@@ -1,6 +1,4 @@
 PRO DARK
-;que pasa!
-
 field = '10'
 
 in_path = '/home/data/raw/2015/Dark/2015-06-08/'
