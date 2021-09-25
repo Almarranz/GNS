@@ -7,8 +7,10 @@ ny = 1536
 
    field = '12'
    band = 'H'
-   in_path = '/home/data/raw/2015/' + band + '/Flat/2015-05-27/' 
+   in_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/' + band + '/Flat/22-9-2021/' ;NOTE: CHECK the DAtE!ª!!!!
    com = '/data/GNS/2015/' + band + '/' + field + '/ims/'
+   ;~ in_path = '/home/data/raw/2015/' + band + '/Flat/2015-05-27/' 
+   ;~ com = '/data/GNS/2015/' + band + '/' + field + '/ims/'
    flat_name = 'flat_' + band + '.fits'
    bpm_name = 'bpm_' + band + '.fits'
    mask_name = 'mask_' + band + '.fits'
