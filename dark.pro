@@ -15,7 +15,7 @@ NDIT = 7   ; number of sub-integrations in Dark
             ; discarding the mean.
             
 
-out_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/20121/H/' + field + '/ims/'
+out_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/H/' + field + '/ims/'
 ;~ out_path = '/data/GNS/2015/H/' + field + '/ims/'
 ;out_path = '/data/GNS/2015/'+ band +'/'+field + '/ims/'
 
