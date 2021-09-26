@@ -1,13 +1,18 @@
 PRO fullbpm, common_path, tmp_path, bpm_name, sky_name, dark_name, mask_name, flat_name, SIGMA_DEV_SKY = sigma_dev_sky, SIGMA_DEV_DARK = sigma_dev_dark
 
 nax1 = 4096
-nax2 = 1536
+nax2 = 4096
 
 band = 'H'
-field = '10'
+field = '9'
 
-   common_path = '/data/GNS/2015/' + band + '/' + field +'/ims/'
-   tmp_path = '/data/GNS/2015/' + band + '/' + field +'/tmp/'
+   common_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
+   tmp_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/tmp/'
+
+   ;~ common_path = '/data/GNS/2015/' + band + '/' + field +'/ims/'
+   ;~ tmp_path = '/data/GNS/2015/' + band + '/' + field +'/tmp/'
+   
+   
    bpm_name = 'bpm_' + band + '.fits'
    sky_name = 'sky.fits'
    dark_name = 'dark.fits'
@@ -42,37 +47,37 @@ sky[good] = sky[good]/flat[good]
 ; 1) Create bad pixel map from mean and standard deviation of sky in each
 ; quadrant
 ; ----------------------------------------------------------------------
-  q = sky[0:2047,0:767]
+  q = sky[0:2047,0:2047]
  RESISTANT_Mean,q,3.0,Mean,Sigma,Num_Rej, goodvec=goodvec
  Sigma = Sigma * sqrt(n_elements(goodvec)) ; we are interested in sigma, not error of the mean
  bad = where(abs(q - Mean) gt sigma_dev_sky * Sigma, n_bad)
  q[*,*] = 0
  q[bad] = 1
- skybpm[0:2047,0:767] = q
+ skybpm[0:2047,0:2047] = q
 
- q = sky[2048:4095,0:767]
+ q = sky[2048:4095,0:2047]
  RESISTANT_Mean,q,3.0,Mean,Sigma,Num_Rej, goodvec=goodvec
  Sigma = Sigma * sqrt(n_elements(goodvec)) ; we are interested in sigma, not error of the mean
  bad = where(abs(q - Mean) gt sigma_dev_sky * Sigma, n_bad)
  q[*,*] = 0
  q[bad] = 1
- skybpm[2048:4095,0:767] = q
+ skybpm[2048:4095,0:2047] = q
 
- q = sky[2048:4095,768:1535]
+ q = sky[2048:4095,2048:4095]
  RESISTANT_Mean,q,3.0,Mean,Sigma,Num_Rej, goodvec=goodvec
  Sigma = Sigma * sqrt(n_elements(goodvec)) ; we are interested in sigma, not error of the mean
  bad = where(abs(q - Mean) gt sigma_dev_sky * Sigma, n_bad)
  q[*,*] = 0
  q[bad] = 1
- skybpm[2048:4095,768:1535] = q
+ skybpm[2048:4095,2048:4095] = q
 
- q = sky[0:2047,768:1535]
+ q = sky[0:2047,2048:4095]
  RESISTANT_Mean,q,3.0,Mean,Sigma,Num_Rej, goodvec=goodvec
  Sigma = Sigma * sqrt(n_elements(goodvec)) ; we are interested in sigma, not error of the mean
  bad = where(abs(q - Mean) gt sigma_dev_sky * Sigma, n_bad)
  q[*,*] = 0
  q[bad] = 1
- skybpm[0:2047,768:1535] = q
+ skybpm[0:2047,2048:4095] = q
 
  writefits, tmp_path + 'sky_bpm.fits', skybpm
 
@@ -81,37 +86,37 @@ sky[good] = sky[good]/flat[good]
 ; ----------------------------------------------------------------------
 
  
- q = dark[0:2047,0:767]
+ q = dark[0:2047,0:2047]
  RESISTANT_Mean,q,3.0,Mean,Sigma,Num_Rej, goodvec=goodvec
  Sigma = Sigma * sqrt(n_elements(goodvec)) ; we are interested in sigma, not error of the mean
  bad = where(abs(q - Mean) gt sigma_dev_dark * Sigma, n_bad)
  q[*,*] = 0
  q[bad] = 1
- darkbpm[0:2047,0:767] = q
+ darkbpm[0:2047,0:2047] = q
 
- q = dark[2048:4095,0:767]
+ q = dark[2048:4095,0:2047]
  RESISTANT_Mean,q,3.0,Mean,Sigma,Num_Rej, goodvec=goodvec
  Sigma = Sigma * sqrt(n_elements(goodvec)) ; we are interested in sigma, not error of the mean
  bad = where(abs(q - Mean) gt sigma_dev_dark * Sigma, n_bad)
  q[*,*] = 0
  q[bad] = 1
- darkbpm[2048:4095,0:767] = q
+ darkbpm[2048:4095,0:2047] = q
 
- q = dark[2048:4095,768:1535]
+ q = dark[2048:4095,2048:4095]
  RESISTANT_Mean,q,3.0,Mean,Sigma,Num_Rej, goodvec=goodvec
  Sigma = Sigma * sqrt(n_elements(goodvec)) ; we are interested in sigma, not error of the mean
  bad = where(abs(q - Mean) gt sigma_dev_dark * Sigma, n_bad)
  q[*,*] = 0
  q[bad] = 1
- darkbpm[2048:4095,768:1535] = q
+ darkbpm[2048:4095,2048:4095] = q
 
- q = dark[0:2047,768:1535]
+ q = dark[0:2047,2048:4095]
  RESISTANT_Mean,q,3.0,Mean,Sigma,Num_Rej, goodvec=goodvec
  Sigma = Sigma * sqrt(n_elements(goodvec)) ; we are interested in sigma, not error of the mean
  bad = where(abs(q - Mean) gt sigma_dev_dark * Sigma, n_bad)
  q[*,*] = 0
  q[bad] = 1
- darkbpm[0:2047,768:1535] = q
+ darkbpm[0:2047,2048:4095] = q
  writefits, tmp_path + 'dark_bpm.fits', darkbpm
 
 
