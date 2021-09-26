@@ -58,7 +58,6 @@ mask[0:10,*] = 0
 mask[4073:4095,*] = 0 ; why the edge is bigger on the right side of the mask?
 mask[2044:2051,*] = 0
 mask[*,4088:4095] = 0
-mask[*,2044:2051] = 0
 ; some additional regions if necessary
 ; mask_polygon, mask, flat + 'mask.reg', value = 0
 writefits, com + mask_name, mask

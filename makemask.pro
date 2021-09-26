@@ -7,9 +7,12 @@ PRO MAKEMASK, common_path, bpm_name
 ;         as is the case for dead pixels.
 ;         Therefore, they must be masked.
 
-field = '10'
+field = '9'
 band = 'H'
-common_path = '/data/GNS/2015/' + band + '/' + field +'/ims/'
+
+common_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
+
+;~ common_path = '/data/GNS/2015/' + band + '/' + field +'/ims/'
 bpm_name = 'bpm.fits'
 
 
@@ -27,20 +30,28 @@ mask[*,*] = 1
 mask[0:10,*] = 0
 mask[4073:4095,*] = 0
 mask[2044:2051,*] = 0
-mask[*,764:771] = 0
+
 ;
 ; the edges of tmpmask are 1 pixel broader than
 ; the edges of the "real" mask
 ; so that it can be avoided to include the 
 ; detector edges and gaps into the search for dead pixel
 ; clusters.
+;~ mask[*,*] = 1
+;~ mask[0:10,*] = 0
+;~ mask[4073:4095,*] = 0 ; why the edge is bigger on the right side of the mask?
+;~ mask[2044:2051,*] = 0
+;~ mask[*,4088:4095] = 0
+;~ mask[*,2044:2051] = 0
+
 
 tmpmask = fltarr(nax1,nax2)
 tmpmask[*,*] = 1
 tmpmask[0:11,*] = 0
-tmpmask[4072:4095,*] = 0
+tmpmask[4073:4095,*] = 0
 tmpmask[2043:2052,*] = 0
-tmpmask[*,763:772] = 0
+mask[*,4087:4095] = 0
+mask[*,2043:2052] = 0
 check = where(tmpmask gt 0,counts)
 ;print, counts
 
@@ -56,7 +67,7 @@ endfor
 
 ; mask manually an isolated pixel in the middle of a bunch 
 ; of bad pixels (I found it when running cleancubes.pro)
-mask[392,677] = 0
+;~ mask[392,677] = 0
 writefits, common_path + 'mask.fits', mask
 
 print, 'makemask.pro ended'
