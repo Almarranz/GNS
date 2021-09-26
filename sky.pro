@@ -14,15 +14,22 @@ PRO sky, in_path, common_path, tmp_path, bpm_name, flat_name, mask_name, dark_na
 ; each given science exposure by determining the sky offset 
 ; in each science exposure.
 
-NDIT = 20 ; number of sub-integrations
-band = 'H'
-field = '10'
+NDIT = 8 ; number of sub-integrations. 
+band='H'
+field = '9'
 all = 0   ; average individual burst exposures (all = 0) or use mean image at the end of cube (all = 1)
 
-in_path = '/home/data/raw/2015/' + band +'/Sky/' + field + '/'
-common_path = '/data/GNS/2015/' + band + '/' + field +'/ims/'
-out_path = '/data/GNS/2015/' + band + '/' + field +'/ims/'
-tmp_path = '/data/GNS/2015/' + band + '/' + field +'/tmp/'
+in_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/' + band +'/Sky/' + field + '/'
+common_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
+out_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
+tmp_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/tmp/'
+
+;~ in_path = '/home/data/raw/2015/' + band +'/Sky/' + field + '/'
+;~ common_path = '/data/GNS/2015/' + band + '/' + field +'/ims/'
+;~ out_path = '/data/GNS/2015/' + band + '/' + field +'/ims/'
+;~ tmp_path = '/data/GNS/2015/' + band + '/' + field +'/tmp/'
+
+
 flat_name = 'flat_' + band + '.fits'
 bpm_name = 'bpm_' + band + '.fits'
 mask_name = 'mask_' + band + '.fits'
@@ -33,7 +40,7 @@ sigma_dev = 5. ; sigma threshold for determining valid pixels
 if not(KEYWORD_SET(sigma_dev)) then sigma_dev = 10.
 
 nax1 = 4096
-nax2 = 1536
+nax2 = 4096
 
 dark = readfits(common_path + dark_name)
 bpm = readfits(common_path + bpm_name)
@@ -46,18 +53,20 @@ xy = array_indices(bpm,bad)
 xbad = xy[0,*]
 ybad = xy[1,*]
 
-q1_mask = mask[0:2047,0:767]
-q2_mask = mask[2048:4095,0:767]
-q3_mask = mask[2048:4095,768:1535]
-q4_mask = mask[0:2047,768:1535]
-q1_dark = dark[0:2047,0:767]
-q2_dark = dark[2048:4095,0:767]
-q3_dark = dark[2048:4095,768:1535]
-q4_dark = dark[0:2047,768:1535]
-q1_bpm = bpm[0:2047,0:767]
-q2_bpm = bpm[2048:4095,0:767]
-q3_bpm = bpm[2048:4095,768:1535]
-q4_bpm = bpm[0:2047,768:1535]
+q1_mask = mask[0:2047,0:2047]
+q2_mask = mask[2048:4095,0:2047]
+q3_mask = mask[2048:4095,2048:4095]
+q4_mask = mask[0:2047,2048:4095]
+
+q1_dark = dark[0:2047,0:2047]
+q2_dark = dark[2048:4095,0:2047]
+q3_dark = dark[2048:4095,2048:4095]
+q4_dark = dark[0:2047,2048:4095]
+
+q1_bpm = bpm[0:2047,0:2047]
+q2_bpm = bpm[2048:4095,0:2047]
+q3_bpm = bpm[2048:4095,2048:4095]
+q4_bpm = bpm[0:2047,2048:4095]
 
 name = ''
 inlist = in_path+'list.txt'
@@ -93,7 +102,7 @@ for ic = 0L, ncubes-1 do begin  ; start loop over frames in this cube
  ; save gain values for each quadrant
  gains = fltarr(4)
 
- q = im[0:2047,0:767] - q1_dark
+ q = im[0:2047,0:2047] - q1_dark
  valid = where(q1_mask gt 0 and q1_bpm lt 1)
  sky_vector = q[valid]
  mmm, sky_vector, skymod, skysigma, skyskew
@@ -102,11 +111,11 @@ for ic = 0L, ncubes-1 do begin  ; start loop over frames in this cube
   value = skymod +  skysigma * RANDOMN(seed)
   q[bad[j]] = value
  endfor
- skycube[0:2047,0:767,ic] = q/median(q[valid])
+ skycube[0:2047,0:2047,ic] = q/median(q[valid])
  gains[0] = skymod
  print, skymod
 
- q = im[2048:4095,0:767] - q2_dark
+ q = im[2048:4095,0:2047] - q2_dark
  valid = where(q2_mask gt 0 and q2_bpm lt 1)
  sky_vector = q[valid]
  mmm, sky_vector, skymod, skysigma, skyskew
@@ -115,11 +124,11 @@ for ic = 0L, ncubes-1 do begin  ; start loop over frames in this cube
   value = skymod +  skysigma * RANDOMN(seed)
   q[bad[j]] = value
  endfor
- skycube[2048:4095,0:767,ic] = q/median(q[valid])
+ skycube[2048:4095,0:2047,ic] = q/median(q[valid])
  gains[1] = skymod
  print, skymod
 
- q = im[2048:4095,768:1535] - q3_dark
+ q = im[2048:4095,2048:4095] - q3_dark
  valid = where(q3_mask gt 0 and q3_bpm lt 1)
  sky_vector = q[valid]
  mmm, sky_vector, skymod, skysigma, skyskew
@@ -128,11 +137,11 @@ for ic = 0L, ncubes-1 do begin  ; start loop over frames in this cube
   value = skymod +  skysigma * RANDOMN(seed)
   q[bad[j]] = value
  endfor
- skycube[2048:4095,768:1535,ic] = q/median(q[valid])
+ skycube[2048:4095,2048:4095,ic] = q/median(q[valid])
  gains[2] = skymod
  print, skymod
 
- q = im[0:2047,768:1535] - q4_dark
+ q = im[0:2047,2048:4095] - q4_dark
  valid = where(q4_mask gt 0 and q4_bpm lt 1)
  sky_vector = q[valid]
  mmm, sky_vector, skymod, skysigma, skyskew
@@ -141,7 +150,7 @@ for ic = 0L, ncubes-1 do begin  ; start loop over frames in this cube
   value = skymod +  skysigma * RANDOMN(seed)
   q[bad[j]] = value
  endfor
- skycube[0:2047,768:1535,ic] = q/median(q[valid])
+ skycube[0:2047,2048:4095,ic] = q/median(q[valid])
  gains[3] = skymod
  print, skymod
 
@@ -160,7 +169,7 @@ writefits, out_path + 'sky.fits', sky*mask
 ; save gain values
 ; ----------------
 gains = gains/mean(gains)
-forprint, TEXTOUT='gains.txt', /NOCOMMENT, gains
+forprint, TEXTOUT= tmp_path+'gains.txt', /NOCOMMENT, gains
 
 ; do comparison between simple median sky and masked sky
 good = where(mask gt 0 and bpm lt 1)
