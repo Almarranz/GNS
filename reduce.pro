@@ -4,12 +4,18 @@ debug = 0
 nam = ''
 
 
-   field = '10'
+   field = '9'
    band = 'H'
-   raw_path = '/home/data/raw/2015/' + band +'/Field/' + field + '/'
-   common_path = '/data/GNS/2015/' + band + '/' + field + '/ims/'
-   tmp_path = '/data/GNS/2015/' + band + '/' + field + '/tmp/'
-   out_path = '/data/GNS/2015/' + band + '/' + field + '/cubes/'
+   raw_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/' + band +'/Field/' + field + '/'
+   common_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
+   tmp_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/tmp/'
+   out_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/cubes/'
+   
+   ;~ raw_path = '/home/data/raw/2015/' + band +'/Field/' + field + '/'
+   ;~ common_path = '/data/GNS/2015/' + band + '/' + field + '/ims/'
+   ;~ tmp_path = '/data/GNS/2015/' + band + '/' + field + '/tmp/'
+   ;~ out_path = '/data/GNS/2015/' + band + '/' + field + '/cubes/'
+   
    mask_name = 'mask.fits'
    bpm_name = 'bpm.fits'
    sky_name = 'sky.fits'
@@ -18,7 +24,8 @@ nam = ''
    list = 'list.txt'
    outlist = 'cubelist.txt'
 
-   readcol, 'gains.txt', gains
+   gains=[1.10618,0.935007,1.08581,0.872999]
+   ;~ readcol, tmp_path +'gains.txt', gains
    sky_frac = 0.3  ; fraction of pixels of lowest value
                    ; that will be used to create the matched sky
                    ; The MMM algorithm is relatively insensitive 
@@ -60,6 +67,7 @@ openr, inp, (raw_path + list), /get_lun  ; open input file for reading
 cn = 0L
 while (not (EOF(inp))) do begin
    readf, inp, nam
+   print,nam
    cube = readfits(raw_path + nam, header) 
    sz = size(cube)
    n3 = sz[3]
@@ -71,10 +79,10 @@ while (not (EOF(inp))) do begin
 
    ; apply gain factors to the four quadrants
    ; gain factors are computed in sky.pro
-   cube[0:2047,0:767,*] = cube[0:2047,0:767,*] / gains[0]
-   cube[2048:4095,0:767,*] = cube[2048:4095,0:767,*] / gains[1]
-   cube[2048:4095,768:1535,*] = cube[2048:4095,768:1535,*] / gains[2]
-   cube[0:2047,768:1535,*] = cube[0:2047,768:1535,*] / gains[3]
+   cube[0:2047,0:2047,*] = cube[0:2047,0:2047,*] / gains[0]
+   cube[2048:4095,0:2047,*] = cube[2048:4095,0:2047,*] / gains[1]
+   cube[2048:4095,2048:4095,*] = cube[2048:4095,2048:4095,*] / gains[2]
+   cube[0:2047,2048:4095,*] = cube[0:2047,2048:4095,*] / gains[3]
 ;   writefits, tmp_path + 'rawxgains.fits', cube
 
    ; Match the master sky to the sky level in this cube
@@ -145,13 +153,14 @@ while (not (EOF(inp))) do begin
    sxaddpar, header, 'NAXIS3', n3
    sxdelpar, header, 'CHECKSUM'
    sxdelpar, header, 'CDATASUM'
-   writefits, out_path + 'cube' + strn(cn) + '.fits', cube, header, /COMPRESS
+   writefits, out_path + 'cube' + strn(cn) + '.fits', cube, header;, /COMPRESS
 
 ;   writefits, tmp_path + 'reduced.fits', cube
  
 ;   writefits,tmp_path + 'long_sigma.fits', stddev(cube,DIMENSION=3)
 
-   printf, lun, 'cube' + strn(cn) + '.fits.gz'
+   printf, lun, 'cube' + strn(cn) + '.fits'
+   ;~ printf, lun, 'cube' + strn(cn) + '.fits.gz'
 
    print, nam
 endwhile
