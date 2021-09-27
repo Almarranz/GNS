@@ -12,8 +12,8 @@ outdir = field_path + 'ims/'
 
 n_frames = 8 ; number of frames in cube, including the last one (long exposure)
 
-;~ n_offset = 68
-n_offset = 1
+n_offset = 68
+
 
 
 indir_mask = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/' + '/ims/'
