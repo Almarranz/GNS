@@ -1,12 +1,19 @@
 PRO CLEANCUBES;, common_path, in_path, out_path, tmp_path, mask_name, N_SIGMA = n_sigma, DEBUG = debug
 
 
-   field = '10'
+   field = '9'
    band = 'H'
-   common_path = '/data/GNS/2015/' + band + '/' + field + '/ims/'
-   in_path = '/data/GNS/2015/' + band + '/' + field + '/cubes/'
-   out_path = '/data/GNS/2015/' + band + '/' + field + '/cleaned/'
-   tmp_path = '/data/GNS/2015/' + band + '/' + field + '/tmp/'
+   
+   in_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/cubes/'	
+   common_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
+   tmp_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/tmp/'
+   out_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/cleaned/'
+   
+   ;~ common_path = '/data/GNS/2015/' + band + '/' + field + '/ims/'
+   ;~ in_path = '/data/GNS/2015/' + band + '/' + field + '/cubes/'
+   ;~ out_path = '/data/GNS/2015/' + band + '/' + field + '/cleaned/'
+   ;~ tmp_path = '/data/GNS/2015/' + band + '/' + field + '/tmp/'
+   
    mask_name = 'mask.fits'
    n_sigma = 7. ; value must be high, otherwise valid pixels of bright stars will be corrected (PSF varies between frames)!
    debug = 0
@@ -62,7 +69,7 @@ while (not (EOF(inp))) do begin
       cube[*,*,j] = im * mask
    endfor
    cn = cn + 1
-   writefits, out_path + 'cube'+ strn(cn) + '.fits', cube, header, /COMPRESS
+   writefits, out_path + 'cube'+ strn(cn) + '.fits', cube, header;, /COMPRESS
  
    printf, lun, 'cube' + strn(cn) + '.fits'
    print, nam
