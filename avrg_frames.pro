@@ -14,10 +14,10 @@ pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 outdir=pruebas
 
 
+ROBUST=0
+j=2
 
-j=1
-
-cube=readfits(indir +'chip1_cube' + strn(j) + '.fits')
+cube=readfits(indir +'chip1_cube' + strn(j) + '.fits',header)
 sz = size(cube)
 nax1 = sz[1]
 nax2 = sz[2]
@@ -53,5 +53,69 @@ for i=0, n_frames-1 do begin
 	;~ new_cube[1+x_off:nax1+x_off,1+y_off:nax1+y_off,i]=cube[*,*,i]
 	endif
 endfor
-writefits, pruebas + 'new_cube.fits', new_cube
+; initialize variables
+; ---------------------
+ssa_all = fltarr(nax1,nax2)
+ssa_sigma_all = fltarr(nax1,nax2)
+wt_all = fltarr(nax1,nax2)
+
+
+ssa = fltarr(nax1,nax2)
+wt = fltarr(nax1,nax2)
+ssa_sigma = fltarr(nax1,nax2)
+; ---------------------
+
+all_frames=new_cube[*,*,0:nax3-2]
+;~ writefits, pruebas+'all_frames.fit',all_frames
+
+   for x = 0, nax1-1 do begin
+     for y = 0, nax2-1 do begin
+      vals = reform(all_frames[x,y,*])
+     ; require at least 3 measurements per pixel
+     ; for a reasonable estimation of sigma
+      good = where(reform(all_frames[x,y,*]) gt 0, complement = bad, ngood)
+      if ngood gt 2 then begin 
+       vals = vals[good]
+       wt[x,y] = wt[x,y] + n_elements(good)
+      endif else begin
+       vals[*] = 0
+       wt[x,y] = 0
+      endelse
+      if ROBUST gt 0 then begin
+        RESISTANT_Mean, vals, Sigma_CUT, vals_mean, vals_sigma, Num_RejECTED
+      endif else begin
+        vals_mean = avg(vals)
+        vals_sigma = stddev(vals)/sqrt(n_elements(vals)-1)
+      endelse
+      ssa[x,y] = vals_mean
+      ssa_sigma[x,y] = vals_sigma
+     endfor
+    endfor
+    new_cube[*,*,nax3-1]=ssa
+    writefits, pruebas + 'ssa_' + strn(j) + '.fits', ssa
+    writefits, pruebas + 'wt_' + strn(j) + '.fits', wt
+    writefits, pruebas + 'ssa_sigma' + strn(j) + '.fits', ssa_sigma
+    writefits, pruebas + 'new_cube_all_' + strn(j) + '.fits', new_cube, header
+    print, 'Averaged cube: cube ',j 
+    
+    ;~ wt_all = wt_all + wt
+    ;~ ssa_all = ssa_all + wt*ssa
+    ;~ ssa_sigma_all = ssa_sigma_all + wt*ssa_sigma^2
+    
+    ;~ good = where(wt_all gt 0, complement=bad)
+	;~ ssa_all[good] = ssa_all[good]/wt_all[good]
+	;~ if (bad[0] gt -1) then ssa_all[bad] = 0
+	;~ ssa_sigma_all[good] = ssa_sigma_all[good]/wt_all[good]
+	;~ if (bad[0] gt -1) then ssa_sigma_all[bad] = 0
+	
+	;~ new_cube[*,*,nax3-1]=ssa_all
+	
+	
+	;~ writefits, pruebas + '_wt.fits', wt_all
+	;~ writefits, pruebas + 'new_cube_all_wt.fits', ssa_all
+	;~ writefits, pruebas + '_sigma.fits', sqrt(ssa_sigma_all)
+ 
+   
+
+
 END
