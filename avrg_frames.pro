@@ -16,7 +16,8 @@ outdir=pruebas
 
 ROBUST=0
 ;~ j=2
-cubes_mod=[7,10,13,17,22,23,34,38,40,42,42,44]
+cubes_mod=[7,10,13,17,22,23,34,38,40,42,43,44]
+
 
 mods=n_elements(cubes_mod)
 print, 'Working on ', mods,' cubes'
