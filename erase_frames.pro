@@ -30,7 +30,7 @@ writefits,output+'cube34.fits',cube, header
 
 	
 cube=readfits(cubos +'cube38.fits',header)
-cube=cube[*,*,[2,3,4,6]]
+cube=cube[*,*,[2,3,4]]
 cube=[[[cube]],[[zero]]];added a zero dimesion for the average scripts works
 ;~ writefits,pruebas+'erased_cube38.fits',cube, header
 writefits,output+'cube38.fits',cube, header
@@ -42,13 +42,13 @@ cube=[[[cube]],[[zero]]];added a zero dimesion for the average scripts works
 writefits,output+'cube42.fits',cube, header
 
 cube=readfits(cubos +'cube43.fits',header)
-cube=cube[*,*,2:6]
+cube=cube[*,*,3:6]
 cube=[[[cube]],[[zero]]];added a zero dimesion for the average scripts works
 ;~ writefits,pruebas+'erased_cube43.fits',cube, header
 writefits,output+'cube43.fits',cube, header
 
 
-f3=[10,22,23,40]
+f3=[10,22,23]
 frms=n_elements(f3)
 print,frms
 for i = 0, frms-1 do begin
@@ -67,7 +67,7 @@ for i = 0, frms-1 do begin
 	writefits,output+'cube'+strn(f3[i])+'.fits',cube, header
 endfor
 
-f4=[7,13,44]
+f4=[40]
 frms=n_elements(f4)
 print,frms
 for i = 0, frms-1 do begin
@@ -86,7 +86,7 @@ for i = 0, frms-1 do begin
 	writefits,output+'cube'+strn(f4[i])+'.fits',cube, header
 endfor
 
-f5=[17]
+f5=[17,7,13,44]
 frms=n_elements(f5)
 print,frms
 for i = 0, frms-1 do begin
