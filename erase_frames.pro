@@ -1,5 +1,5 @@
 PRO erase_frames
-
+;~ Erases bad frames and sustitues longexp frame with a fltarr. SPECIALLY TAILORED for field9!'
 field = 9
 chip = 	1
 
