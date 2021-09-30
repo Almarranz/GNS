@@ -71,7 +71,7 @@ f4=[40]
 frms=n_elements(f4)
 print,frms
 for i = 0, frms-1 do begin
-    print,f3[i]
+    print,f4[i]
 	cube=readfits(cubos +'cube' + strn(f4[i]) + '.fits',header)
 	sz = size(cube)
 	nax1 = sz[1]
@@ -90,7 +90,7 @@ f5=[17,7,13,44]
 frms=n_elements(f5)
 print,frms
 for i = 0, frms-1 do begin
-    print,f3[i]
+    print,f5[i]
 	cube=readfits(cubos +'cube' + strn(f5[i]) + '.fits',header)
 	sz = size(cube)
 	nax1 = sz[1]
@@ -104,35 +104,6 @@ for i = 0, frms-1 do begin
 	;~ writefits,pruebas+'erased_cube'+strn(f5[i])+'.fits',cube, header
 	writefits,output+'cube'+strn(f5[i])+'.fits',cube, header
 endfor
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

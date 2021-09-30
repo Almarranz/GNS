@@ -10,7 +10,7 @@ ims = 'ims/'
 indir = field_path + 'cleaned/'
 outdir = field_path + 'ims/'
 
-n_frames = 8 ; number of frames in cube, including the last one (long exposure)
+;n_frames = 8 ; number of frames in cube, including the last one (long exposure)
 
 n_offset = 68
 
@@ -30,6 +30,8 @@ maskname = 'mask.fits'
 for j = 1, n_offset do begin
   
  cube = readfits(indir + 'cube'+ strn(j) + '.fits', header)
+ sz=size(cube)
+ n_frames=sz[3]; I have eliminated some frames, so now not all cubes have the same number of frames.
  ;~ cube = readfits(indir + 'cube'+ strn(j) + '.fits.gz', header)
 
  ;Chip 1 
