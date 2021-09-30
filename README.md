@@ -19,7 +19,7 @@ Erases bad frames and there fore transfor the cubes thrid dimension.
 8. makecubes.pro (little change).
 ----------------------------------
 Here I added an extra script: avrg_frames.pro 
-Last frme of the cube is not the average anymore. This scripts makes the average of last frames. 
+Last frme of cubes which had bad frames (erased) is not the average anymore. This scripts makes the average of last frames. 
 Should I make average for only those cubes from  which I erased some frames and left the original ones untouched??
 ----------------------------------
 9. dejitter.pro (some changes)
