@@ -10,9 +10,12 @@ scripts GNS
 5. makemask.pro
 6. reduce.pro
 7. cleancubes.pro.
+
 ######################.
+
 Here I added an extra script: erase_frames.pro
 Erases bad frames and there fore transfor the cubes thrid dimension.
+
 #######################.
 8. makecubes.pro (little change).
 ########################
