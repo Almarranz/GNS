@@ -11,7 +11,7 @@ outdir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + str
 
 pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
-outdir=pruebas
+;~ outdir=pruebas
 
 
 ROBUST=0

@@ -3,7 +3,7 @@ pro dejitter, field, chip
 ;field = 10
 ;chip = 4
 
-for chip = chip, chip do begin
+for chip = chip, 4 do begin
 
 band = 'H'
 indir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
@@ -33,7 +33,8 @@ sizey_new = 2700
 wx = 1000
 wy = 1000
 
-elements_cube = 8
+;elements_cube = 8 no all cubes have the same numer of elements now.
+
 ; Set the jitter box width 
 ; equal to or larger than the jitter box used 
 ; during the observations.
@@ -53,12 +54,13 @@ openw, out1, outdir + 'list_chip'+strn(chip)+'.txt', /get_lun
 openw, out2, outdir + 'masklist_chip'+strn(chip)+'.txt', /get_lun
 
 new_ref = fltarr(sizex_new,sizey_new)
-new_ref_cube = fltarr(sizex_new,sizey_new,elements_cube)
+;~ new_ref_cube = fltarr(sizex_new,sizey_new,elements_cube)
 new_mask_ref = fltarr(sizex_new,sizey_new)
 lnx_cube = fltarr(sizex_new,sizey_new,n_offsets)
 mask_cube = fltarr(sizex_new,sizey_new,n_offsets)
 
 for i = 1, n_offsets do begin
+
 
   print, 'Pointing : ' + strn(i)   
 
@@ -72,6 +74,16 @@ for i = 1, n_offsets do begin
   ;~ cube = readfits(indir + 'chip' + strn(chip) + '_cube' + strn(i) + '.fits.gz', header)
   ;~ mask = readfits(indir + 'mask_chip' + strn(chip) + '.fits.gz')
   
+  ;################################################################
+  sz=size(cube)
+  elements_cube = sz[3] ; many cubes have fewer number of slices
+  ; thes have to ve move for each ofset particulary.
+  ;~ new_ref = fltarr(sizex_new,sizey_new)
+  new_ref_cube = fltarr(sizex_new,sizey_new,elements_cube)
+  ;~ new_mask_ref = fltarr(sizex_new,sizey_new)
+  ;~ lnx_cube = fltarr(sizex_new,sizey_new,n_offsets)
+  ;~ mask_cube = fltarr(sizex_new,sizey_new,n_offsets)
+  ;################################################################
   ; Read in cumulative offset from initial pointing in pixels
   x_off = strsplit(header[615],'HIERARCH ESO SEQ CUMOFFSETX = ', ESCAPE = '/', /extract)
   y_off = strsplit(header[616],'HIERARCH ESO SEQ CUMOFFSETY = ', ESCAPE = '/', /extract) 
@@ -158,7 +170,7 @@ for i = 1, n_offsets do begin
    
    ; This is to catch grave problems with correl_optimize
    ; These problems will hopefully not happen any more with /NUMPIX.
-   if abs(x_off) gt 50 or abs(y_off) gt 50 then begin
+   if abs(x_off) gt 100 or abs(y_off) gt 100 then begin
     x_off = 0
     y_off = 0
     print,'###################################'
