@@ -1,5 +1,6 @@
 PRO erase_frames
 ;~ Erases bad frames and sustitues longexp frame with a fltarr. SPECIALLY TAILORED for field9!'
+; it takes the input from the odd clean cubes, with the bad frames, and storeds it in the new cubes dir.
 field = 9
 chip = 	1
 
@@ -7,11 +8,11 @@ chip = 	1
 
 band = 'H'
 indir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
-cubos = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes_bad_frms/'
+cubos = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cleaned_bad_frms/'
 
 pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
-output='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes/
+output='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cleaned/
 ;~ outdir=pruebas
 
 
