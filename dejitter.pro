@@ -11,7 +11,7 @@ outdir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + str
 
 pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
-outdir=pruebas
+;~ outdir=pruebas
 ;~ indir = '/data/GNS/2015/'+band+'/' + strn(field) + '/ims/'
 ;~ outdir = '/data/GNS/2015/'+band+'/' + strn(field) + '/cubes/'
 
