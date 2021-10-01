@@ -3,7 +3,7 @@ pro dejitter, field, chip
 ;field = 10
 ;chip = 4
 
-for chip = chip, 1 do begin
+for chip = chip, 4 do begin
 
 band = 'H'
 indir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
@@ -11,7 +11,7 @@ outdir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + str
 
 pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
-outdir=pruebas
+;~ outdir=pruebas
 ;~ indir = '/data/GNS/2015/'+band+'/' + strn(field) + '/ims/'
 ;~ outdir = '/data/GNS/2015/'+band+'/' + strn(field) + '/cubes/'
 
@@ -165,7 +165,7 @@ for i = 1, n_offsets do begin
 ;   y_off = round(OFFSET[1])
 
 
-    correl_optimize, small_ref, small_new_ref, x_off, y_off, MAGNIFICATION=1	, /NUMPIX ; /NUMPIX is ESSENTIAL
+    correl_optimize, small_ref, small_new_ref, x_off, y_off, MAGNIFICATION=4	, /NUMPIX ; /NUMPIX is ESSENTIAL
     print, 'Offsets from correlation: ' + strn(x_off) + ', ' + strn(y_off)
    
    ; This is to catch grave problems with correl_optimize
