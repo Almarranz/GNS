@@ -23,6 +23,9 @@ Last frme of cubes which had bad frames (erased) is not the average anymore. Thi
 Should I make average for only those cubes from  which I erased some frames and left the original ones untouched??
 ----------------------------------
 9. dejitter.pro (some changes)
+---
+in dejitter.pro. the x_off y_off WASN'T applied to the masks. I changed it.
+---
 10. longexposure.pro
 
 

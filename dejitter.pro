@@ -3,7 +3,7 @@ pro dejitter, field, chip
 ;field = 10
 ;chip = 4
 
-for chip = chip, 4 do begin
+for chip = chip, 1 do begin
 
 band = 'H'
 indir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
@@ -11,7 +11,7 @@ outdir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + str
 
 pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
-;~ outdir=pruebas
+outdir=pruebas
 ;~ indir = '/data/GNS/2015/'+band+'/' + strn(field) + '/ims/'
 ;~ outdir = '/data/GNS/2015/'+band+'/' + strn(field) + '/cubes/'
 
@@ -145,7 +145,7 @@ for i = 1, n_offsets do begin
     
    new[pos_x:pos_x + size_old_x -1 ,pos_y:pos_y + size_old_y - 1] = cube[*,*,elements_cube-1]
    ;~ new[pos_x:pos_x + size_old_x -1 ,pos_y:pos_y + size_old_y - 1] = cube[*,*,elements_cube]
-   new_mask[pos_x:pos_x + size_old_x -1 ,pos_y:pos_y + size_old_y - 1] = mask 
+   ;~ new_mask[pos_x:pos_x + size_old_x -1 ,pos_y:pos_y + size_old_y - 1] = mask ; Im going to call new_mas downline to shift it with x_off y_off too
   
    ; extract a small region from near image centre
    ; that is used for final fine alignment
@@ -165,7 +165,7 @@ for i = 1, n_offsets do begin
 ;   y_off = round(OFFSET[1])
 
 
-    correl_optimize, small_ref, small_new_ref, x_off, y_off, MAGNIFICATION=4, /NUMPIX ; /NUMPIX is ESSENTIAL
+    correl_optimize, small_ref, small_new_ref, x_off, y_off, MAGNIFICATION=1	, /NUMPIX ; /NUMPIX is ESSENTIAL
     print, 'Offsets from correlation: ' + strn(x_off) + ', ' + strn(y_off)
    
    ; This is to catch grave problems with correl_optimize
@@ -180,8 +180,10 @@ for i = 1, n_offsets do begin
  
    new_cube[pos_x + x_off:pos_x + size_old_x -1 + x_off ,pos_y + y_off:pos_y + size_old_y + y_off- 1,*] = cube[*,*,0:elements_cube-1]
    lnx_tmp[pos_x + x_off:pos_x + size_old_x -1 + x_off ,pos_y + y_off:pos_y + size_old_y + y_off- 1] = cube[*,*,elements_cube-1]
+   
+   new_mask[pos_x + x_off:pos_x + size_old_x -1 + x_off ,pos_y + y_off:pos_y + size_old_y + y_off- 1] = mask; with line we are shifting also the mask
    ;~ lnx_tmp[pos_x + x_off:pos_x + size_old_x -1 + x_off ,pos_y + y_off:pos_y + size_old_y + y_off- 1] = cube[*,*,elements_cube]
-  
+ 
    lnx_cube[*,*,i-1] = lnx_tmp[*,*]
    mask_cube[*,*,i-1] = new_mask[*,*]   
 
