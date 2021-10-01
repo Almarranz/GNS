@@ -5,8 +5,12 @@ pro longexposure, field, n_chip
 
 band = 'H'
 
-indir = '/data/GNS/2015/'+band+'/' + strn(field) + '/cubes/'
-outdir = '/data/GNS/2015/'+band+'/' + strn(field) + '/ims/'
+indir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
+outdir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes/'
+pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
+
+;~ indir = '/data/GNS/2015/'+band+'/' + strn(field) + '/cubes/'
+;~ outdir = '/data/GNS/2015/'+band+'/' + strn(field) + '/ims/'
 
 
 sz = size(cube)
@@ -21,8 +25,10 @@ Sigma_CUT = 3.0
 
  chipnr = strn(n_chip)
  
- cube = readfits(indir + 'lnx_jitter_cube_' + chipnr + '.fits.gz', header)
- mask = readfits(indir +'lnx_jitter_mask_' + chipnr + '.fits.gz')
+ cube = readfits(indir + 'lnx_jitter_cube_' + chipnr + '.fits', header)
+ mask = readfits(indir +'lnx_jitter_mask_' + chipnr + '.fits')
+ ;~ cube = readfits(indir + 'lnx_jitter_cube_' + chipnr + '.fits.gz', header)
+ ;~ mask = readfits(indir +'lnx_jitter_mask_' + chipnr + '.fits.gz')
  
 ;weight = readfits(indir + 'new_weight_jitter_chip' + strn(n_chip) + '.fits'
  sz = size(cube)
