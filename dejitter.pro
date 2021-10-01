@@ -43,8 +43,9 @@ wy = 1000
 ;
 ; The jitter_offset paraemter makes sure that an exposure
 ; with zero offset falls into the middle of the frame after alignment
-jitter_offset = round((60./2.)/0.106) ; maximal offset of a jittered exposure from initial pointing
+;jitter_offset = round((60./2.)/0.106) ; maximal offset of a jittered exposure from initial pointing
 ;jitter offset = 330 ; This value has been chosen empirically (systematics in FITS Header cumoffset?)
+jitter_offset=round((2700-2048)/2); place a x_off y_off =0 frame at the center of the cambas.
 
 n_offsets = 68
 ;~ n_offsets = 68
@@ -165,7 +166,7 @@ for i = 1, n_offsets do begin
 ;   y_off = round(OFFSET[1])
 
 
-    correl_optimize, small_ref, small_new_ref, x_off, y_off, MAGNIFICATION=4	, /NUMPIX ; /NUMPIX is ESSENTIAL
+    correl_optimize, small_ref, small_new_ref, x_off, y_off, MAGNIFICATION=1	, /NUMPIX ; /NUMPIX is ESSENTIAL
     print, 'Offsets from correlation: ' + strn(x_off) + ', ' + strn(y_off)
    
    ; This is to catch grave problems with correl_optimize

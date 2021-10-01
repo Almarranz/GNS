@@ -9,9 +9,11 @@ indir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn
 outdir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
 pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
+
 ;~ indir = '/data/GNS/2015/'+band+'/' + strn(field) + '/cubes/'
 ;~ outdir = '/data/GNS/2015/'+band+'/' + strn(field) + '/ims/'
 outdir=pruebas
+;~ indir=pruebas
 
 sz = size(cube)
 
