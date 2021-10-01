@@ -5,13 +5,13 @@ pro longexposure, field, n_chip
 
 band = 'H'
 
-indir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
-outdir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes/'
+indir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes/'
+outdir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
 pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
 ;~ indir = '/data/GNS/2015/'+band+'/' + strn(field) + '/cubes/'
 ;~ outdir = '/data/GNS/2015/'+band+'/' + strn(field) + '/ims/'
-
+outdir=pruebas
 
 sz = size(cube)
 
@@ -73,9 +73,12 @@ Sigma_CUT = 3.0
   
  endfor
  
- writefits, outdir + 'lnx_jitter_' + chipnr + '.fits', lxp, header, /COMPRESS
- writefits, outdir + 'lnx_jitter_' + chipnr + '_sig.fits', lxp_sigma, /COMPRESS
- writefits, outdir + 'lnx_jitter_' + chipnr + '_wt.fits', wt, /COMPRESS
+ writefits, outdir + 'lnx_jitter_' + chipnr + '.fits', lxp, header
+ writefits, outdir + 'lnx_jitter_' + chipnr + '_sig.fits', lxp_sigma
+ writefits, outdir + 'lnx_jitter_' + chipnr + '_wt.fits', wt
+ ;~ writefits, outdir + 'lnx_jitter_' + chipnr + '.fits', lxp, header, /COMPRESS
+ ;~ writefits, outdir + 'lnx_jitter_' + chipnr + '_sig.fits', lxp_sigma, /COMPRESS
+ ;~ writefits, outdir + 'lnx_jitter_' + chipnr + '_wt.fits', wt, /COMPRESS
  
  print, 'Averaged chip '+ chipnr + '.'
 
