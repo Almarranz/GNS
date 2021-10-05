@@ -166,7 +166,7 @@ for i = 1, n_offsets do begin
 ;   y_off = round(OFFSET[1])
 
 
-    correl_optimize, small_ref, small_new_ref, x_off, y_off, MAGNIFICATION=1	, /NUMPIX ; /NUMPIX is ESSENTIAL
+    correl_optimize, small_ref, small_new_ref, x_off, y_off, MAGNIFICATION=4	, /NUMPIX ; /NUMPIX is ESSENTIAL
     print, 'Offsets from correlation: ' + strn(x_off) + ', ' + strn(y_off)
    
    ; This is to catch grave problems with correl_optimize
