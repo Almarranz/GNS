@@ -1,4 +1,5 @@
-# GNS
+# GNS 2
+=============
 ############################
 
 on branch: unwid
@@ -27,5 +28,7 @@ Should I make average for only those cubes from  which I erased some frames and 
 in dejitter.pro. the x_off y_off WASN'T applied to the masks. I changed it.
 ---
 10. longexposure.pro
+11. findstars.pro
+12.
 
 
