@@ -35,13 +35,16 @@ end
 
 PRO FINDSTARS, field_nr, chip_nr
 
-field_nr = 3
-chip_nr = 4
+field_nr = 9
+;~ chip_nr = 1
 band = 'H'
 
-data_path = '/data/GNS/2015/'+band+'/' + strn(field_nr) + '/ims/'
-out_path = '/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
-tmp_path = '/data/GNS/2015/'+band+'/' + strn(field_nr) + '/tmp/'
+data_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/ims/'
+out_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) +  '/data/'
+tmp_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) +  '/tmp/'
+;~ data_path = '/data/GNS/2015/'+band+'/' + strn(field_nr) + '/ims/'
+;~ out_path = '/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
+;~ tmp_path = '/data/GNS/2015/'+band+'/' + strn(field_nr) + '/tmp/'
 
 
 ; Find stars in images of each Chip
@@ -77,11 +80,13 @@ guide_y = ""
 
 for i_chip = chip_nr, chip_nr do begin
   chip_nr = strn(i_chip)
-  im = readfits(data_path + 'lnx_jitter_' + strn(i_chip)+ '.fits.gz')
+  im = readfits(data_path + 'lnx_jitter_' + strn(i_chip)+ '.fits')
+  ;~ im = readfits(data_path + 'lnx_jitter_' + strn(i_chip)+ '.fits.gz')
   sz = size(im)
   n1 = sz[1]
   n2 = sz[2]
-  noise = readfits(data_path + 'lnx_jitter_' + strn(i_chip)+ '_sig.fits.gz')
+  noise = readfits(data_path + 'lnx_jitter_' + strn(i_chip)+ '_sig.fits')
+  ;~ noise = readfits(data_path + 'lnx_jitter_' + strn(i_chip)+ '_sig.fits.gz')
 
  ; choose PSF reference stars
  ; --------------------------
@@ -144,7 +149,8 @@ for i_chip = chip_nr, chip_nr do begin
 ; -----------------------------
 ;   writefits, tmp_path + 'im' + '_' + chip_nr + '.fits' , im
 ;   writefits, data_path + 'resid' + '_' + chip_nr + '.fits' , im - stars, /COMPRESS
-   writefits, data_path + 'stars' + '_' + chip_nr + '.fits' , stars, /COMPRESS
+   ;~ writefits, data_path + 'stars' + '_' + chip_nr + '.fits' , stars
+   ;~ writefits, data_path + 'stars' + '_' + chip_nr + '.fits' , stars, /COMPRESS
 ;   dat = ptr_new({X_size: 20, Y_size: 20, Sigma_x: 1.5, Sigma_y: 1.5, Angle: 0.0})
 ;   map = image_model(x,y,f,n1,n2,'gaussian', dat)
  ;  writefits, data_path + 'map' + '_' + chip_nr + '.fits', map, /COMPRESS
