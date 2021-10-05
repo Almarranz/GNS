@@ -1,9 +1,7 @@
 # GNS 2
-############################
+### on branch: unwid
 
-on branch: unwid
 
-############################
 scripts GNS
 1. dark.pro
 2. Create flat
