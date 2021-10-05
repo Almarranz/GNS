@@ -12,7 +12,7 @@ pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
 ;~ indir = '/data/GNS/2015/'+band+'/' + strn(field) + '/cubes/'
 ;~ outdir = '/data/GNS/2015/'+band+'/' + strn(field) + '/ims/'
-outdir=pruebas
+;~ outdir=pruebas
 ;~ indir=pruebas
 
 sz = size(cube)
