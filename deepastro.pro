@@ -1,11 +1,14 @@
 PRO DEEPASTRO
 
-tmpdir = 'tmp/'
-dir = './'
+tmpdir = './Fields/tmp/'
+dir = './Fields/'
+;~ tmpdir = 'tmp/'
+;~ dir = './'
 ZP = 23.171
-innam = 'Field10'
+innam = 'Field9'
 
-im = readfits(dir + innam + '.fits.gz',header)
+im = readfits(dir + innam + '.fits',header)
+;~ im = readfits(dir + innam + '.fits.gz',header)
 EXTAST, header, astr
 ZP = SXPAR(header,'PHOTZP')
 print, 'Zero Point: ' + strn(ZP)
@@ -22,7 +25,6 @@ noise[*,*] = 3.0 ; very roughly estimated by eye
 
 psf = readfits(dir + innam + '_psf.fits')
 psf = psf/total(psf)   ; normalize PSF
-
 ; Settings for StarFinder you are most likely to 
 ; want to play with
 ; these parameters apply to the final StarFinder run
@@ -62,9 +64,13 @@ guide_y = ""
       	x, y, f, sx, sy, sf, c, STARS = stars, $
         LOGFILE = logfilename, /CUBIC
 
-  writefits, dir + innam + '_stars.fits', stars, /COMPRESS
-  writefits, dir + innam + '_bg.fits', background, /COMPRESS
-  writefits, dir + innam + '_resid.fits', im-stars-background, /COMPRESS
+  writefits, dir + innam + '_stars.fits', stars
+  writefits, dir + innam + '_bg.fits', background
+  writefits, dir + innam + '_resid.fits', im-stars-background
+
+  ;~ writefits, dir + innam + '_stars.fits', stars, /COMPRESS
+  ;~ writefits, dir + innam + '_bg.fits', background, /COMPRESS
+  ;~ writefits, dir + innam + '_resid.fits', im-stars-background, /COMPRESS
 
   sigma_gauss = fwhm(psf)/2.355 ; compute standard deviation of Gaussian corresponding to PSF
   dat = ptr_new({X_size: 10, Y_size: 10, Sigma_x: sigma_gauss, Sigma_y: sigma_gauss, Angle: 0.0})
