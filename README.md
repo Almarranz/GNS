@@ -1,5 +1,4 @@
 # GNS 2
-=============
 ############################
 
 on branch: unwid
@@ -30,5 +29,11 @@ in dejitter.pro. the x_off y_off WASN'T applied to the masks. I changed it.
 10. longexposure.pro
 11. findstars.pro
 12.
+---
+* prep_refim.pro
+* extarctpsf.pro
+* deepastro.pro
+---
+
 
 
