@@ -15,9 +15,9 @@ scripts GNS
 ----------------------------------
 Here I added an extra script: erase_frames.pro
 Erases bad frames and there fore transfor the cubes thrid dimension.
-----------------------------------
+___
 8. makecubes.pro (little change).
-----------------------------------
+___
 Here I added an extra script: avrg_frames.pro 
 Last frme of cubes which had bad frames (erased) is not the average anymore. This scripts makes the average of last frames. 
 Should I make average for only those cubes from  which I erased some frames and left the original ones untouched??
