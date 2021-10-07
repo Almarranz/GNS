@@ -41,14 +41,15 @@ ysize_quad = 2700
 ;~ ysize_quad = 1500
 
 ;~ rot_angle = 0 ; manually estimated angle of rotation between HAWK-I observations and VVV field
-rot_angle = -0.40 * !PI/180. ; manually estimated angle of rotation between HAWK-I observations and VVV field
+rot_angle = 0.40 * !PI/180. ; manually estimated angle of rotation between HAWK-I observations and VVV field
 
 ; --------------------------------------------------------------------
-
+VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
 im_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/ims/'
 data_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/data/'
 tmp_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/tmp/'
-ref_file =  '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/scripts/GNS/'+'Fields/Field' + strn(field_nr) + '_stars.txt'
+ref_file =  VVV +'/H/Fields/Field' + strn(field_nr) + '_stars.txt'
+
 ;~ im_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/ims/'
 ;~ data_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
 ;~ tmp_path = '/home/data/GNS/2018/'+band+'/' + strn(field_nr) + '/tmp/'

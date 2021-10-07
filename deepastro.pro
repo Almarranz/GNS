@@ -1,13 +1,15 @@
 PRO DEEPASTRO
 
-tmpdir = './Fields/tmp/'
-dir = './Fields/'
+;~ tmpdir = './Fields/tmp/'
+;~ dir = './Fields/'
+VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
+tmpdir = VVV+'/Fields/H/tmp/'
 ;~ tmpdir = 'tmp/'
 ;~ dir = './'
 ZP = 23.171
 innam = 'Field9'
 
-im = readfits(dir + innam + '.fits',header)
+im = readfits(VVV+'/Fields/H/'+ innam + '.fits',header)
 ;~ im = readfits(dir + innam + '.fits.gz',header)
 EXTAST, header, astr
 ZP = SXPAR(header,'PHOTZP')
@@ -23,7 +25,7 @@ noise = im
 ;noise[*,*] = sigma
 noise[*,*] = 3.0 ; very roughly estimated by eye
 
-psf = readfits(dir + innam + '_psf.fits')
+psf = readfits(VVV+'/Fields/H/' + innam + '_psf.fits')
 psf = psf/total(psf)   ; normalize PSF
 ; Settings for StarFinder you are most likely to 
 ; want to play with
@@ -64,9 +66,9 @@ guide_y = ""
       	x, y, f, sx, sy, sf, c, STARS = stars, $
         LOGFILE = logfilename, /CUBIC
 
-  writefits, dir + innam + '_stars.fits', stars
-  writefits, dir + innam + '_bg.fits', background
-  writefits, dir + innam + '_resid.fits', im-stars-background
+  writefits, VVV+'/Fields/H/' + innam + '_stars.fits', stars
+  writefits, VVV+'/Fields/H/' + innam + '_bg.fits', background
+  writefits, VVV+'/Fields/H/' + innam + '_resid.fits', im-stars-background
 
   ;~ writefits, dir + innam + '_stars.fits', stars, /COMPRESS
   ;~ writefits, dir + innam + '_bg.fits', background, /COMPRESS
@@ -75,13 +77,13 @@ guide_y = ""
   sigma_gauss = fwhm(psf)/2.355 ; compute standard deviation of Gaussian corresponding to PSF
   dat = ptr_new({X_size: 10, Y_size: 10, Sigma_x: sigma_gauss, Sigma_y: sigma_gauss, Angle: 0.0})
   im = image_model(x,y,f,n1,n2,'gaussian', dat)
-  writefits, dir + innam + '_map.fits', im
+  writefits, VVV+'/Fields/H/' + innam + '_map.fits', im
 
 
   ; Calibrate and save list
   ; select stars in region with more than covfrac coverage
   nstars = n_elements(f)
-  openw, outp, dir + innam + '_stars.txt', /get_lun
+  openw, outp, VVV+'/Fields/H/' + innam + '_stars.txt', /get_lun
   m = ZP - 2.5*alog10(f)
   sm = 2.5/alog(10.) * sf/f
   XY2AD, x, y, astr, a, d
