@@ -48,7 +48,7 @@ VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
 im_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/ims/'
 data_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/data/'
 tmp_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/tmp/'
-ref_file =  VVV +'/H/Fields/Field' + strn(field_nr) + '_stars.txt'
+ref_file =  VVV +'/Fields/H/Field' + strn(field_nr) + '_stars.txt'
 
 ;~ im_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/ims/'
 ;~ data_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
@@ -56,8 +56,8 @@ ref_file =  VVV +'/H/Fields/Field' + strn(field_nr) + '_stars.txt'
 ;~ ref_file = '/home/data/VVV/ForHAWKI/J/Fields/Field' + strn(field_nr) + '_stars.txt'
 
 ; mark stars Y/N
-;~ markstars = 1
-markstars = 0
+markstars = 1
+;~ markstars = 0
 
 ; VVV --> HAWKI
 scale = 0.34/0.106
