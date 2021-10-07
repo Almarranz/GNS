@@ -35,9 +35,10 @@ raw_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/'+ band+'/Field/'+field+'/'
 readcol, raw_path + list, names, FORMAT='A'
 im = readfits(raw_path + names[0], header)
 
-; get offset from original pointing )
-x_off = strsplit(header[615],' ', /extract)
-y_off = strsplit(header[616],' ', /extract) 
+; get offset from original (0,0) pointing ) in arcsec, NO  in PIXELs.
+x_off = strsplit(header[613],' ', /extract)
+y_off = strsplit(header[614],' ', /extract) 
+
 ;~ x_off = strsplit(header[425],' ', /extract)
 ;~ y_off = strsplit(header[426],' ', /extract) 
 x_off = float(x_off[5])
@@ -60,11 +61,15 @@ AD2XY, alpha, delta, astr, x_cen, y_cen
 
 
 x0 = round(x_cen - x_vvv/2.)
+
 x1 = x0 + x_vvv - 1
 ; Some fields are at eastern edge of b333
 ; this needs to be taken care of
 x0_expand = 0
 if (x0 lt 0) then begin
+  print, '       ######'
+  print, 'Field east of VVV tile'
+  print, '       ######'
   x0_expand = abs(x0)
   x0 = 0
   tmpim = fltarr(x_vvv,y_vvv)
@@ -80,14 +85,20 @@ hextract, vvvim, vvvhdr, refim, refhdr, x0, x1, y0, y1
 ; Careful: The following Will screw up header astrometry.
 if (x0_expand gt 0) then begin
   tmpim[x0_expand:x_vvv-1,*] = refim[*,*]
+  refim = tmpim ;I did put all this inside the loop
+  SXADDPAR, refhdr, 'BITPIX', 32
+  crpix1 = SXPAR(refhdr, 'CRPIX1')
+  crpix1 = crpix1 + x0_expand
+  SXADDPAR, refhdr, 'CRPIX1', crpix1
+  refim = float(refim)
 endif
 
-;~ refim = tmpim ;I have commented this line cause it stop the runing. I think it belongs to inside the If loop...
-SXADDPAR, refhdr, 'BITPIX', 32
-crpix1 = SXPAR(refhdr, 'CRPIX1')
-crpix1 = crpix1 + x0_expand
-SXADDPAR, refhdr, 'CRPIX1', crpix1
-refim = float(refim)
+;~ refim = tmpim ;I have commented this line cause it stop the runing. I think it belongs inside the If loop...
+;~ SXADDPAR, refhdr, 'BITPIX', 32
+;~ crpix1 = SXPAR(refhdr, 'CRPIX1')
+;~ crpix1 = crpix1 + x0_expand
+;~ SXADDPAR, refhdr, 'CRPIX1', crpix1
+;~ refim = float(refim)
 writefits, 'Fields/Field' + strn(field) + '.fits', refim, refhdr
 ;~ writefits, 'Field' + strn(field) + '.fits.gz', refim, refhdr, /COMPRESS
 

@@ -1,4 +1,4 @@
-PRO ALIGNQUADRANTS
+PRO ALIGNQUADRANTS,chip
 
 ; PURPOSE: Use one (to a few, one is usually sufficient) reference stars per quadrant for a
 ; pre-alignment with VVV. Then search for more stars and refine the
@@ -11,12 +11,13 @@ PRO ALIGNQUADRANTS
 ; size of VVV reference image
 ; This is the printed output  the end of prep_refim.pro
 xsize_ref = 1453
-ysize_ref = 655
+ysize_ref = 1453
+;~ ysize_ref = 655
 
-chip = 4
+;~ chip = 1      
 chip_nr = strn(chip)
 band = 'H'
-field_nr = 10
+field_nr = 9
 
 ; ----------------CAN BE EDITED, but USUALLY NOT NECESSARY ----------
  
@@ -24,29 +25,38 @@ field_nr = 10
 ; To create small aligned longexposure images
 ; So that we can cut away the unnecessary zeros around the images.
 xs = 2400
-ys = 1200
+ys = 2400
+;~ ys = 1200
 ; Approximate offsets of fields within aligned HAWK-I frame
 ; These offsets can be seen inside the 
 ; images lnx_jitter_?_aligned.fits.gz
 ; that are being produced by this script
 x_off = [0,2200,2200,0]
-y_off = [50,50,900,900]
+y_off = [0,2200,2200,0]
+;~ y_off = [50,50,900,900]
 
 ; size of dejittered HAWK-I long exposures
 xsize_quad = 2700
-ysize_quad = 1500
+ysize_quad = 2700
+;~ ysize_quad = 1500
 
-rot_angle = 0.4 * !PI/180. ; manually estimated angle of rotation between HAWK-I observations and VVV field
+;~ rot_angle = 0 ; manually estimated angle of rotation between HAWK-I observations and VVV field
+rot_angle = -0.40 * !PI/180. ; manually estimated angle of rotation between HAWK-I observations and VVV field
 
 ; --------------------------------------------------------------------
 
-im_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/ims/'
-data_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
-tmp_path = '/home/data/GNS/2018/'+band+'/' + strn(field_nr) + '/tmp/'
-ref_file = '/home/data/VVV/ForHAWKI/J/Fields/Field' + strn(field_nr) + '_stars.txt'
+im_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/ims/'
+data_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/data/'
+tmp_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/tmp/'
+ref_file =  '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/scripts/GNS/'+'Fields/Field' + strn(field_nr) + '_stars.txt'
+;~ im_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/ims/'
+;~ data_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
+;~ tmp_path = '/home/data/GNS/2018/'+band+'/' + strn(field_nr) + '/tmp/'
+;~ ref_file = '/home/data/VVV/ForHAWKI/J/Fields/Field' + strn(field_nr) + '_stars.txt'
 
 ; mark stars Y/N
-markstars = 1
+;~ markstars = 1
+markstars = 0
 
 ; VVV --> HAWKI
 scale = 0.34/0.106
@@ -58,7 +68,19 @@ xsize_final = round(xsize_ref * scale)
 ysize_final = round(ysize_ref * scale)
 
 ; Read list of reference stars
-readcol, ref_file, x_ref, y_ref, a_ref, d_ref, m_ref, sx_ref, sy_ref, sm_ref, c
+readcol, ref_file, x_ref, y_ref, a_ref, d_ref, m_ref, sx_ref, sy_ref, sm_ref, c, Format = 'A,A,A,A,A,A,A,A,A'
+
+
+x_ref=float(x_ref)
+y_ref=float(y_ref)
+a_ref=float(a_ref)
+d_ref=float(d_ref)
+m_ref=float(m_ref)
+sx_ref=float(sx_ref)
+sy_ref=float(sy_ref)
+sm_ref=float(sm_ref)
+c=float(c)
+
 
 ; scale ref pixel scale
 ; -----------------------------
@@ -77,28 +99,78 @@ if (markstars gt 0) then begin
   f_ref = 10^(-0.4*m_ref)
   RETURNMARKED, xsize_ref, ysize_ref, x_ref, y_ref, f_ref, XM = xm_ref, YM = ym_ref, FM = fm_ref, BOXSIZE = 21, dmax = 2.0, g_sigma = 2.0, DISP_STRETCH='linear', DISP_LARGE=1, DISPRAN=[0,1]
   SAVE, xm_ref, ym_ref, FILENAME=data_path + 'Refstars_VVV_' + chip_nr
+  print,'#########################'
+  print,'xm_ref,ym_fer',xm_ref, ym_ref
+  print,'#########################'
  endif
 
  RESTORE, data_path + 'Refstars_VVV_' + strn(chip_nr)
 ; stop
+if (markstars gt 0) then begin
  xm_ref = xm_ref * scale
  ym_ref = ym_ref * scale
-
+endif
  ; now mark HAWK-I stars
- readcol, data_path + 'stars_' + chip_nr + '.txt', x, y, f
+ readcol, data_path + 'stars_' + chip_nr + '.txt', x, y, f, Format='A,A,A'
+ x=float(x)
+ y=float(y)
+ f=float(f)
  if (markstars gt 0) then begin
   RETURNMARKED, xsize_quad, ysize_quad, x, y, f, XM = xm, YM = ym, FM = fm, BOXSIZE = 21, dmax = 2., g_sigma = 3.0, DISP_STRETCH='logarithm', DISP_LARGE=1, DISPRAN=[0.001,1]
   SAVE, xm, ym, FILENAME=data_path + 'Refstars_HAWKI_' + chip_nr
+  print,'#########################'
+  print,'xm,ym',xm, ym
+  print,'#########################'
  endif
  RESTORE, data_path + 'Refstars_HAWKI_' + strn(chip_nr)
 
  ; preliminary offset and rotation
  ; -------------------------------
+if (markstars eq 0) then begin; I found this coordinates by comparing the imges on DS9
+
+  xm_ref1=1313.44     
+  ym_ref1= 582.606
+  xm_ref1= xm_ref * scale
+  ym_ref1 = ym_ref * scale
+  xm1=2148.51      
+  ym1=1830.81
+  
+  xoff1=  xm_ref1 - xm1
+  yoff1 = ym_ref1 - ym1
+  
+  xm_ref2=1324 
+  ym_ref2= 534
+  xm_ref2= xm_ref * scale
+  ym_ref2 = ym_ref * scale
+  xm2=     2177
+  ym2=1670
+  
+  xoff2=  xm_ref2 - xm2
+  yoff2 = ym_ref2 - ym2
+  
+  
+  xm_ref3=1214   
+  ym_ref3= 588
+  xm_ref3= xm_ref * scale
+  ym_ref3 = ym_ref * scale
+  xm3=     1828
+  ym3= 1854
+  
+  xoff3=  xm_ref3 - xm3
+  yoff3 = ym_ref3 - ym3
+  
+  xoff=median([xoff1,xoff2,xoff3]); it seems works better with median than with mean
+  yoff=median([yoff1,yoff2,yoff3])
+  
+endif
+
 
  xm = xm * cos(rot_angle) - ym * sin(rot_angle)
  ym = xm * sin(rot_angle) + ym * cos(rot_angle)
- if (n_elements(xm) gt 1) then xoff = median(xm_ref - xm) else xoff = xm_ref - xm
- if (n_elements(ym) gt 1) then yoff = median(ym_ref - ym) else yoff = ym_ref - ym
+ if (markstars eq 1) then begin 
+	if (n_elements(xm) gt 1) then xoff = median(xm_ref - xm) else xoff = xm_ref - xm
+	if (n_elements(ym) gt 1) then yoff = median(ym_ref - ym) else yoff = ym_ref - ym
+ endif
  xi = x * cos(rot_angle) - y * sin(rot_angle)
  yi = x * sin(rot_angle) + y * cos(rot_angle)
  xi = xi + xoff
@@ -120,7 +192,8 @@ if (markstars gt 0) then begin
  ; iterative degree 1 alignment
  ; ------------------------------
 
- for it = 1, 10 do begin
+ for it = 1, 5 do begin
+ ;~ for it = 1, 10 do begin
   degree = 1
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
   print, Kx
@@ -137,7 +210,8 @@ endfor
  ; ------------------------------
 
  print, 'Now Degree 2 alignment.'
- for it = 1, 10 do begin
+ for it = 1, 5 do begin
+ ;~ for it = 1, 10 do begin
   degree = 2
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
   print, Kx
@@ -165,35 +239,45 @@ endfor
  ; later problems with division by small numbers
  ; ---------------------------------------------
 
- im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits.gz')
+ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits')
+ ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits.gz')
  transim = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
 ; transim = transim * transmask
- writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_wt.fits.gz', transim, /COMPRESS
+ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_wt.fits', transim
+ ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_wt.fits.gz', transim, /COMPRESS
 
- im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits.gz')
+ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits')
+ ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits.gz')
  transim = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
 ; transim = transim * transmask
- writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned.fits.gz', transim, /COMPRESS
+ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned.fits', transim
+ ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned.fits.gz', transim, /COMPRESS
 
  transim_im = transim
 
- im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_sig.fits.gz')
+ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_sig.fits')
+ ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_sig.fits.gz')
  transim = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0 )
 ; transim = transim * transmask
- writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_sig.fits.gz', transim, /COMPRESS
+ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_sig.fits', transim
+ ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_sig.fits.gz', transim, /COMPRESS
  
  transim_noise = transim
 
  ; to check alignment with VVV, create
  ; a transformed image inside the VVV frame of reference
  polywarp,   x[subc2], y[subc2], x_ref[subc1], y_ref[subc1], degree, Kx, Ky
- im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits.gz')
+ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits')
+ ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits.gz')
  transim = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
- writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV.fits.gz', transim, /COMPRESS
+ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV.fits', transim
+ ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV.fits.gz', transim, /COMPRESS
 
- im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits.gz')
+ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits')
+ ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits.gz')
  transim = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
- writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV_wt.fits.gz', transim, /COMPRESS
+ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV_wt.fits', transim
+ ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV_wt.fits.gz', transim, /COMPRESS
  
 
 ; Now cut out the aligned HAWK-I images from the large frames to get
@@ -210,8 +294,10 @@ lnx_noise = transim_noise[xlo:xhi,ylo:yhi]
  
  
  
-writefits, data_path + 'lnx_aligned_' + chip_nr + '.fits.gz', lnx, /COMPRESS
-writefits, data_path + 'lnx_aligned_' + chip_nr + '_sig.fits.gz', lnx_noise, /COMPRESS
+writefits, data_path + 'lnx_aligned_' + chip_nr + '.fits', lnx
+writefits, data_path + 'lnx_aligned_' + chip_nr + '_sig.fits', lnx_noise
+;~ writefits, data_path + 'lnx_aligned_' + chip_nr + '.fits.gz', lnx, /COMPRESS
+;~ writefits, data_path + 'lnx_aligned_' + chip_nr + '_sig.fits.gz', lnx_noise, /COMPRESS
 
 
 ;To have an idea of the displacement that we have, we take the initial list and the corrected one to see the difference in positions.
