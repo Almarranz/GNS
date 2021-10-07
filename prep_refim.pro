@@ -2,7 +2,7 @@ PRO PREP_REFIM, field
 
 field = strn(field)
 band = 'H'
-
+VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
 ; Determine FoV
 ; We assume 60"  jitter window for all observations, even
 ; though the 2015 observations were done with a 30" jitter
@@ -54,7 +54,7 @@ delta = crval2 - y_off
 
 
 ;~ vvvim = readfits('GC_VVV_J.fits',vvvhdr) ; load b333 from VVV
-vvvim = readfits('GC_VVV_H.fits',vvvhdr) ; load b333 from VVV
+vvvim = readfits(VVV+'GC_VVV_H.fits',vvvhdr) ; load b333 from VVV
 ;~ vvvim = readfits('GC_VVV_' + band + '.fits',vvvhdr) ; load b333 from VVV
 ;~ vvvim = readfits('../GC_VVV_' + band + '.fits.gz',vvvhdr) ; load b333 from VVV
 EXTAST, vvvhdr, astr
@@ -100,7 +100,7 @@ endif
 ;~ crpix1 = crpix1 + x0_expand
 ;~ SXADDPAR, refhdr, 'CRPIX1', crpix1
 ;~ refim = float(refim)
-writefits, 'Fields/Field' + strn(field) + '.fits', refim, refhdr
+writefits, VVV+'Fields/H/Field' + strn(field) + '.fits', refim, refhdr
 ;~ writefits, 'Field' + strn(field) + '.fits.gz', refim, refhdr, /COMPRESS
 
 print, 'Size of reference image: ' + strn(x_vvv)  + ' x '+ strn(y_vvv)
