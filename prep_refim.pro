@@ -53,7 +53,8 @@ alpha = crval1 - x_off
 delta = crval2 - y_off
 
 
-vvvim = readfits('GC_VVV_J.fits',vvvhdr) ; load b333 from VVV
+;~ vvvim = readfits('GC_VVV_J.fits',vvvhdr) ; load b333 from VVV
+vvvim = readfits('GC_VVV_H.fits',vvvhdr) ; load b333 from VVV
 ;~ vvvim = readfits('GC_VVV_' + band + '.fits',vvvhdr) ; load b333 from VVV
 ;~ vvvim = readfits('../GC_VVV_' + band + '.fits.gz',vvvhdr) ; load b333 from VVV
 EXTAST, vvvhdr, astr
