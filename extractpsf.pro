@@ -1,12 +1,13 @@
 PRO EXTRACTPSF
 
-tmpdir = './Fields/tmp/'
-dir = './Fields/'
+
+VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
+tmpdir = VVV+'/Fields/H/tmp/'
 ;~ dir = './'
 ZP = 23.171
-innam = 'Field9'
-
-im = readfits(dir + innam + '.fits',header)
+innam = 'Field9' ; chose the field you are working with
+;Edit the pathn depending on which tile of VVV you want to use H or J
+im = readfits(VVV+'Fields/H/' + innam + '.fits',header)
 ;~ im = readfits(dir + innam + '.fits.gz',header)
 ZP = SXPAR(header,'PHOTZP')
 print, 'Zero Point: ' + strn(ZP)
@@ -264,7 +265,7 @@ print, 'Found  '+ strn(n_ref) + ' supported, unsaturated and isolated reference 
  dat = ptr_new({X_size: 40, Y_size: 40, Sigma_x: 2., Sigma_y: 2., Angle: 0.0})
  refstars = image_model(x_psf,y_psf,f_psf,n1,n2,'gaussian', dat)
  writefits, tmpdir + 'refstars.fits', refstars
- forprint, TEXTOUT= dir + innam + '_psfstars.txt', x_psf, y_psf, m_psf, /NOCOMMENT
+ forprint, TEXTOUT= VVV+'Fields/H/' + innam + '_psfstars.txt', x_psf, y_psf, m_psf, /NOCOMMENT
 
  print
  print, 'Magnitudes of reference stars: '
@@ -287,7 +288,7 @@ print, 'Found  '+ strn(n_ref) + ' supported, unsaturated and isolated reference 
   psf = psf_masked  
   writefits, tmpdir + 'tmppsf_masked.fits', psf  
   psf = psf/total(psf)  ; normalization of PSF
-  writefits, dir + innam + '_psf.fits', psf
+  writefits, VVV+'Fields/H/' + innam + '_psf.fits', psf
 
 
 END
