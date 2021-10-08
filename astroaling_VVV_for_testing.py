@@ -115,14 +115,15 @@ for i in range(1,3):
 
 
 distancia=1
+q=1#choose the chip(quadrant) do you want to align
 for loop in range(5):
     diff=[]
-    for i in range(len(vvv_chip1)):
+    for i in range(len(dic_vvv['vvv_c%s'%(q)])):
     #compara las distancia entre los puntos y guarda las menores que a, si hay mas de dos puntos con distancias menores que a, guarda la más perqueña
-        dist=distance.cdist(vvv_chip1[i:i+1,0:2],gns_new[:,0:2], 'euclidean')
+        dist=distance.cdist(dic_vvv['vvv_c%s'%(q)][i:i+1,0:2],dic_gns['gns_c%s'%(q)][:,0:2], 'euclidean')
         d=np.where(dist<distancia)
         if len(d[1])>0:
-            diff.append((vvv_chip1[i],gns_new[d[1][np.argmin(dist[d])]]))
+            diff.append((dic_vvv['vvv_c%s'%(q)][i],dic_gns['gns_c%s'%(q)][d[1][np.argmin(dist[d])]]))
     print('Common stars %s'%(len(diff)))           
     x1=[]
     y1=[]
@@ -144,12 +145,12 @@ for loop in range(5):
     degree=1
     Kx,Ky=polywarp(x1,y1,x2,y2,degree=degree)
     #print(Kx[0,0])
-    xi=np.zeros(len(gns_new))
-    yi=np.zeros(len(gns_new))
+    xi=np.zeros(len(dic_gns['gns_c%s'%(q)]))
+    yi=np.zeros(len(dic_gns['gns_c%s'%(q)]))
     x=[]
     y=[]
-    x=gns_new[:,0]
-    y=gns_new[:,1]
+    x=dic_gns['gns_c%s'%(q)][:,0]
+    y=dic_gns['gns_c%s'%(q)][:,1]
     x=np.array(x)
     y=np.array(y)
     #for k in range(degree+1):
@@ -160,8 +161,8 @@ for loop in range(5):
         for m in range(degree+1):
             xi=xi+Kx[k,m]*x**k*y**m
             yi=yi+Ky[k,m]*x**k*y**m
-    gns_new[:,0]=xi
-    gns_new[:,1]=yi
+    dic_gns['gns_c%s'%(q)][:,0]=xi
+    dic_gns['gns_c%s'%(q)][:,1]=yi
     '''
     diff=[]
     im_a=1
