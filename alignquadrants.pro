@@ -41,7 +41,7 @@ ysize_quad = 2700
 ;~ ysize_quad = 1500
 
 ;~ rot_angle = 0 ; manually estimated angle of rotation between HAWK-I observations and VVV field
-rot_angle = 0.40 * !PI/180. ; manually estimated angle of rotation between HAWK-I observations and VVV field
+rot_angle = 1.507 * !PI/180. ; manually estimated angle of rotation between HAWK-I observations and VVV field
 
 ; --------------------------------------------------------------------
 VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
@@ -180,10 +180,17 @@ endif
  x0 = xi
  y0 = yi
  
-
+print,'#########################'
+print,'xoff,yoff',xoff, yoff
+print,'#########################'
 ; dat = ptr_new({X_size: 20, Y_size: 20, Sigma_x: 1.5, Sigma_y: 1.5, Angle: 0.0})
 ; map = image_model(xi,yi,f,xsize_quad,ysize_quad,'gaussian', dat)
 ; writefits, tmp_path + 'align_sources.fits', map
+
+chip1=where((x_ref_scaled lt 727*scale) and (y_ref_scaled lt 727*scale)); makes interations faster. But it'll screw the lxs VVV imaging...
+x_ref_scaled=x_ref_scaled[chip1]
+y_ref_scaled=y_ref_scaled[chip1]
+
 
  dmax = 1.0
  compare_lists, x_ref_scaled, y_ref_scaled, xi, yi, x1c, y1c, x2c, y2c, MAX_DISTANCE=dmax, SUBSCRIPTS_1=subc1, SUBSCRIPTS_2 = subc2, SUB1 = sub1, SUB2 = sub2
@@ -193,7 +200,14 @@ endif
  ; iterative degree 1 alignment
  ; ------------------------------
 
- for it = 1, 5 do begin
+  lim_it = 2
+  count=0
+  comm=[]
+  it=0
+  lim_it=2
+	 
+  while count lt lim_it do begin
+  it=it+1
  ;~ for it = 1, 10 do begin
   degree = 1
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
@@ -205,7 +219,16 @@ endif
   nc = n_elements(subc1)
   print, 'Iteration ' + strn(it)
   print, 'Found ' + strn(nc) + ' common stars.'
-endfor
+  comm=[comm,nc]
+    if (n_elements(comm) gt 2) then begin
+	   if comm[-2] eq comm[-1] then begin
+	   count=count+1
+	   endif else begin
+	   count=0
+	   endelse
+	endif
+  endwhile
+;~ endfor
 ;STOP
  ; iterative degree 2 alignment
  ; ------------------------------
