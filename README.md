@@ -26,7 +26,6 @@ in dejitter.pro. the x_off y_off WASN'T applied to the masks. I changed it.
 ___
 10. longexposure.pro
 11. findstars.pro
-___
 12. This is step consists in three scripts. Only to be run once.
 * prep_refim.pro
 * extarctpsf.pro
