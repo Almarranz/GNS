@@ -1,7 +1,7 @@
 PRO AA_ALIGNQUADRANTS,chip
 
-; PURPOSE: Use one (to a few, one is usually sufficient) reference stars per quadrant for a
-; pre-alignment with VVV. Then search for more stars and refine the
+; PURPOSE: Loads the list for GNS stars already transfom with rotation and translation (python astroalign).
+; Then search for more stars and refine the
 ; alignment.
 ; 
 ; This script loops over the four quadrants for each pointing.
@@ -39,9 +39,9 @@ y_off = [0,2200,2200,0]
 xsize_quad = 2700
 ysize_quad = 2700
 ;~ ysize_quad = 1500
-
+scale=0.34/0.106
 ;~ rot_angle = 0 ; manually estimated angle of rotation between HAWK-I observations and VVV field
-rot_angle = 1.507 * !PI/180. ; manually estimated angle of rotation between HAWK-I observations and VVV field
+;rot_angle = 1.507 * !PI/180. ; manually estimated angle of rotation between HAWK-I observations and VVV field
 
 ; --------------------------------------------------------------------
 VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
@@ -49,6 +49,7 @@ im_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + st
 data_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/data/'
 tmp_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/tmp/'
 ref_file =  VVV +'/Fields/H/Field' + strn(field_nr) + '_stars.txt'
+pruebas='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
 ;~ im_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/ims/'
 ;~ data_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
@@ -81,22 +82,22 @@ y_ref_scaled = y_ref * scale
 ; Loop over four quadrants
 ; ------------------------
 
-  
-  
-
-
-  
-
-
+; now read transformed HAWK-I stars
+ readcol, pruebas + 'aa_stars_' + chip_nr + '.txt', x, y, f, Format='A,A,A'
+ ;~ readcol, data_path + 'stars_' + chip_nr + '.txt', x, y, f, Format='A,A,A'
+ x=float(x)
+ y=float(y)
+ f=float(f)
+ 
  dmax = 1.0
- compare_lists, x_ref_scaled, y_ref_scaled, xi, yi, x1c, y1c, x2c, y2c, MAX_DISTANCE=dmax, SUBSCRIPTS_1=subc1, SUBSCRIPTS_2 = subc2, SUB1 = sub1, SUB2 = sub2
+ compare_lists, x_ref_scaled, y_ref_scaled, x, y, x1c, y1c, x2c, y2c, MAX_DISTANCE=dmax, SUBSCRIPTS_1=subc1, SUBSCRIPTS_2 = subc2, SUB1 = sub1, SUB2 = sub2
  nc = n_elements(subc1)
  print, 'Found ' + strn(nc) + ' common stars.'
 
  ; iterative degree 1 alignment
  ; ------------------------------
 
-  lim_it = 2
+  lim_it = 1
   count=0
   comm=[]
   it=0
@@ -130,7 +131,14 @@ y_ref_scaled = y_ref * scale
  ; ------------------------------
 
  print, 'Now Degree 2 alignment.'
- for it = 1, 5 do begin
+ lim_it = 1
+  count=0
+  comm=[]
+  it=0
+  lim_it=2
+	 
+  while count lt lim_it do begin
+  it=it+1
  ;~ for it = 1, 10 do begin
   degree = 2
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
@@ -142,7 +150,16 @@ y_ref_scaled = y_ref * scale
   nc = n_elements(subc1)
   print, 'Iteration ' + strn(it)
   print, 'Found ' + strn(nc) + ' common stars.'
-endfor
+  comm=[comm,nc]
+    if (n_elements(comm) gt 2) then begin
+	   if comm[-2] eq comm[-1] then begin
+	   count=count+1
+	   endif else begin
+	   count=0
+	   endelse
+	endif
+  endwhile
+  ;~ endfor
 
  ; determine transformation parameters for image and save them
  ; for later use
