@@ -28,7 +28,7 @@ ___
 11. findstars.pro
 12. This is step consists in three scripts. Only to be run once.
 
------------------------------------------------------------------------
+============================================
 
 * prep_refim.pro
 * extarctpsf.pro
