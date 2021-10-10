@@ -40,8 +40,6 @@ xsize_quad = 2700
 ysize_quad = 2700
 ;~ ysize_quad = 1500
 scale=0.34/0.106
-;~ rot_angle = 0 ; manually estimated angle of rotation between HAWK-I observations and VVV field
-;rot_angle = 1.507 * !PI/180. ; manually estimated angle of rotation between HAWK-I observations and VVV field
 
 ; --------------------------------------------------------------------
 VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
@@ -82,7 +80,7 @@ y_ref_scaled = y_ref * scale
 ; Loop over four quadrants
 ; ------------------------
 
-; now read transformed HAWK-I stars
+; now read transformed HAWK-I stars list
  readcol, pruebas + 'aa_stars_' + chip_nr + '.txt', x, y, f, Format='A,A,A'
  ;~ readcol, data_path + 'stars_' + chip_nr + '.txt', x, y, f, Format='A,A,A'
  x=float(x)
@@ -101,7 +99,7 @@ y_ref_scaled = y_ref * scale
   count=0
   comm=[]
   it=0
-  lim_it=2
+  lim_it=2 ;cosider convergece when the number of common stars repeats 'lim_it' times.
 	 
   while count lt lim_it do begin
   it=it+1
