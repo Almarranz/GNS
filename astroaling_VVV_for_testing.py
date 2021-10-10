@@ -9,7 +9,7 @@ import astroalign as aa
 from astropy.io.fits import getheader
 from astropy.io import fits
 from scipy.spatial import distance
-
+import sys
 
 # In[12]:
 
@@ -21,7 +21,7 @@ VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/Fields/%s/'%(band)
 file ='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/%s/%s/ims/'%(band,field)
 GNS_stars= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/%s/%s/data/'%(band,field)
 scripts='/Users/amartinez/Desktop/PhD/HAWK/The_Brick/photometry/scripts/'
-
+pruebas='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 stream = open(scripts+'polywarp.py')
 read_file = stream.read()
 exec(read_file)
@@ -39,19 +39,21 @@ VVV_c1=VVV_all[0:round(x/2)-1,0:round(y/2)-1]
 # In[4]:
 
 
-p, (pos_img, pos_img_rot) = aa.find_transform(l_exp,VVV_c1,max_control_points=200
-                                             )
-print("\nTranslation: (x, y) = ({:.2f}, {:.2f})".format(*p.translation))
-print("Rotation: %.3f degrees"%(p.rotation * 180.0 / np.pi))
-print("Rotation: {:.3f} degrees".format(p.rotation * 180.0 / np.pi))
-print("\nScale factor: {:.4f}".format(p.scale))
+# p, (pos_img, pos_img_rot) = aa.find_transform(l_exp,VVV_c1,max_control_points=200
+#                                              )
+# print("\nTranslation: (x, y) = ({:.2f}, {:.2f})".format(*p.translation))
+# print("Rotation: %.3f degrees"%(p.rotation * 180.0 / np.pi))
+# print("Rotation: {:.3f} degrees".format(p.rotation * 180.0 / np.pi))
+# print("\nScale factor: {:.4f}".format(p.scale))
             
 
 
 # In[5]
 dic_gns={}
+dic_f={}
 for i in range(1,3):
     dic_gns['gns_c%s'%(i)]=np.loadtxt(GNS_stars+'stars_%s.txt'%(i),usecols=(0,1))
+    dic_f['f_c%s'%(i)]=np.loadtxt(GNS_stars+'stars_%s.txt'%(i),usecols=(2))
 # gns_s=np.loadtxt(GNS_stars+'stars_%s.txt'%(chip),usecols=(0,1))
 # gns_s2=np.loadtxt(GNS_stars+'stars_%s.txt'%(2),usecols=(0,1))
 
@@ -72,7 +74,6 @@ dic_vvv['vvv_c4']=vvv_s[chip4]*scale
 
 
 
-
 #%%
 # m,(_,_)= aa.find_transform(gns_s2,vvv_c2,max_control_points=200)
 # print('For chip%s'%(2)+'\n'+"Translation: (x, y) = (%.2f, %.2f)"%(m.translation[0],m.translation[1]))
@@ -83,18 +84,29 @@ dic_vvv['vvv_c4']=vvv_s[chip4]*scale
 # In[7]:
 
 for i in range(1,3):
-    m,(_,_)= aa.find_transform(dic_gns['gns_c%s'%(i)],dic_vvv['vvv_c%s'%(i)],max_control_points=450)
-    print('For chip%s'%(i)+'\n'+"Translation: (x, y) = (%.2f, %.2f)"%(m.translation[0],m.translation[1]))
-    print("Rotation: %.3f degrees"%(m.rotation * 180.0 / np.pi))
-    print("\nScale factor: %.4f"%(m.scale))
+    check_x,check_y=2,2
+    while abs(check_x) >1 or abs(check_y)>1  :
+        m,(_,_)= aa.find_transform(dic_gns['gns_c%s'%(i)],dic_vvv['vvv_c%s'%(i)],max_control_points=450)
+        print('For chip%s'%(i)+'\n'+"Translation: (x, y) = (%.2f, %.2f)"%(m.translation[0],m.translation[1]))
+        print("Rotation: %.3f degrees"%(m.rotation * 180.0 / np.pi))
+        print("Scale factor: %.4f"%(m.scale))
+        
+        test_gns = aa.matrix_transform(dic_gns['gns_c%s'%(i)], m.params)
+        
+        print(20*'#'+'\n'+'CHECKING'+'\n'+20*'#')
+        t,(_,_)= aa.find_transform(test_gns,dic_vvv['vvv_c%s'%(i)],max_control_points=450)
+        print("Translation: (x, y) = (%.2f, %.2f)"%(t.translation[0],t.translation[1]))
+        print("Rotation: %.3f degrees"%(t.rotation * 180.0 / np.pi))
+        print("Scale factor: %.4f"%(t.scale))
+        check_x= t.translation[0]
+        check_y= t.translation[1]
+        
+    print('___NOW TRANSFORMING GNS___')   
     dic_gns['gns_c%s'%(i)] = aa.matrix_transform(dic_gns['gns_c%s'%(i)], m.params)
-    print(20*'#'+'\n'+'CHECKING'+'\n'+20*'#')
-    t,(_,_)= aa.find_transform(dic_gns['gns_c%s'%(i)],dic_vvv['vvv_c%s'%(i)],max_control_points=450)
-    print("Translation: (x, y) = (%.2f, %.2f)"%(t.translation[0],t.translation[1]))
-    print("Rotation: %.3f degrees"%(t.rotation * 180.0 / np.pi))
-    print("\nScale factor: %.4f"%(t.scale))
-
-
+    dic_gns['gns_c%s'%(i)]=np.c_[dic_gns['gns_c%s'%(i)],dic_f['f_c%s'%(i)]]
+    np.savetxt(pruebas + 'aa_stars_%s.txt'%(i),dic_gns['gns_c%s'%(i)])
+print('Saliendo')
+sys.exit()
     # In[8]:
 
 # for i in range(1,3):
@@ -180,7 +192,7 @@ for loop in range(5):
 
 # In[ ]:
 
-
+dic_gns['gns_c%s'%(i)]=np.c_[dic_gns['gns_c%s'%(i)],dic_f['f_c%s'%(i)]]
 
 
 
