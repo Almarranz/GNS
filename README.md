@@ -27,7 +27,7 @@ ___
 10. longexposure.pro
 11. findstars.pro
 12. This is step consists in three scripts. Only to be run once.
-___
+---
 * prep_refim.pro
 * extarctpsf.pro
 * deepastro.pro
