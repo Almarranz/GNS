@@ -192,8 +192,6 @@ for loop in range(5):
 
 # In[ ]:
 
-dic_gns['gns_c%s'%(i)]=np.c_[dic_gns['gns_c%s'%(i)],dic_f['f_c%s'%(i)]]
-
 
 
 # In[14]:
