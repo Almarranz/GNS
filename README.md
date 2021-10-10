@@ -32,6 +32,9 @@ in dejitter.pro. the x_off y_off WASN'T applied to the masks. I changed it.
 * extarctpsf.pro
 * deepastro.pro
 ---
+13. alignquadrants.pro new verision. Instead of clinking on stars to figure out the x ,y displacement between list, run astroalign packge on GNS lits to get the transformation matrix, transfor the list and then align with poliwarp with VVV
+* astroaling_VVV_for_testing.py
+* aa_alignquadrants.pro
 
 
 
