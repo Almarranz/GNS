@@ -31,7 +31,7 @@ ___
 * deepastro.pro
 ___
 13. alignquadrants.pro new verision. Instead of clinking on stars to figure out the x ,y displacement between list, run astroalign packge on GNS lits to get the transformation matrix, transfor the list and then align with poliwarp with VVV
-* astroaling_VVV_for_testing.py
+* astroaling_VVV.py
 * aa_alignquadrants.pro
 ___
 
