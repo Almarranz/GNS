@@ -119,7 +119,7 @@ ysize_final = round(ysize_ref * scale)
   print, 'Found ' + strn(nc) + ' common stars.'
   comm=[comm,nc]
     if (n_elements(comm) gt 2) then begin
-	   if comm[-2] le comm[-1] then begin
+	   if comm[-2] ge comm[-1] then begin
 	   count=count+1
 	   endif else begin
 	   count=0
@@ -153,7 +153,7 @@ ysize_final = round(ysize_ref * scale)
   print, 'Found ' + strn(nc) + ' common stars.'
   comm=[comm,nc]
     if (n_elements(comm) gt 2) then begin
-	   if comm[-2] le comm[-1] then begin
+	   if comm[-2] ge comm[-1] then begin
 	   count=count+1
 	   endif else begin
 	   count=0
