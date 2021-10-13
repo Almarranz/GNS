@@ -76,12 +76,15 @@ c=float(c)
 x_ref_scaled = x_ref * scale
 y_ref_scaled = y_ref * scale
 
+xsize_final = round(xsize_ref * scale)
+ysize_final = round(ysize_ref * scale)
+
 ;stop
 ; Loop over four quadrants
 ; ------------------------
 
 ; now read transformed HAWK-I stars list
- readcol, pruebas + 'aa_stars_' + chip_nr + '.txt', x, y, f, Format='A,A,A'
+ readcol, data_path + 'aa_stars_' + chip_nr + '.txt', x, y, f, Format='A,A,A'
  ;~ readcol, data_path + 'stars_' + chip_nr + '.txt', x, y, f, Format='A,A,A'
  x=float(x)
  y=float(y)
@@ -99,7 +102,7 @@ y_ref_scaled = y_ref * scale
   count=0
   comm=[]
   it=0
-  lim_it=2 ;cosider convergece when the number of common stars repeats 'lim_it' times.
+  lim_it=1 ;cosider convergece when the number of common stars  'lim_it' times.
 	 
   while count lt lim_it do begin
   it=it+1
@@ -116,7 +119,7 @@ y_ref_scaled = y_ref * scale
   print, 'Found ' + strn(nc) + ' common stars.'
   comm=[comm,nc]
     if (n_elements(comm) gt 2) then begin
-	   if comm[-2] eq comm[-1] then begin
+	   if comm[-2] le comm[-1] then begin
 	   count=count+1
 	   endif else begin
 	   count=0
@@ -133,7 +136,7 @@ y_ref_scaled = y_ref * scale
   count=0
   comm=[]
   it=0
-  lim_it=2
+  
 	 
   while count lt lim_it do begin
   it=it+1
@@ -150,7 +153,7 @@ y_ref_scaled = y_ref * scale
   print, 'Found ' + strn(nc) + ' common stars.'
   comm=[comm,nc]
     if (n_elements(comm) gt 2) then begin
-	   if comm[-2] eq comm[-1] then begin
+	   if comm[-2] le comm[-1] then begin
 	   count=count+1
 	   endif else begin
 	   count=0
