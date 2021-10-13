@@ -32,7 +32,7 @@ ys = 2400
 ; images lnx_jitter_?_aligned.fits.gz
 ; that are being produced by this script
 x_off = [0,2200,2200,0]
-y_off = [0,2200,2200,0]
+y_off = [0,0,2200,2200]
 ;~ y_off = [50,50,900,900]
 
 ; size of dejittered HAWK-I long exposures
@@ -80,18 +80,20 @@ xsize_final = round(xsize_ref * scale)
 ysize_final = round(ysize_ref * scale)
 
 ;stop
-; Loop over four quadrants
-; ------------------------
-
-; now read transformed HAWK-I stars list
- readcol, data_path + 'aa_stars_' + chip_nr + '.txt', x, y, f, Format='A,A,A'
- ;~ readcol, data_path + 'stars_' + chip_nr + '.txt', x, y, f, Format='A,A,A'
+; now read 'original' HAWK-I stars. We need the original list for Kx, Ky 
+ readcol, data_path + 'stars_' + chip_nr + '.txt', x, y, f, Format='A,A,A'
  x=float(x)
  y=float(y)
  f=float(f)
+; now read transformed HAWK-I stars list
+ readcol, data_path + 'aa_stars_' + chip_nr + '.txt', xi, yi, fi, Format='A,A,A'
+ ;~ readcol, data_path + 'stars_' + chip_nr + '.txt', x, y, f, Format='A,A,A'
+ xi=float(xi)
+ yi=float(yi)
+ fi=float(fi)
  
  dmax = 1.0
- compare_lists, x_ref_scaled, y_ref_scaled, x, y, x1c, y1c, x2c, y2c, MAX_DISTANCE=dmax, SUBSCRIPTS_1=subc1, SUBSCRIPTS_2 = subc2, SUB1 = sub1, SUB2 = sub2
+ compare_lists, x_ref_scaled, y_ref_scaled, xi, yi, x1c, y1c, x2c, y2c, MAX_DISTANCE=dmax, SUBSCRIPTS_1=subc1, SUBSCRIPTS_2 = subc2, SUB1 = sub1, SUB2 = sub2
  nc = n_elements(subc1)
  print, 'Found ' + strn(nc) + ' common stars.'
 
@@ -106,7 +108,7 @@ ysize_final = round(ysize_ref * scale)
 	 
   while count lt lim_it do begin
   it=it+1
- ;~ for it = 1, 10 do begin
+ ;~ for it = 1, 3 do begin
   degree = 1
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
   print, Kx
@@ -140,7 +142,7 @@ ysize_final = round(ysize_ref * scale)
 	 
   while count lt lim_it do begin
   it=it+1
- ;~ for it = 1, 10 do begin
+ ;~ for it = 1, 3 do begin
   degree = 2
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
   print, Kx
