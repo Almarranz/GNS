@@ -187,9 +187,9 @@ print,'#########################'
 ; map = image_model(xi,yi,f,xsize_quad,ysize_quad,'gaussian', dat)
 ; writefits, tmp_path + 'align_sources.fits', map
 
-chip1=where((x_ref_scaled lt 727*scale) and (y_ref_scaled lt 727*scale)); makes interations faster. But it'll screw the lxs VVV imaging...
-x_ref_scaled=x_ref_scaled[chip1]
-y_ref_scaled=y_ref_scaled[chip1]
+;~ chip1=where((x_ref_scaled lt 727*scale) and (y_ref_scaled lt 727*scale)); makes interations faster. But it'll screw the lxs VVV imaging...
+;~ x_ref_scaled=x_ref_scaled[chip1]
+;~ y_ref_scaled=y_ref_scaled[chip1]
 
 
  dmax = 1.0
@@ -206,9 +206,9 @@ y_ref_scaled=y_ref_scaled[chip1]
   it=0
   lim_it=2
 	 
-  while count lt lim_it do begin
-  it=it+1
- ;~ for it = 1, 10 do begin
+  ;~ while count lt lim_it do begin
+  ;~ it=it+1
+ for it = 1, 5 do begin
   degree = 1
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
   print, Kx
