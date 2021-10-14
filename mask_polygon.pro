@@ -30,18 +30,16 @@ PRO mask_polygon, image, ds9reg, value = value
 
 field = '9'
 band = 'H'
-ds9reg='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/H/regions/mask_c4.reg'
-;~ mask_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
-;~ image=mask_path+ 'mask.fits
+ds9reg=     '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/H/regions/mask_c4.reg'
+mask_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
+image=readfits(mask_path+ 'mask.fits')
 
-pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
-image=readfits(pruebas +'mask.fits')
+;~ pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
+;~ image=readfits(pruebas +'mask.fits')
 
 IF n_elements(value) EQ 0 THEN value = 0.0
 imsize = size(image,/dimen)
-
-
-
+print,imsize
 
 openr, ds9, ds9reg, /get_lun
 string=''
@@ -111,6 +109,7 @@ skip:
 ENDWHILE  ; end of main loop
 free_lun, ds9
 
-writefits, pruebas+'new_mask.fits',image
+writefits,mask_path+'mask.fits',image
+;~ writefits,pruebas+'new_mask.fits',image
 
 END
