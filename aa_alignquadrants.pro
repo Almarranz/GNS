@@ -24,15 +24,19 @@ field_nr = 9
 
 ; To create small aligned longexposure images
 ; So that we can cut away the unnecessary zeros around the images.
-xs = 2400
-ys = 2400
+xs = 2500
+ys = 2500
+;~ xs = 2400
+;~ ys = 2400
 ;~ ys = 1200
 ; Approximate offsets of fields within aligned HAWK-I frame
 ; These offsets can be seen inside the 
 ; images lnx_jitter_?_aligned.fits.gz
 ; that are being produced by this script
-x_off = [0,2200,2200,0]
-y_off = [0,0,2200,2200]
+x_off = [0,2000,2000,0]
+y_off = [0,0,2000,2000]
+;~ x_off = [0,2200,2200,0]
+;~ y_off = [0,0,2200,2200]
 ;~ y_off = [50,50,900,900]
 
 ; size of dejittered HAWK-I long exposures
@@ -76,6 +80,8 @@ c=float(c)
 x_ref_scaled = x_ref * scale
 y_ref_scaled = y_ref * scale
 
+;~ xsize_final = round(xsize_ref * scale)+200
+;~ ysize_final = round(ysize_ref * scale)+200
 xsize_final = round(xsize_ref * scale)
 ysize_final = round(ysize_ref * scale)
 
@@ -108,7 +114,7 @@ ysize_final = round(ysize_ref * scale)
 	 
   while count lt lim_it do begin
   it=it+1
- ;~ for it = 1, 3 do begin
+ ;~ for it = 1, 1 do begin
   degree = 1
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
   print, Kx
@@ -142,7 +148,7 @@ ysize_final = round(ysize_ref * scale)
 	 
   while count lt lim_it do begin
   it=it+1
- ;~ for it = 1, 3 do begin
+ ;~ for it = 1, 1 do begin
   degree = 2
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
   print, Kx
@@ -181,40 +187,49 @@ ysize_final = round(ysize_ref * scale)
 
  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits')
  ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits.gz')
- transim = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
+ transim=fltarr(xsize_final+200,ysize_final+200)
+ 
+ ;~ transim= POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
+ transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
 ; transim = transim * transmask
  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_wt.fits', transim
+
  ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_wt.fits.gz', transim, /COMPRESS
 
  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits')
  ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits.gz')
- transim = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
+ transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
+ ;~ transim = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
 ; transim = transim * transmask
  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned.fits', transim
  ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned.fits.gz', transim, /COMPRESS
 
+ ;~ transim_im = transim[100:xsize_final+99,100:ysize_final+99]
  transim_im = transim
 
  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_sig.fits')
  ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_sig.fits.gz')
- transim = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0 )
+ transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0 )
+ ;~ transim = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0 )
 ; transim = transim * transmask
  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_sig.fits', transim
  ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_sig.fits.gz', transim, /COMPRESS
  
+ ;~ transim_noise = transim[100:xsize_final+99,100:ysize_final+99]
  transim_noise = transim
-
  ; to check alignment with VVV, create
  ; a transformed image inside the VVV frame of reference
  polywarp,   x[subc2], y[subc2], x_ref[subc1], y_ref[subc1], degree, Kx, Ky
  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits')
  ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits.gz')
+ ;~ transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
  transim = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV.fits', transim
  ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV.fits.gz', transim, /COMPRESS
 
  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits')
  ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits.gz')
+ ;~ transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
  transim = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV_wt.fits', transim
  ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV_wt.fits.gz', transim, /COMPRESS
@@ -226,8 +241,8 @@ ysize_final = round(ysize_ref * scale)
 
   xlo = x_off[chip-1]
   ylo = y_off[chip-1]
-  xhi = x_off[chip-1] + xs - 1
-  yhi = y_off[chip-1] + ys - 1
+  xhi = x_off[chip-1] + xs - 1+200
+  yhi = y_off[chip-1] + ys - 1+200
 
 lnx = transim_im[xlo:xhi,ylo:yhi]
 lnx_noise = transim_noise[xlo:xhi,ylo:yhi]
