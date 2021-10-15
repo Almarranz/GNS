@@ -8,15 +8,18 @@ scripts GNS
 3. sky.pro
 4. fullbpm.pro
 5. makemask.pro
+___
+## mask_poligon.pro
+There are some bright pixels on chip4 that doesnt show on the bpm or the mask. This script masked them
 6. reduce.pro
 7. cleancubes.pro.
 ___
-Here I added an extra script: erase_frames.pro
+## erase_frames.pro
 Erases bad frames and there fore transfor the cubes thrid dimension.
 ___
 8. makecubes.pro (little change).
 ___
-Here I added an extra script: avrg_frames.pro 
+## avrg_frames.pro 
 Last frme of cubes which had bad frames (erased) is not the average anymore. This scripts makes the average of last frames. 
 Should I make average for only those cubes from  which I erased some frames and left the original ones untouched??
 ___
@@ -30,9 +33,10 @@ ___
 * extarctpsf.pro
 * deepastro.pro
 ___
-13. alignquadrants.pro new verision. Instead of clinking on stars to figure out the x ,y displacement between list, run astroalign packge on GNS lits to get the transformation matrix, transfor the list and then align with poliwarp with VVV
-* astroaling_VVV.py
-* aa_alignquadrants.pro
+13. alignquadrants new verision. 
+Instead of clinking on stars to figure out the x ,y displacement between list, run astroalign packge on GNS lits to get the transformation matrix, transfor the list and then align with poliwarp with VVV
+*  ## astroaling_VVV.py
+* ## aa_alignquadrants.pro
 ___
 
 
