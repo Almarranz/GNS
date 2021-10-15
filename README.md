@@ -9,12 +9,12 @@ scripts GNS
 4. fullbpm.pro
 5. makemask.pro
 ___
-## mask_poligon.pro
+### 5.1 mask_poligon.pro
 There are some bright pixels on chip4 that doesnt show on the bpm or the mask. This script masked them
 6. reduce.pro
 7. cleancubes.pro.
 ___
-## erase_frames.pro
+## 7.1 erase_frames.pro
 Erases bad frames and there fore transfor the cubes thrid dimension.
 ___
 8. makecubes.pro (little change).
