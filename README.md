@@ -11,6 +11,7 @@ scripts GNS
 ___
 ### 5.1 mask_poligon.pro
 There are some bright pixels on chip4 that doesnt show on the bpm or the mask. This script masked them
+___
 6. reduce.pro
 7. cleancubes.pro.
 ___
