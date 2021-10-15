@@ -21,8 +21,7 @@ ___
 8. makecubes.pro (little change).
 ___
 ### 8.1 avrg_frames.pro 
-Last frme of cubes which had bad frames (erased) is not the average anymore. This scripts makes the average of last frames. 
-Should I make average for only those cubes from  which I erased some frames and left the original ones untouched??
+Last frme of cubes which had bad frames (erased) is not the average anymore. This scripts makes the average of first frames and put it in the last slice of the cube. It ONLY does this on cubes with bad frames, and left the rest untouched.
 ___
 9. dejitter.pro (some changes)
 in dejitter.pro. the x_off y_off WASN'T applied to the masks. I changed it.
