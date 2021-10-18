@@ -8,11 +8,11 @@ chip = 	1
 
 band = 'H'
 indir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
-cubos = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cleaned_bad_frms/'
+cubos = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes/'
 
 pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
-output='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cleaned/
+output='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes/
 ;~ outdir=pruebas
 
 
@@ -24,7 +24,7 @@ zero=fltarr(4096,4096)
 cube=readfits(cubos +'cube34.fits',header)
 cube=cube[*,*,[0,1,2,3,5]]
 cube=[[[cube]],[[zero]]];added a zero dimesion for the average scripts works
-;~ writefits,pruebas+'erased_cube34.fits',cube, header
+;~ ;;writefits,pruebas+'erased_cube34.fits',cube, header
 writefits,output+'cube34.fits',cube, header
 
 
@@ -32,23 +32,29 @@ writefits,output+'cube34.fits',cube, header
 cube=readfits(cubos +'cube38.fits',header)
 cube=cube[*,*,[2,3,4]]
 cube=[[[cube]],[[zero]]];added a zero dimesion for the average scripts works
-;~ writefits,pruebas+'erased_cube38.fits',cube, header
+;~ ;;writefits,pruebas+'erased_cube38.fits',cube, header
 writefits,output+'cube38.fits',cube, header
 
 cube=readfits(cubos +'cube42.fits',header)
 cube=cube[*,*,1:6]
 cube=[[[cube]],[[zero]]];added a zero dimesion for the average scripts works
-;~ writefits,pruebas+'erased_cube42.fits',cube, header
+;~ ;;writefits,pruebas+'erased_cube42.fits',cube, header
 writefits,output+'cube42.fits',cube, header
+
+cube=readfits(cubos +'cube47.fits',header)
+cube=cube[*,*,1:6]
+cube=[[[cube]],[[zero]]];added a zero dimesion for the average scripts works
+;~ writefits,pruebas+'erased_cube42.fits',cube, header
+writefits,output+'cube47.fits',cube, header
 
 cube=readfits(cubos +'cube43.fits',header)
 cube=cube[*,*,3:6]
 cube=[[[cube]],[[zero]]];added a zero dimesion for the average scripts works
-;~ writefits,pruebas+'erased_cube43.fits',cube, header
+;~ ;;writefits,pruebas+'erased_cube43.fits',cube, header
 writefits,output+'cube43.fits',cube, header
 
 
-f3=[10,22,23]
+f3=[10,22]
 frms=n_elements(f3)
 print,frms
 for i = 0, frms-1 do begin
@@ -63,11 +69,11 @@ for i = 0, frms-1 do begin
 	cube=cube[*,*,3:nax3-2]
 	cube=[[[cube]],[[zero]]];added a zero dimesion for the average scripts works
 
-	;~ writefits,pruebas+'erased_cube'+strn(f3[i])+'.fits',cube, header
+	;~ ;;writefits,pruebas+'erased_cube'+strn(f3[i])+'.fits',cube, header
 	writefits,output+'cube'+strn(f3[i])+'.fits',cube, header
 endfor
 
-f4=[40]
+f4=[40,23]
 frms=n_elements(f4)
 print,frms
 for i = 0, frms-1 do begin
