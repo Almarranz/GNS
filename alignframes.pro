@@ -16,25 +16,28 @@ PRO ALIGNFRAMES, field_nr, chip_nr
 ; Image size is the size of the cut-out LNX images for each chip
 ; They are located in the data directory!
 
-x_out = 2400
-y_out = 1200
+x_out = 2460
+y_out = 2460
 
 ; offsets of fields within transformed frame (see alignquadrants.pro)
 ; used to cut out the chips from the large algined field
 x_off = [0,2200,2200,0]
-y_off = [50,50,900,900]
+y_off = [0,0,2200,2200]
 
 ; size of VVV reference image
 xsize_ref = 1453
-ysize_ref = 655
+ysize_ref = 1453
 
 ; -------------------------------------------------------
 
 
       band = 'H'
-      cube_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/cubes/'
-      data_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
-      out_path =  '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/aligned/'
+      cube_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/cubes/'
+      data_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/data/'
+      out_path =  '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/aligned/'
+      ;~ cube_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/cubes/'
+      ;~ data_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
+      ;~ out_path =  '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/aligned/'
       
 
 
@@ -87,7 +90,8 @@ y_trans = round(ysize_ref * scale)
    bad = where(mask lt 1)
    mask[bad] = 0
    
-   for j = 1, n3 -1 do begin ; Remove first frame in cube
+   for j = 0, n3 -1 do begin ; Keep the first frame in cube
+   ;~ for j = 1, n3 -1 do begin ; Remove first frame in cube
     im = cube[*,*,j]
 
     im = POLY_2D(im,Kx,Ky,2,x_trans,y_trans,CUBIC=-0.5,MISSING=0)
@@ -96,9 +100,12 @@ y_trans = round(ysize_ref * scale)
     outmasks[*,*,j-1] = mask[xlo:xhi,ylo:yhi]
     print, j
    endfor
-
-   writefits, out_path + mask_names[ic], outmasks, /COMPRESS
-   writefits, out_path + cube_names[ic], outcube, /COMPRESS
+   
+   writefits, out_path + mask_names[ic], outmasks
+   writefits, out_path + cube_names[ic], outcube
+   print,'Done Cube', ic +1
+   ;~ writefits, out_path + mask_names[ic], outmasks, /COMPRESS
+   ;~ writefits, out_path + cube_names[ic], outcube, /COMPRESS
  
 
  endfor
