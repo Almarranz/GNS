@@ -13,11 +13,11 @@ ___
 There are some bright pixels on chip4 that doesnt show on the bpm or the mask. This script masked them
 ___
 6. reduce.pro
-7. cleancubes.pro.
 ___
-### 7.1 erase_frames.pro
+### 6.1 erase_frames.pro
 Erases bad frames and there fore transfor the cubes thrid dimension.
 ___
+7. cleancubes.pro
 8. makecubes.pro (little change).
 ___
 ### 8.1 avrg_frames.pro 
