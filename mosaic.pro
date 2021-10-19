@@ -1,22 +1,26 @@
 PRO MOSAIC, im_path, refim
 
 band = 'H'
-field_nr = 10
-refim = '/home/data/VVV/ForHAWKI/J/Fields/Field' + strn(field_nr) + '.fits.gz'
-im_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/ims/'
+field_nr = 9
+refim = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/Fields/H/' +'Field'+strn(field_nr) + '.fits'
+im_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/ims/'
+;~ refim = '/home/data/VVV/ForHAWKI/J/Fields/Field' + strn(field_nr) + '.fits.gz'
+;~ im_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/ims/'
 
 ; mosaic at VVV pixel scale
 ; see xsize_ref and ysize_ref in alignquadrants.pro
 x_VVV =  1453
-y_VVV = 655
+y_VVV = 1453
 mosaic = fltarr(x_VVV,y_VVV)
 weight = fltarr(x_VVV,y_VVV)
 
 for chip = 1, 4 do begin
 
  chip_nr = strn(chip)
- im = readfits(im_path + 'lnx_jitter_'+strn(chip_nr)+ '_VVV.fits.gz')
- wt = readfits(im_path + 'lnx_jitter_'+strn(chip_nr) + '_VVV_wt.fits.gz')
+ im = readfits(im_path + 'lnx_jitter_'+strn(chip_nr)+ '_VVV.fits')
+ wt = readfits(im_path + 'lnx_jitter_'+strn(chip_nr) + '_VVV_wt.fits')
+ ;~ im = readfits(im_path + 'lnx_jitter_'+strn(chip_nr)+ '_VVV.fits.gz')
+ ;~ wt = readfits(im_path + 'lnx_jitter_'+strn(chip_nr) + '_VVV_wt.fits.gz')
  good = where(wt gt 3,complement=bad)
 
 ; wt[good] = 1
@@ -28,7 +32,8 @@ for chip = 1, 4 do begin
 endfor
 good = where(weight gt 0,complement=bad)
 mosaic[good] = mosaic[good]/weight[good]
-writefits, 'mosaic.fits.gz', mosaic, /COMPRESS
+writefits, 'mosaic.fits', mosaic
+;~ writefits, 'mosaic.fits.gz', mosaic, /COMPRESS
 find, mosaic, xx, yy, flux, sharp, roundness, 1000.0, 4.0, [-1.0,1.0], [0.2,1.0]
 print, 'Found ' + strn(n_elements(xx)) + ' stars for fine alignment.'
 
@@ -52,12 +57,16 @@ print, 'Offsets: ' + strn(x_off) + ', ' + strn(y_off)
 ;correl_optimize, ref, smooth(mosaic,1), x_off, y_off, MAGNIFICATION=4, XOFF_INIT=0, YOFF_INIT=0
 ;print, x_off, y_off
 
-writefits, im_path + 'lnx_mosaic_VVV.fits.gz', image_shift(mosaic,x_off,y_off), /COMPRESS
-writefits, im_path + 'lnx_weight_VVV.fits.gz', image_shift(weight,x_off, y_off), /COMPRESS
+writefits, im_path + 'lnx_mosaic_VVV.fits', image_shift(mosaic,x_off,y_off)
+writefits, im_path + 'lnx_weight_VVV.fits', image_shift(weight,x_off, y_off)
+;~ writefits, im_path + 'lnx_mosaic_VVV.fits.gz', image_shift(mosaic,x_off,y_off), /COMPRESS
+;~ writefits, im_path + 'lnx_weight_VVV.fits.gz', image_shift(weight,x_off, y_off), /COMPRESS
 
 ; mosaic at HAWK-I pixel scale
-x_hawki = 4661
-y_hawki = 2101
+x_hawki = 4861
+y_hawki = 4861
+;~ x_hawki = 4661
+;~ y_hawki = 4661
 mosaic = fltarr(x_hawki, y_hawki)
 mosaic_sigma = fltarr(x_hawki, y_hawki)
 weight = fltarr(x_hawki, y_hawki)
@@ -65,9 +74,12 @@ weight = fltarr(x_hawki, y_hawki)
 for chip = 1, 4 do begin
 
  chip_nr = strn(chip)
- im = readfits(im_path + 'lnx_jitter_'+strn(chip_nr)+ '_aligned.fits.gz')
- sigma = readfits(im_path + 'lnx_jitter_'+strn(chip_nr)+ '_aligned_sig.fits.gz')
- wt = readfits(im_path + 'lnx_jitter_'+strn(chip_nr) + '_aligned_wt.fits.gz')
+ im = readfits(im_path + 'lnx_jitter_'+strn(chip_nr)+ '_aligned.fits')
+ sigma = readfits(im_path + 'lnx_jitter_'+strn(chip_nr)+ '_aligned_sig.fits')
+ wt = readfits(im_path + 'lnx_jitter_'+strn(chip_nr) + '_aligned_wt.fits')
+ ;~ im = readfits(im_path + 'lnx_jitter_'+strn(chip_nr)+ '_aligned.fits.gz')
+ ;~ sigma = readfits(im_path + 'lnx_jitter_'+strn(chip_nr)+ '_aligned_sig.fits.gz')
+ ;~ wt = readfits(im_path + 'lnx_jitter_'+strn(chip_nr) + '_aligned_wt.fits.gz')
  not_nan =  where(FINITE(sigma), complement=isnan)
  sigma[isnan] = 0
 
@@ -86,8 +98,11 @@ endfor
 good = where(weight gt 0)
 mosaic[good] = mosaic[good]/weight[good]
 mosaic_sigma[good] = sqrt(mosaic_sigma[good]/weight[good])
-writefits, im_path + 'lnx_mosaic.fits.gz', mosaic, /COMPRESS
-writefits, im_path + 'lnx_mosaic_sigma.fits.gz', mosaic_sigma, /COMPRESS
-writefits, im_path + 'lnx_weight.fits.gz', weight, /COMPRESS
+writefits, im_path + 'lnx_mosaic.fits', mosaic
+writefits, im_path + 'lnx_mosaic_sigma.fits', mosaic_sigma
+writefits, im_path + 'lnx_weight.fits', weight
+;~ writefits, im_path + 'lnx_mosaic.fits.gz', mosaic, /COMPRESS
+;~ writefits, im_path + 'lnx_mosaic_sigma.fits.gz', mosaic_sigma, /COMPRESS
+;~ writefits, im_path + 'lnx_weight.fits.gz', weight, /COMPRESS
 
 END
