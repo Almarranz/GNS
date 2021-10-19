@@ -77,13 +77,12 @@ for i = 1, n_offsets do begin
   
   ;################################################################
   sz=size(cube)
-  elements_cube = sz[3] ; many cubes have fewer number of slices
-  ; thes have to ve move for each ofset particulary.
-  ;~ new_ref = fltarr(sizex_new,sizey_new)
+  elements_cube = sz[3] ; many cubes have fewer number of slices than others
+  
+  ;so, we need to call these thrid dimesion for each pointing. 
+  
   new_ref_cube = fltarr(sizex_new,sizey_new,elements_cube)
-  ;~ new_mask_ref = fltarr(sizex_new,sizey_new)
-  ;~ lnx_cube = fltarr(sizex_new,sizey_new,n_offsets)
-  ;~ mask_cube = fltarr(sizex_new,sizey_new,n_offsets)
+  
   ;################################################################
   ; Read in cumulative offset from initial pointing in pixels
   x_off = strsplit(header[615],'HIERARCH ESO SEQ CUMOFFSETX = ', ESCAPE = '/', /extract)
