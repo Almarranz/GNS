@@ -24,17 +24,17 @@ field_nr = 9
 
 ; To create small aligned longexposure images
 ; So that we can cut away the unnecessary zeros around the images.
-xs = 2500
-ys = 2500
-;~ xs = 2400
-;~ ys = 2400
+;~ xs = 2500
+;~ ys = 2500
+xs = 2400
+ys = 2400
 ;~ ys = 1200
 ; Approximate offsets of fields within aligned HAWK-I frame
 ; These offsets can be seen inside the 
 ; images lnx_jitter_?_aligned.fits.gz
 ; that are being produced by this script
-x_off = [0,2000,2000,0]
-y_off = [0,0,2000,2000]
+x_off = [0,2100,2100,0]
+y_off = [100,100,2100,2100]
 ;~ x_off = [0,2200,2200,0]
 ;~ y_off = [0,0,2200,2200]
 ;~ y_off = [50,50,900,900]
@@ -241,8 +241,8 @@ ysize_final = round(ysize_ref * scale)
 
   xlo = x_off[chip-1]
   ylo = y_off[chip-1]
-  xhi = x_off[chip-1] + xs - 1+200
-  yhi = y_off[chip-1] + ys - 1+200
+  xhi = x_off[chip-1] + xs - 1+300
+  yhi = y_off[chip-1] + ys - 1+300
 
 lnx = transim_im[xlo:xhi,ylo:yhi]
 lnx_noise = transim_noise[xlo:xhi,ylo:yhi]
