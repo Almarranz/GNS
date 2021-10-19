@@ -16,7 +16,8 @@ pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
 ROBUST=0
 ;~ j=2
-cubes_mod=[7,10,13,17,22,23,34,38,40,42,43,44]
+cubes_mod=[7,10,13,17,22,23,34,38,40,42,43,44,47]
+;~ cubes_mod=[42,47]
 
 
 mods=n_elements(cubes_mod)
