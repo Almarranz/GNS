@@ -38,5 +38,6 @@ Instead of clinking on stars to figure out the x ,y displacement between list, r
 *  ### 13. 1 astroaling_VVV.py
 * ### 13.2  aa_alignquadrants.pro
 ___
-
+14. mosaic.pro
+15. aligframes.pro. I chagend the size of the cropping areas to extrac aligned frames of the big  cambas.
 
