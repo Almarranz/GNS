@@ -88,9 +88,15 @@ y_trans = round(ysize_ref * scale)
    sz = size(cube)
    print,sz
    n3 = sz[3]
+   
    ; Note: Remove first frame in cube
-   outcube = fltarr(x_out,y_out,n3-1)
-   outmasks = fltarr(x_out,y_out,n3-1)
+   ;~ outcube = fltarr(x_out,y_out,n3-1)
+   ;~ outmasks = fltarr(x_out,y_out,n3-1)
+   
+   ;Note: keeps the first frame:
+   outcube = fltarr(x_out,y_out,n3)
+   outmasks = fltarr(x_out,y_out,n3)
+   
    
    trans_mask=fltarr(x_trans+200,y_trans+200)
   ;Because the masks are always the same, I put this here instead of the "for" cycle.
@@ -102,8 +108,8 @@ y_trans = round(ysize_ref * scale)
    bad = where(mask lt 1)
    mask[bad] = 0
    
-   ;~ for j = 0, n3 -1 do begin ; Keep the first frame in cube
-   for j = 1, n3 -1 do begin ; Remove first frame in cube
+   for j = 0, n3 -1 do begin ; Keep the first frame in cube
+   ;~ for j = 1, n3 -1 do begin ; Remove first frame in cube
     trans_im=fltarr(x_trans+200,y_trans+200)
     im = cube[*,*,j]
     ;~ writefits, pruebas + 'im_test_chip'+chip_nr+'_'+strn(ic)+'.fits',im;·································
