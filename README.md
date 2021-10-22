@@ -34,7 +34,7 @@ ___
 * deepastro.pro
 ___
 13. alignquadrants new verision. 
-Instead of clinking on common stars to figure out the x ,y displacement and manually figure the rotation angle between lists, runs astroalign packge on GNS list to get the transformation matrix, transforms the list, uses it to find common stars and  then aligns with poliwarp with VVV
+Instead of clinking on common stars to figure out the x ,y displacement and manually figure the rotation angle between lists, runs astroalign packge on GNS and VVV lists to get the transformation matrix, transforms the list, uses it to find common stars and  then aligns with poliwarp with VVV
 *  ### 13. 1 astroaling_VVV.py
 * ### 13.2  aa_alignquadrants.pro
 ___
