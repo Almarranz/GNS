@@ -36,9 +36,11 @@ pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 readcol, raw_path + list, names, FORMAT='A'
 im = readfits(raw_path + names[0], header)
 
-; get offset from original pointing )
-x_off = strsplit(header[615],' ', /extract)
-y_off = strsplit(header[616],' ', /extract) 
+; get offset from original pointing )IN RADIANS!!!!!!!!
+x_off = strsplit(header[613],' ', /extract)
+y_off = strsplit(header[614],' ', /extract) 
+print,x_off,y_off
+stop
 ;~ x_off = strsplit(header[425],' ', /extract)
 ;~ y_off = strsplit(header[426],' ', /extract) 
 x_off = float(x_off[5])

@@ -127,43 +127,7 @@ endif
 
  ; preliminary offset and rotation
  ; -------------------------------
-if (markstars eq 0) then begin; I found this coordinates by comparing the imges on DS9
 
-  xm_ref1=1313.44     
-  ym_ref1= 582.606
-  xm_ref1= xm_ref * scale
-  ym_ref1 = ym_ref * scale
-  xm1=2148.51      
-  ym1=1830.81
-  
-  xoff1=  xm_ref1 - xm1
-  yoff1 = ym_ref1 - ym1
-  
-  xm_ref2=1324 
-  ym_ref2= 534
-  xm_ref2= xm_ref * scale
-  ym_ref2 = ym_ref * scale
-  xm2=     2177
-  ym2=1670
-  
-  xoff2=  xm_ref2 - xm2
-  yoff2 = ym_ref2 - ym2
-  
-  
-  xm_ref3=1214   
-  ym_ref3= 588
-  xm_ref3= xm_ref * scale
-  ym_ref3 = ym_ref * scale
-  xm3=     1828
-  ym3= 1854
-  
-  xoff3=  xm_ref3 - xm3
-  yoff3 = ym_ref3 - ym3
-  
-  xoff=median([xoff1,xoff2,xoff3]); it seems works better with median than with mean
-  yoff=median([yoff1,yoff2,yoff3])
-  
-endif
 
 
  xm = xm * cos(rot_angle) - ym * sin(rot_angle)

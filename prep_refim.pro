@@ -3,6 +3,8 @@ PRO PREP_REFIM, field
 field = strn(field)
 band = 'H'
 VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
+
+pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 ; Determine FoV
 ; We assume 60"  jitter window for all observations, even
 ; though the 2015 observations were done with a 30" jitter
@@ -100,7 +102,9 @@ endif
 ;~ crpix1 = crpix1 + x0_expand
 ;~ SXADDPAR, refhdr, 'CRPIX1', crpix1
 ;~ refim = float(refim)
-writefits, VVV+'Fields/H/Field' + strn(field) + '.fits', refim, refhdr
+
+;~ writefits, VVV+'Fields/H/Field' + strn(field) + '.fits', refim, refhdr
+writefits, pruebas+'Field' + strn(field) + '.fits', refim, refhdr
 ;~ writefits, 'Field' + strn(field) + '.fits.gz', refim, refhdr, /COMPRESS
 
 print, 'Size of reference image: ' + strn(x_vvv)  + ' x '+ strn(y_vvv)

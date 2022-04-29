@@ -1,16 +1,19 @@
-PRO SUBCUBES, field_nr, chip_nr
+PRO SUBCUBES, field_nr, chip
 
 ;field_nr = 10
 ;chip_nr = 1
 
  band = 'H'
- data_path =  '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/aligned/' 
- out_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/subcubes/'
+ data_path =  '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/aligned/' 
+ out_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/subcubes/'
+ ;~ data_path =  '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/aligned/' 
+ ;~ out_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/subcubes/'
+ 
  mask_path = data_path
- x_cube = 600 ; xaxis length of sub-cube
- y_cube = 600 ; yaxis length of sub-cube
- x_large = 2400  ; xaxis length of large cube
- y_large = 1200  ; yaxis length of large cube
+ x_cube = 900 ; xaxis length of sub-cube
+ y_cube = 900 ; yaxis length of sub-cube
+ x_large = 2700  ; xaxis length of large cube
+ y_large = 2700  ; yaxis length of large cube
  valid_frac = 0.3 ; minimum fraction of valid pixels required
  
  x_sub_shift = x_cube/2
@@ -23,9 +26,12 @@ PRO SUBCUBES, field_nr, chip_nr
 chip_nr = strn(chip)
 
 ; First, remove all *fits and *txt  files in target directory
-spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.fits.gz'
-spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.fits.gz'
+spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.fits'
+spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.fits'
 spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.txt'
+;~ spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.fits.gz'
+;~ spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.fits.gz'
+;~ spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.txt'
 
 readcol, data_path + 'list_chip' + chip_nr + '.txt', cube_names, FORMAT='A'
 readcol, data_path + 'masklist_chip' + chip_nr + '.txt', mask_names, FORMAT='A'
@@ -56,13 +62,22 @@ for ic = 0, n_cubes - 1 do begin
 
       outnam = '_' + strn(i_x) + '_' + strn(i_y)
       out_cube = cube[xlo:xhi,ylo:yhi,*]
-      writefits, out_path +  'chip' + chip_nr + '/cube' + outnam + '_' + icnum + '.fits.gz', out_cube, /COMPRESS
-      writefits, out_path +  'chip' + chip_nr + '/masks'+ outnam + '_' + icnum + '.fits.gz', out_masks, /COMPRESS      
+      
+      writefits, out_path +  'chip' + chip_nr + '/cube' + outnam + '_' + icnum + '.fits', out_cube
+      writefits, out_path +  'chip' + chip_nr + '/masks'+ outnam + '_' + icnum + '.fits', out_masks    
       openw, outc, out_path + 'chip' + chip_nr + '/list' + outnam + '.txt', /get_lun, /APPEND
       openw, outm, out_path  + 'chip' + chip_nr + '/masklist' + outnam + '.txt', /get_lun, /APPEND
 
-      printf, outc,  'cube' + outnam + '_' + icnum + '.fits.gz'
-      printf, outm,  'masks' + outnam + '_' + icnum + '.fits.gz'
+      printf, outc,  'cube' + outnam + '_' + icnum + '.fits'
+      printf, outm,  'masks' + outnam + '_' + icnum + '.fits'
+      
+      ;~ writefits, out_path +  'chip' + chip_nr + '/cube' + outnam + '_' + icnum + '.fits.gz', out_cube, /COMPRESS
+      ;~ writefits, out_path +  'chip' + chip_nr + '/masks'+ outnam + '_' + icnum + '.fits.gz', out_masks, /COMPRESS      
+      ;~ openw, outc, out_path + 'chip' + chip_nr + '/list' + outnam + '.txt', /get_lun, /APPEND
+      ;~ openw, outm, out_path  + 'chip' + chip_nr + '/masklist' + outnam + '.txt', /get_lun, /APPEND
+
+      ;~ printf, outc,  'cube' + outnam + '_' + icnum + '.fits.gz'
+      ;~ printf, outm,  'masks' + outnam + '_' + icnum + '.fits.gz'
       free_lun, outc, outm
 
      endif
