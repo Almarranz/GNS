@@ -35,7 +35,7 @@ for file in glob.glob(data + 'HAWKI*.fits'):
     name = file
     header = fits.open(file)[0].header
     print(header['OBJECT'])
-    if header['OBJECT'] == 'DARK':
+    if header['OBJECT'] == 'DARK' and 'WinDarks' not in header['ORIGFILE'] :
         count +=1
         # print(name)
         with open(data + 'dark.sof','a') as f:
@@ -59,11 +59,14 @@ for file in glob.glob(data + 'HAWKI*.fits'):
             fsc.close()
     else:
         print(len(name)*'*')
-        print(name,header['OBJECT'])
+        print(name,header['OBJECT'],header['ORIGFILE'])
         print(len(name)*'*')
 print(count, len(file))
 
-            
+# %%
+frase ='laspelotasptuboca'
+if 'pelots' not in frase:
+    print('yes')
             
             
             
