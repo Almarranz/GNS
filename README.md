@@ -4,8 +4,12 @@
 
 GNS pipeline adapted for unwindowed frames. 
 
-1. dark.pro
-2. Create flat
+1. file_sorter.py. This separte the darks and th flats to be use with esorex recipes. Also generates the .sof files needed for esorex
+> Note: at the moment there is no **esorex** not **gasgano** installed at teatime. SO I doing this locally for now
+2. Esorex recipes
+> esorex hawki_dark_combine dark.sof 
+> esorex hawki_twilight_flat_combine flat.sof
+4. joint_flats.pro
 3. sky.pro
 4. fullbpm.pro
 5. makemask.pro
