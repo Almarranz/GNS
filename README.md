@@ -10,6 +10,7 @@ GNS pipeline adapted for unwindowed frames.
 > esorex hawki_dark_combine dark.sof.
 
 > esorex hawki_twilight_flat_combine flat.sof.
+
 >>Note: the dark.fits file is no longe produce by the dark.pro file, but for esorex dark recipe Instead
 
 2. joint_flats.pro. generates the flat, bpm_H and the mask.
