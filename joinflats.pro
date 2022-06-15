@@ -5,12 +5,12 @@ PRO JOINFLATS, in_path, com, flat_name, bpm_name, mask_name
 nx = 4096
 ny = 4096
    
-   pruebas = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
-   field = '9'
+   pruebas = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
+   field = '6'
    band = 'H'
-   in_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/' + band + '/Flat/22-9-2021/' ;NOTE: CHECK the DAtE!ª!!!!
-   com = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field + '/ims/'
-   ;~ com=pruebas
+   in_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/H/Flat/22-05-28/' ;NOTE: CHECK the DAtE!ª!!!!
+   ;~ com = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field + '/ims/'
+   com=pruebas
    
    ;~ in_path = '/home/data/raw/2015/' + band + '/Flat/2015-05-27/' 
    ;~ com = '/data/GNS/2015/' + band + '/' + field + '/ims/'
@@ -22,15 +22,16 @@ ny = 4096
 bigflat = fltarr(nx,ny)
 bigbpm = fltarr(nx,ny)
 
+; flats and bpm are no longer (isues with GRAAL) done with gasgano, but with esorex instead 
 
-flat_chip1 = readfits(in_path+'hawki_cal_flat_set01_0000.fits',EXTEN_NO=1)
-bpm_chip1 = readfits(in_path+'hawki_cal_flat_bpmflat_set01_0000.fits',EXTEN_NO=1)
-flat_chip2 = readfits(in_path+'hawki_cal_flat_set01_0000.fits',EXTEN_NO=2)
-bpm_chip2 = readfits(in_path+'hawki_cal_flat_bpmflat_set01_0000.fits',EXTEN_NO=2)
-flat_chip3 = readfits(in_path+'hawki_cal_flat_set01_0000.fits',EXTEN_NO=4)
-bpm_chip3 = readfits(in_path+'hawki_cal_flat_bpmflat_set01_0000.fits',EXTEN_NO=4)
-flat_chip4 = readfits(in_path+'hawki_cal_flat_set01_0000.fits',EXTEN_NO=3)
-bpm_chip4 = readfits(in_path+'hawki_cal_flat_bpmflat_set01_0000.fits',EXTEN_NO=3)
+flat_chip1 = readfits(in_path+'twilightcomb.fits',EXTEN_NO=1)
+bpm_chip1 = readfits(in_path+'bpmmap.fits',EXTEN_NO=1)
+flat_chip2 = readfits(in_path+'twilightcomb.fits',EXTEN_NO=2)
+bpm_chip2 = readfits(in_path+'bpmmap.fits',EXTEN_NO=2)
+flat_chip3 = readfits(in_path+'twilightcomb.fits',EXTEN_NO=4)
+bpm_chip3 = readfits(in_path+'bpmmap.fits',EXTEN_NO=4)
+flat_chip4 = readfits(in_path+'twilightcomb.fits',EXTEN_NO=3)
+bpm_chip4 = readfits(in_path+'bpmmap.fits',EXTEN_NO=3)
 
 
 ;chip 1
@@ -55,9 +56,11 @@ writefits, com + bpm_name, bigbpm
 mask = fltarr(nx,ny)
 mask[*,*] = 1
 mask[0:10,*] = 0
+mask[*,0:10] = 0
 mask[4073:4095,*] = 0 ; why the edge is bigger on the right side of the mask?
 mask[2044:2051,*] = 0
 mask[*,4088:4095] = 0
+mask[*,2044:2051] = 0
 ; some additional regions if necessary
 ; mask_polygon, mask, flat + 'mask.reg', value = 0
 writefits, com + mask_name, mask
