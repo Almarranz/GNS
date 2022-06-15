@@ -8,8 +8,8 @@ GNS pipeline adapted for unwindowed frames.
 > Note: at the moment there is no **esorex** not **gasgano** installed at teatime. SO I doing this locally for now
 1. Esorex recipes
 > esorex hawki_dark_combine dark.sof 
+> esorex hawki_twilight_flat_combine flat.sof.
 >>Note: the dark.fits file is no longe produce by the dark.pro file, but for esorex dark recipe Instead
-> esorex hawki_twilight_flat_combine flat.sof
 
 2. joint_flats.pro. generates the flat, bpm_H and the mask.
 3. sky.pro
