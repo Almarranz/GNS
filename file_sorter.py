@@ -28,7 +28,7 @@ with open(dark + 'dark.sof','w') as f:
     f.write('')
 with open(flat + 'flat.sof','w') as ff:
     ff.write('')
-with open(sky + 'sky.sof','w') as fsk:
+with open(sky + 'list.txt','w') as fsk:
     fsk.write('')
 with open(data + 'science.sof', 'w') as fsc:
     fsc.write(data + 'science.sof')
@@ -57,8 +57,8 @@ for file in glob.glob(data + 'HAWKI*.fits'):
         os.replace(name, flat+os.path.basename(name))
     elif header['OBJECT'] == 'GC_H_Sky':
         count +=1
-        with open(sky + 'sky.sof', 'a') as fsk:
-            fsk.write(sky+os.path.basename(name) + ' SKY \n')
+        with open(sky + 'list.txt', 'a') as fsk:
+            fsk.write(os.path.basename(name) + '\n')
             fsk.close()
         os.replace(name, sky+os.path.basename(name))
     elif header['OBJECT'] == field:
