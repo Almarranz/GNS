@@ -14,15 +14,21 @@ import numpy as np
 import os
 import glob
 from astropy.io import fits
-
-data = '/Users/alvaromartinez/Desktop/Phd/HAWKI/GNS_2/raw/field6/'
+import shutil
 # %%
-field = 'GC H F6'
-with open(data + 'dark.sof','w') as f:
+field_n =6
+date = '22-05-28'#date of the flats
+data = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/H/Field/%s/'%(field_n)
+sky = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/H/Sky/%s/'%(field_n)
+flat = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/H/Flat/%s/'%(date)
+dark = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Dark/%s/'%(field_n)
+field = 'GC H F%s'%(field_n)
+# %%
+with open(dark + 'dark.sof','w') as f:
     f.write('')
-with open(data + 'flat.sof','w') as ff:
+with open(flat + 'flat.sof','w') as ff:
     ff.write('')
-with open(data + 'sky.sof','w') as fsk:
+with open(sky + 'sky.sof','w') as fsk:
     fsk.write('')
 with open(data + 'science.sof', 'w') as fsc:
     fsc.write(data + 'science.sof')
@@ -38,20 +44,23 @@ for file in glob.glob(data + 'HAWKI*.fits'):
     if header['OBJECT'] == 'DARK' and 'WinDarks' not in header['ORIGFILE'] :
         count +=1
         # print(name)
-        with open(data + 'dark.sof','a') as f:
-            f.write(name +' DARK \n')
+        with open(dark + 'dark.sof','a') as f:
+            f.write(dark+os.path.basename(name) +' DARK \n')
             f.close
+        os.replace(name, dark+os.path.basename(name))
     elif header['OBJECT'] == 'FLAT':
         count +=1
         # print(name)
-        with open(data + 'flat.sof','a') as ff:
-            ff.write(name +' FLAT_TWILIGHT \n')
+        with open(flat + 'flat.sof','a') as ff:
+            ff.write(flat+os.path.basename(name) +' FLAT_TWILIGHT \n')
             ff.close()
+        os.replace(name, flat+os.path.basename(name))
     elif header['OBJECT'] == 'GC_H_Sky':
         count +=1
-        with open(data + 'sky.sof', 'a') as fsk:
-            fsk.write(name + ' SKY \n')
+        with open(sky + 'sky.sof', 'a') as fsk:
+            fsk.write(sky+os.path.basename(name) + ' SKY \n')
             fsk.close()
+        os.replace(name, sky+os.path.basename(name))
     elif header['OBJECT'] == field:
         count +=1
         with open(data + 'science.sof', 'a') as fsc:
@@ -61,12 +70,11 @@ for file in glob.glob(data + 'HAWKI*.fits'):
         print(len(name)*'*')
         print(name,header['OBJECT'],header['ORIGFILE'])
         print(len(name)*'*')
-print(count, len(file))
 
-# %%
-frase ='laspelotasptuboca'
-if 'pelots' not in frase:
-    print('yes')
+with open(flat + 'flat.sof','a') as ff:
+    ff.write(dark+'darkcomb.fits MASTER_DARK')
+    ff.close()
+
             
             
             
