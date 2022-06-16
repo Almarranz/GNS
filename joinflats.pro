@@ -9,8 +9,8 @@ ny = 4096
    field = '6'
    band = 'H'
    in_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/H/Flat/22-05-28/' ;NOTE: CHECK the DAtE!ª!!!!
-   ;~ com = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field + '/ims/'
-   com=pruebas
+   com = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field + '/ims/'
+   ;~ com=pruebas
    
    ;~ in_path = '/home/data/raw/2015/' + band + '/Flat/2015-05-27/' 
    ;~ com = '/data/GNS/2015/' + band + '/' + field + '/ims/'
