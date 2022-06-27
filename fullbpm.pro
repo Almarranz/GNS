@@ -118,7 +118,7 @@ sky[good] = sky[good]/flat[good]
  darkbpm[2048:4095,2048:4095] = q
 
  ;~ q = dark[0:2047,2048:4095]
- q = readfits(dark_path + dark_name,EXTEN_NO=4)
+ q = readfits(dark_path + dark_name,EXTEN_NO=3)
  RESISTANT_Mean,q,3.0,Mean,Sigma,Num_Rej, goodvec=goodvec
  Sigma = Sigma * sqrt(n_elements(goodvec)) ; we are interested in sigma, not error of the mean
  bad = where(abs(q - Mean) gt sigma_dev_dark * Sigma, n_bad)
