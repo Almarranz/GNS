@@ -7,10 +7,10 @@ PRO MAKEMASK, common_path, bpm_name
 ;         as is the case for dead pixels.
 ;         Therefore, they must be masked.
 
-field = '9'
+field = '6'
 band = 'H'
 
-common_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
+common_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
 
 ;~ common_path = '/data/GNS/2015/' + band + '/' + field +'/ims/'
 bpm_name = 'bpm.fits'
