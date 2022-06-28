@@ -28,6 +28,7 @@ nax2 = sz[2]
 mask = fltarr(nax1,nax2)
 mask[*,*] = 1
 mask[0:10,*] = 0
+mask[*,0:10] = 0
 mask[4073:4095,*] = 0
 mask[2044:2051,*] = 0
 
@@ -48,6 +49,7 @@ mask[2044:2051,*] = 0
 tmpmask = fltarr(nax1,nax2)
 tmpmask[*,*] = 1
 tmpmask[0:11,*] = 0
+tmpmask[*,0:11] = 0
 tmpmask[4073:4095,*] = 0
 tmpmask[2043:2052,*] = 0
 mask[*,4087:4095] = 0
