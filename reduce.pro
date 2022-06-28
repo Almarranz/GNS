@@ -4,13 +4,15 @@ debug = 0
 nam = ''
 
 
-   field = '9'
+   field = '6'
    band = 'H'
-   raw_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/' + band +'/Field/' + field + '/'
-   common_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
-   tmp_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/tmp/'
-   out_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/cubes/'
-   
+   raw_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/' + band +'/Field/' + field + '/'
+   common_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
+   tmp_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/tmp/'
+   out_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/cubes/'
+   dark_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Dark/' + field + '/'
+   pruebas = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/pruebas/'
+
    ;~ raw_path = '/home/data/raw/2015/' + band +'/Field/' + field + '/'
    ;~ common_path = '/data/GNS/2015/' + band + '/' + field + '/ims/'
    ;~ tmp_path = '/data/GNS/2015/' + band + '/' + field + '/tmp/'
@@ -19,23 +21,42 @@ nam = ''
    mask_name = 'mask.fits'
    bpm_name = 'bpm.fits'
    sky_name = 'sky.fits'
-   dark_name = 'dark.fits'
+   ;~ dark_name = 'dark.fits'
+   dark_name = 'darkcomb.fits'
+   mask_blank_name = 'mask_H.fits'
    flat_name = 'flat_' + band + '.fits'
    list = 'list.txt'
    outlist = 'cubelist.txt'
 
-   gains=[1.10618,0.935007,1.08581,0.872999]
-   ;~ readcol, tmp_path +'gains.txt', gains
+   ;~ gains=[1.10618,0.935007,1.08581,0.872999]
+   readcol, tmp_path +'gains.txt', gains
    sky_frac = 0.3  ; fraction of pixels of lowest value
                    ; that will be used to create the matched sky
                    ; The MMM algorithm is relatively insensitive 
                    ; to this value 0.1 - 0.5 or even higher will work
 
-dark = readfits(common_path + dark_name)
+;~ dark = readfits(common_path + dark_name)
+mask_blank = readfits(common_path + mask_blank_name)
+sz = size(mask_blank)
+nax1 = sz[1]
+nax2 = sz[2]
+
+dark_cambas = fltarr(nax1,nax2)
+
+dark_cambas[0:2047,0:2047] = readfits(dark_path + dark_name, EXTEN_NO=1)
+dark_cambas[2048:4095,0:2047] = readfits(dark_path + dark_name, EXTEN_NO=2)
+dark_cambas[2048:4095,2048:4095] = readfits(dark_path + dark_name, EXTEN_NO=4)
+dark_cambas[0:2047,2048:4095] = readfits(dark_path + dark_name, EXTEN_NO=3)
+
+dark = dark_cambas*mask_blank
+
+
 sky = readfits(common_path + sky_name)
 bpm = readfits(common_path + bpm_name)
 mask = readfits(common_path + mask_name)
 flat = readfits(common_path + flat_name)
+
+
 
 ; work on the four chips (quadrants) individually
 ;sky_qs = fltarr(2048,768,4)
@@ -153,14 +174,14 @@ while (not (EOF(inp))) do begin
    sxaddpar, header, 'NAXIS3', n3
    sxdelpar, header, 'CHECKSUM'
    sxdelpar, header, 'CDATASUM'
-   writefits, out_path + 'cube' + strn(cn) + '.fits', cube, header;, /COMPRESS
+   writefits, out_path + 'cube' + strn(cn) + '.fits', cube, header, /COMPRESS
 
 ;   writefits, tmp_path + 'reduced.fits', cube
  
 ;   writefits,tmp_path + 'long_sigma.fits', stddev(cube,DIMENSION=3)
 
-   printf, lun, 'cube' + strn(cn) + '.fits'
-   ;~ printf, lun, 'cube' + strn(cn) + '.fits.gz'
+   ;~ printf, lun, 'cube' + strn(cn) + '.fits'
+   printf, lun, 'cube' + strn(cn) + '.fits.gz'
 
    print, nam
 endwhile
