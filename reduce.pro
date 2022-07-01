@@ -169,7 +169,7 @@ while (not (EOF(inp))) do begin
 
    print, nam
    
-   stop
+
 endwhile
 
 free_lun, inp
