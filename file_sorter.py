@@ -22,6 +22,7 @@ data = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/H/Field/%s/'%(field_n)
 sky = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/H/Sky/%s/'%(field_n)
 flat = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/H/Flat/%s/'%(date)
 dark = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Dark/%s/'%(field_n)
+common_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/6/ims/'
 field = 'GC H F%s'%(field_n)
 # %%
 with open(dark + 'dark.sof','w') as f:
@@ -41,11 +42,13 @@ for file in glob.glob(data + 'HAWKI*.fits'):
     name = file
     header = fits.open(file)[0].header
     print(header['OBJECT'])
-    if header['OBJECT'] == 'DARK' and 'WinDarks' not in header['ORIGFILE'] :
+    if header['OBJECT'] == 'DARK' and 'WinDarks' in header['ORIGFILE'] :
         count +=1
-        # print(name)
-        with open(dark + 'dark.sof','a') as f:
-            f.write(dark+os.path.basename(name) +' DARK \n')
+        print(len(name)*'*')
+        print(name,header['OBJECT'],header['ORIGFILE'])
+        print(len(name)*'*')
+        with open(dark + 'list.txt','a') as f:
+            f.write(os.path.basename(name) + '\n')
             f.close
         os.replace(name, dark+os.path.basename(name))
     elif header['OBJECT'] == 'FLAT':
@@ -67,12 +70,12 @@ for file in glob.glob(data + 'HAWKI*.fits'):
             fsc.write(os.path.basename(name) + '\n')
             fsc.close()
     else:
-        print(len(name)*'*')
+        print(len(name)*'-')
         print(name,header['OBJECT'],header['ORIGFILE'])
-        print(len(name)*'*')
+        print(len(name)*'-')
 
 with open(flat + 'flat.sof','a') as ff:
-    ff.write(dark+'darkcomb.fits MASTER_DARK')
+    ff.write(common_path+'dark_ext.fits MASTER_DARK')
     ff.close()
 
             
