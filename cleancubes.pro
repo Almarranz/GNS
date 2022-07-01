@@ -1,13 +1,13 @@
 PRO CLEANCUBES;, common_path, in_path, out_path, tmp_path, mask_name, N_SIGMA = n_sigma, DEBUG = debug
 
 
-   field = '9'
+   field = '6'
    band = 'H'
    
-   in_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/cubes/'	
-   common_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
-   tmp_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/tmp/'
-   out_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/cleaned/'
+   in_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/cubes/'	
+   common_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
+   tmp_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/tmp/'
+   out_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/cleaned/'
    
    ;~ common_path = '/data/GNS/2015/' + band + '/' + field + '/ims/'
    ;~ in_path = '/data/GNS/2015/' + band + '/' + field + '/cubes/'
@@ -15,17 +15,15 @@ PRO CLEANCUBES;, common_path, in_path, out_path, tmp_path, mask_name, N_SIGMA = 
    ;~ tmp_path = '/data/GNS/2015/' + band + '/' + field + '/tmp/'
    
    mask_name = 'mask.fits'
-   n_sigma = 7. ; value must be high, otherwise valid pixels of bright stars will be corrected (PSF varies between frames)!
+   n_sigma = 6. ; value must be high, otherwise valid pixels of bright stars will be corrected (PSF varies between frames)!
    debug = 0
-   filt_box = 5 ; width of box for sigma filtering
+   filt_box = 6 ; width of box for sigma filtering
 
 
-
-if not(KEYWORD_SET(n_sigma)) then n_sigma = 5.
-if not(KEYWORD_SET(box_width)) then box_width = 5
-if not(KEYWORD_SET(debug)) then debug = 0
-if not(KEYWORD_SET(sigma_dev)) then sigma_dev = 5.
-
+;~ if not(KEYWORD_SET(n_sigma)) then n_sigma = 5.
+;~ if not(KEYWORD_SET(box_width)) then box_width = 5
+;~ if not(KEYWORD_SET(debug)) then debug = 0
+;~ if not(KEYWORD_SET(sigma_dev)) then sigma_dev = 5.
 
 
 nam = ''
@@ -69,10 +67,15 @@ while (not (EOF(inp))) do begin
       cube[*,*,j] = im * mask
    endfor
    cn = cn + 1
-   writefits, out_path + 'cube'+ strn(cn) + '.fits', cube, header;, /COMPRESS
- 
+   writefits, out_path + 'cube'+ strn(cn) + '.fits', cube, header, /COMPRESS
+   
+   
+   
+   
    printf, lun, 'cube' + strn(cn) + '.fits'
+   print,'***********'
    print, nam
+   print,'***********'
 endwhile
 
 free_lun, inp
