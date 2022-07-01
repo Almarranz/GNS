@@ -16,12 +16,11 @@ field = '6'
    
    bpm_name = 'bpm_' + band + '.fits'
    sky_name = 'sky.fits'
-   ;~ dark_name = 'dark.fits'
-   dark_name = 'darkcomb.fits'
+   dark_name = 'dark.fits'
    mask_name = 'mask_' + band + '.fits'
    flat_name = 'flat_' + band + '.fits'
    sigma_dev_sky = 5. ; sigma threshold for determining bad pixels in sky
-   sigma_dev_dark = 10. ; sigma threshold for determining bad pixels in dark
+   sigma_dev_dark = 5. ; sigma threshold for determining bad pixels in dark
 
 
 
@@ -30,17 +29,15 @@ if not(KEYWORD_SET(sigma_dev_sky)) then sigma_dev_sky = 5.
 if not(KEYWORD_SET(sigma_dev_dark)) then sigma_dev_dark = 20.
 
 bpm = readfits(common_path + bpm_name)
-;~ mask = readfits(common_path + mask_name)
 mask = readfits(common_path + mask_name)
 sky = readfits(common_path + sky_name)
-dark = readfits(dark_path + dark_name)
+dark = readfits(common_path + dark_name)
 flat = readfits(common_path + flat_name)
 
 ; initialize dark and sky bpms
 skybpm = sky
 skybpm[*,*] = 0
-;~ darkbpm = dark
-darkbpm = sky ; adapated for then new dark (where thechips are in differents extensions)
+darkbpm = dark
 darkbpm[*,*] = 0
 
 ; get rid of flat  variations in sky
@@ -90,8 +87,7 @@ sky[good] = sky[good]/flat[good]
 ; ----------------------------------------------------------------------
 
  
- ;~ q = dark[0:2047,0:2047]
- q =  readfits(dark_path + dark_name,EXTEN_NO=1)
+ q = dark[0:2047,0:2047]
  RESISTANT_Mean,q,3.0,Mean,Sigma,Num_Rej, goodvec=goodvec
  Sigma = Sigma * sqrt(n_elements(goodvec)) ; we are interested in sigma, not error of the mean
  bad = where(abs(q - Mean) gt sigma_dev_dark * Sigma, n_bad)
@@ -99,8 +95,7 @@ sky[good] = sky[good]/flat[good]
  q[bad] = 1
  darkbpm[0:2047,0:2047] = q
 
- ;~ q = dark[2048:4095,0:2047]
- q =  readfits(dark_path + dark_name,EXTEN_NO=2)
+ q = dark[2048:4095,0:2047]
  RESISTANT_Mean,q,3.0,Mean,Sigma,Num_Rej, goodvec=goodvec
  Sigma = Sigma * sqrt(n_elements(goodvec)) ; we are interested in sigma, not error of the mean
  bad = where(abs(q - Mean) gt sigma_dev_dark * Sigma, n_bad)
@@ -108,8 +103,7 @@ sky[good] = sky[good]/flat[good]
  q[bad] = 1
  darkbpm[2048:4095,0:2047] = q
 
- ;~ q = dark[2048:4095,2048:4095]
- q =  readfits(dark_path + dark_name,EXTEN_NO=4)
+ q = dark[2048:4095,2048:4095]
  RESISTANT_Mean,q,3.0,Mean,Sigma,Num_Rej, goodvec=goodvec
  Sigma = Sigma * sqrt(n_elements(goodvec)) ; we are interested in sigma, not error of the mean
  bad = where(abs(q - Mean) gt sigma_dev_dark * Sigma, n_bad)
@@ -117,8 +111,7 @@ sky[good] = sky[good]/flat[good]
  q[bad] = 1
  darkbpm[2048:4095,2048:4095] = q
 
- ;~ q = dark[0:2047,2048:4095]
- q = readfits(dark_path + dark_name,EXTEN_NO=3)
+ q = dark[0:2047,2048:4095]
  RESISTANT_Mean,q,3.0,Mean,Sigma,Num_Rej, goodvec=goodvec
  Sigma = Sigma * sqrt(n_elements(goodvec)) ; we are interested in sigma, not error of the mean
  bad = where(abs(q - Mean) gt sigma_dev_dark * Sigma, n_bad)
