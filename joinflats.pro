@@ -5,18 +5,18 @@ PRO JOINFLATS, in_path, com, flat_name, bpm_name, mask_name
 nx = 4096
 ny = 4096
    
-   pruebas = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
-   field = '6'
-   band = 'H'
-   in_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/H/Flat/22-05-28/' ;NOTE: CHECK the DAtE!ª!!!!
-   com = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field + '/ims/'
-   ;~ com=pruebas
-   
-   ;~ in_path = '/home/data/raw/2015/' + band + '/Flat/2015-05-27/' 
-   ;~ com = '/data/GNS/2015/' + band + '/' + field + '/ims/'
-   flat_name = 'flat_' + band + '.fits'
-   bpm_name = 'bpm_' + band + '.fits'
-   mask_name = 'mask_' + band + '.fits'
+pruebas = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
+field = '6'
+band = 'H'
+in_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/H/Flat/'+ field + '/'
+com = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field + '/ims/'
+;~ com=pruebas
+
+;~ in_path = '/home/data/raw/2015/' + band + '/Flat/2015-05-27/' 
+;~ com = '/data/GNS/2015/' + band + '/' + field + '/ims/'
+flat_name = 'flat_' + band + '.fits'
+bpm_name = 'bpm_' + band + '.fits'
+mask_name = 'mask_' + band + '.fits'
   
 
 bigflat = fltarr(nx,ny)
