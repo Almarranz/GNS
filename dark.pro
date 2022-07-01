@@ -1,8 +1,9 @@
 PRO DARK
-field = '9'
+field = '6'
 
-;~ in_path = '/home/data/raw/2015/Dark/2015-06-08/'
-in_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/Dark/17-09-2021/'
+
+in_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Dark/' + field + '/'
+
 
 band = 'H'
 list = 'list.txt'
@@ -15,9 +16,8 @@ NDIT = 7   ; number of sub-integrations in Dark
             ; discarding the mean.
             
 
-out_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/H/' + field + '/ims/'
-;~ out_path = '/data/GNS/2015/H/' + field + '/ims/'
-;out_path = '/data/GNS/2015/'+ band +'/'+field + '/ims/'
+out_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/H/' + field + '/ims/'
+
 
 readcol, in_path+list, names, FORMAT='(A)'
 
@@ -44,6 +44,16 @@ endfor
 
 writefits, out_path + 'dark.fits', dark
 writefits, out_path + 'dark_sigma.fits', dark_sigma
+
+dark_c1 = dark[0:2047,0:2047]
+dark_c2 = dark[2048:4095,0:2047]
+dark_c3 = dark[2048:4095,2048:4095]
+dark_c4 = dark[0:2047,2048:4095]
+
+writefits, out_path + 'dark_ext.fits', dark_c1,header,/app 
+writefits, out_path + 'dark_ext.fits', dark_c2,header2,/app 
+writefits, out_path + 'dark_ext.fits', dark_c3,header3,/app 
+writefits, out_path + 'dark_ext.fits', dark_c4,header4,/app 
 
 print, "dark.pro ended"
 
