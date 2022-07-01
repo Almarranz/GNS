@@ -33,8 +33,7 @@ dark_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Dark/' + field + '/'
 flat_name = 'flat_' + band + '.fits'
 bpm_name = 'bpm_' + band + '.fits'
 mask_name = 'mask_' + band + '.fits'
-;~ dark_name = 'dark.fits'
-dark_name = 'darkcomb.fits'
+dark_name = 'dark.fits'
 sigma_dev = 5. ; sigma threshold for determining valid pixels
 
 
@@ -43,8 +42,7 @@ if not(KEYWORD_SET(sigma_dev)) then sigma_dev = 10.
 nax1 = 4096
 nax2 = 4096
 
-;~ dark = readfits(common_path + dark_name)
-;~ dark = readfits(dark_path + dark_name)
+dark = readfits(common_path + dark_name)
 bpm = readfits(common_path + bpm_name)
 mask = readfits(common_path + mask_name)
 flat = readfits(common_path + flat_name)
@@ -60,14 +58,11 @@ q2_mask = mask[2048:4095,0:2047]
 q3_mask = mask[2048:4095,2048:4095]
 q4_mask = mask[0:2047,2048:4095]
 
-;~ q1_dark = dark[0:2047,0:2047]
-;~ q2_dark = dark[2048:4095,0:2047]
-;~ q3_dark = dark[2048:4095,2048:4095]
-;~ q4_dark = dark[0:2047,2048:4095]
-q1_dark = readfits(dark_path + dark_name,EXTEN_NO=1)
-q2_dark = readfits(dark_path + dark_name,EXTEN_NO=2)
-q3_dark = readfits(dark_path + dark_name,EXTEN_NO=4)
-q4_dark = readfits(dark_path + dark_name,EXTEN_NO=3)
+q1_dark = dark[0:2047,0:2047]
+q2_dark = dark[2048:4095,0:2047]
+q3_dark = dark[2048:4095,2048:4095]
+q4_dark = dark[0:2047,2048:4095]
+
 
 q1_bpm = bpm[0:2047,0:2047]
 q2_bpm = bpm[2048:4095,0:2047]
