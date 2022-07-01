@@ -59,7 +59,8 @@ mask[:,2044:2052] = 0
 mask[4087:4096,:] = 0
 mask[2043:2053,:] = 0
 
-fits.writeto(common_path+ 'mask_%sreg_py.fits'%(reg-1),bpm1*mask,overwrite=True)
+fits.writeto(common_path+ 'mask.fits',bpm1*mask,overwrite=True)
+# fits.writeto(pruebas+ 'mask_%sreg_py.fits'%(reg-1),bpm1*mask,overwrite=True)
 
 
 
