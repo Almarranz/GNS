@@ -17,7 +17,7 @@ from astropy.io import fits
 import shutil
 # %%
 field_n =6
-date = '22-05-28'#date of the flats
+date =  field_n #date of the flats
 data = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/H/Field/%s/'%(field_n)
 sky = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/H/Sky/%s/'%(field_n)
 flat = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/H/Flat/%s/'%(date)
