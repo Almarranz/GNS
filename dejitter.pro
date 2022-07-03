@@ -3,13 +3,14 @@ pro dejitter, field, chip
 ;field = 10
 ;chip = 4
 
-for chip = chip, 4 do begin
+for chip = chip, chip do begin
 
 band = 'H'
-indir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
-outdir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes/'
+indir = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
+outdir = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes/'
+pruebas= '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
-pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
+;~ pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
 ;~ outdir=pruebas
 ;~ indir = '/data/GNS/2015/'+band+'/' + strn(field) + '/ims/'
@@ -43,9 +44,9 @@ wy = 1000
 ;
 ; The jitter_offset paraemter makes sure that an exposure
 ; with zero offset falls into the middle of the frame after alignment
-;jitter_offset = round((60./2.)/0.106) ; maximal offset of a jittered exposure from initial pointing
+;~ jitter_offset = round((60./2.)/0.106) ; maximal offset of a jittered exposure from initial pointing
 ;jitter offset = 330 ; This value has been chosen empirically (systematics in FITS Header cumoffset?)
-jitter_offset=round((2700-2048)/2); place a x_off y_off =0 frame at the center of the cambas.
+jitter_offset = round((2700-2048)/2) ; This value has been chosen empirically (systematics in FITS Header cumoffset?)
 
 n_offsets = 68
 ;~ n_offsets = 68
@@ -53,6 +54,7 @@ n_offsets = 68
 
 openw, out1, outdir + 'list_chip'+strn(chip)+'.txt', /get_lun
 openw, out2, outdir + 'masklist_chip'+strn(chip)+'.txt', /get_lun
+openw, out3, 'jitter_offsets'+strn(chip)+'.txt', /get_lun
 
 new_ref = fltarr(sizex_new,sizey_new)
 ;~ new_ref_cube = fltarr(sizex_new,sizey_new,elements_cube)
@@ -60,46 +62,46 @@ new_mask_ref = fltarr(sizex_new,sizey_new)
 lnx_cube = fltarr(sizex_new,sizey_new,n_offsets)
 mask_cube = fltarr(sizex_new,sizey_new,n_offsets)
 
+
 for i = 1, n_offsets do begin
 
 
   print, 'Pointing : ' + strn(i)   
 
-  printf, out1, 'cube_jitter_' + strn(chip) + '_' + strn(i) + '.fits'
-  printf, out2, 'mask_jitter_' + strn(chip) + '_' + strn(i) + '.fits'
-  ;~ printf, out1, 'cube_jitter_' + strn(chip) + '_' + strn(i) + '.fits.gz'
-  ;~ printf, out2, 'mask_jitter_' + strn(chip) + '_' + strn(i) + '.fits.gz'
+  ;~ printf, out1, 'cube_jitter_' + strn(chip) + '_' + strn(i) + '.fits'
+  ;~ printf, out2, 'mask_jitter_' + strn(chip) + '_' + strn(i) + '.fits'
+  printf, out1, 'cube_jitter_' + strn(chip) + '_' + strn(i) + '.fits.gz'
+  printf, out2, 'mask_jitter_' + strn(chip) + '_' + strn(i) + '.fits.gz'
   
-  cube = readfits(indir + 'chip' + strn(chip) + '_cube' + strn(i) + '.fits', header)
-  mask = readfits(indir + 'mask_chip' + strn(chip) + '.fits')
-  ;~ cube = readfits(indir + 'chip' + strn(chip) + '_cube' + strn(i) + '.fits.gz', header)
-  ;~ mask = readfits(indir + 'mask_chip' + strn(chip) + '.fits.gz')
+  ;~ cube = readfits(indir + 'chip' + strn(chip) + '_cube' + strn(i) + '.fits', header)
+  ;~ mask = readfits(indir + 'mask_chip' + strn(chip) + '.fits')
+  cube = readfits(indir + 'chip' + strn(chip) + '_cube' + strn(i) + '.fits.gz', header)
+  mask = readfits(indir + 'mask_chip' + strn(chip) + '.fits.gz')
   
   ;################################################################
   sz=size(cube)
-  elements_cube = sz[3] ; many cubes have fewer number of slices than others
+  elements_cube = sz[3] ; many cubes have fewer number of slices
   
-  ;so, we need to call these thrid dimesion for each pointing. 
   
-  new_ref_cube = fltarr(sizex_new,sizey_new,elements_cube)
-  
+  new_ref_cube = fltarr(sizex_new,sizey_new,elements_cube-1) ; smaller than input cube because we omit the long exposure (last frame)
+	
   ;################################################################
   ; Read in cumulative offset from initial pointing in pixels
   x_off = strsplit(header[615],'HIERARCH ESO SEQ CUMOFFSETX = ', ESCAPE = '/', /extract)
   y_off = strsplit(header[616],'HIERARCH ESO SEQ CUMOFFSETY = ', ESCAPE = '/', /extract) 
   
   
-  x_off = fix(x_off[0])
-  y_off = fix(y_off[0])
+  x_off_header = fix(x_off[0])
+  y_off_header = fix(y_off[0])
   
 
   print, 'Offsets from Fits Header: ' + strn(x_off) + ', ' + strn(y_off)
 
 ;STOP
 
-  pos_x = jitter_offset - x_off
-  pos_y = jitter_offset - y_off
- 
+  pos_x = jitter_offset - x_off_header
+  pos_y = jitter_offset - y_off_header
+
   if i eq 1 then begin
    
    ref_header = header
@@ -108,13 +110,15 @@ for i = 1, n_offsets do begin
    size_old_x = n_size[1]
    size_old_y = n_size[2]
  
-   new_ref_cube[pos_x:pos_x + size_old_x -1 ,pos_y:pos_y + size_old_y - 1,*] = cube[*,*,0:elements_cube-1]
+   new_ref_cube[pos_x:pos_x + size_old_x -1 ,pos_y:pos_y + size_old_y - 1,*] = cube[*,*,0:elements_cube-2]
    new_mask_ref[pos_x:pos_x + size_old_x -1 ,pos_y:pos_y + size_old_y - 1] = mask
   
-   writefits, outdir + 'cube_jitter_' + strn(chip) + '_' + strn(i) + '.fits', new_ref_cube, header
-   writefits, outdir + 'mask_jitter_' + strn(chip) + '_' + strn(i) + '.fits', new_mask_ref
-   ;~ writefits, outdir + 'cube_jitter_' + strn(chip) + '_' + strn(i) + '.fits', new_ref_cube, header, /COMPRESS
-   ;~ writefits, outdir + 'mask_jitter_' + strn(chip) + '_' + strn(i) + '.fits', new_mask_ref, /COMPRESS
+   ;~ writefits, outdir + 'cube_jitter_' + strn(chip) + '_' + strn(i) + '.fits', new_ref_cube, header
+   ;~ writefits, outdir + 'mask_jitter_' + strn(chip) + '_' + strn(i) + '.fits', new_mask_ref
+   print, 'cube_jitter_' + strn(chip) + '_' + strn(i) + '.fits'
+   help, new_ref_cube
+   writefits, outdir + 'cube_jitter_' + strn(chip) + '_' + strn(i) + '.fits', new_ref_cube, header, /COMPRESS
+   writefits, outdir + 'mask_jitter_' + strn(chip) + '_' + strn(i) + '.fits', new_mask_ref, /COMPRESS
 
    ; store long exposures in reference image    
    new_ref[pos_x:pos_x + size_old_x -1 ,pos_y:pos_y + size_old_y - 1,*] = cube[*,*,elements_cube-1];last exposure is 8-1, not 8. The cube has 8 slices, from 0 to 7.
@@ -133,19 +137,21 @@ for i = 1, n_offsets do begin
    small_ref[wx-2:wx,*]=1
    small_ref[*,0:2]=1
    small_ref[*,wy-2:wy]=1
+
+   printf, out3, x_off_header, y_off_header, FORMAT='(2F8.2)'
    
 ;   writefits, outdir + 'aaa_ref.fits', small_ref
 
   endif else begin
 
    new = fltarr(sizex_new,sizey_new)
-   new_cube=fltarr(sizex_new,sizey_new,elements_cube)
+   new_cube=fltarr(sizex_new,sizey_new,elements_cube-1); smaller than input cube because we omit the long exposure (last frame)
    new_mask = fltarr(sizex_new,sizey_new)
    lnx_tmp = fltarr(sizex_new,sizey_new)
     
    new[pos_x:pos_x + size_old_x -1 ,pos_y:pos_y + size_old_y - 1] = cube[*,*,elements_cube-1]
    ;~ new[pos_x:pos_x + size_old_x -1 ,pos_y:pos_y + size_old_y - 1] = cube[*,*,elements_cube]
-   ;~ new_mask[pos_x:pos_x + size_old_x -1 ,pos_y:pos_y + size_old_y - 1] = mask ; Im going to call new_mas downline to shift it with x_off y_off too
+   ;new_mask[pos_x:pos_x + size_old_x -1 ,pos_y:pos_y + size_old_y - 1] = mask ;I have called this line later down. 
   
    ; extract a small region from near image centre
    ; that is used for final fine alignment
@@ -165,8 +171,12 @@ for i = 1, n_offsets do begin
 ;   y_off = round(OFFSET[1])
 
 
-    correl_optimize, small_ref, small_new_ref, x_off, y_off, MAGNIFICATION=4	, /NUMPIX ; /NUMPIX is ESSENTIAL
+    correl_optimize, small_ref, small_new_ref, x_off, y_off, MAGNIFICATION=4, /NUMPIX ; /NUMPIX is ESSENTIAL
     print, 'Offsets from correlation: ' + strn(x_off) + ', ' + strn(y_off)
+
+    ; offsets in header and in correlation point into differeent directions
+    ; not tested....
+    printf, out3, (x_off_header - x_off), (y_off_header - y_off), FORMAT='(2F8.2)'
    
    ; This is to catch grave problems with correl_optimize
    ; These problems will hopefully not happen any more with /NUMPIX.
@@ -178,32 +188,30 @@ for i = 1, n_offsets do begin
     print,'###################################'
    endif
  
-   new_cube[pos_x + x_off:pos_x + size_old_x -1 + x_off ,pos_y + y_off:pos_y + size_old_y + y_off- 1,*] = cube[*,*,0:elements_cube-1]
+   new_cube[pos_x + x_off:pos_x + size_old_x -1 + x_off ,pos_y + y_off:pos_y + size_old_y + y_off- 1,*] = cube[*,*,0:elements_cube-2]
    lnx_tmp[pos_x + x_off:pos_x + size_old_x -1 + x_off ,pos_y + y_off:pos_y + size_old_y + y_off- 1] = cube[*,*,elements_cube-1]
-   
-   new_mask[pos_x + x_off:pos_x + size_old_x -1 + x_off ,pos_y + y_off:pos_y + size_old_y + y_off- 1] = mask; with line we are shifting also the mask
    ;~ lnx_tmp[pos_x + x_off:pos_x + size_old_x -1 + x_off ,pos_y + y_off:pos_y + size_old_y + y_off- 1] = cube[*,*,elements_cube]
- 
+   new_mask[pos_x + x_off:pos_x + size_old_x -1 + x_off ,pos_y + y_off:pos_y + size_old_y + y_off- 1] = mask; here we are applying the shifting also to the mask
    lnx_cube[*,*,i-1] = lnx_tmp[*,*]
    mask_cube[*,*,i-1] = new_mask[*,*]   
 
-   writefits, outdir + 'cube_jitter_' + strn(chip) + '_' + strn(i) + '.fits', new_cube
-   writefits, outdir + 'mask_jitter_' + strn(chip) + '_' + strn(i) + '.fits', new_mask
-   ;~ writefits, outdir + 'cube_jitter_' + strn(chip) + '_' + strn(i) + '.fits', new_cube, /COMPRESS
-   ;~ writefits, outdir + 'mask_jitter_' + strn(chip) + '_' + strn(i) + '.fits', new_mask, /COMPRESS
-   
+   print, 'cube_jitter_' + strn(chip) + '_' + strn(i) + '.fits'
+   help, new_cube
+   writefits, outdir + 'cube_jitter_' + strn(chip) + '_' + strn(i) + '.fits', new_cube, /COMPRESS
+   writefits, outdir + 'mask_jitter_' + strn(chip) + '_' + strn(i) + '.fits', new_mask, /COMPRESS
   
-  endelse
- 
+
+endelse
+; STOP
 
 endfor
 
-free_lun, out1, out2
+free_lun, out1, out2, out3
 
-writefits, outdir + 'lnx_jitter_cube_' + strn(chip) + '.fits', lnx_cube, ref_header
-writefits, outdir + 'lnx_jitter_mask_' + strn(chip) + '.fits', mask_cube
-;~ writefits, outdir + 'lnx_jitter_cube_' + strn(chip) + '.fits', lnx_cube, ref_header, /COMPRESS
-;~ writefits, outdir + 'lnx_jitter_mask_' + strn(chip) + '.fits', mask_cube, /COMPRESS
+;~ writefits, outdir + 'lnx_jitter_cube_' + strn(chip) + '.fits', lnx_cube, ref_header
+;~ writefits, outdir + 'lnx_jitter_mask_' + strn(chip) + '.fits', mask_cube
+writefits, outdir + 'lnx_jitter_cube_' + strn(chip) + '.fits', lnx_cube, ref_header, /COMPRESS
+writefits, outdir + 'lnx_jitter_mask_' + strn(chip) + '.fits', mask_cube, /COMPRESS
 
 
 endfor
