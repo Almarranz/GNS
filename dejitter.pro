@@ -85,10 +85,11 @@ for i = 1, n_offsets do begin
   
   new_ref_cube = fltarr(sizex_new,sizey_new,elements_cube-1) ; smaller than input cube because we omit the long exposure (last frame)
 	
+  
   ;################################################################
   ; Read in cumulative offset from initial pointing in pixels
-  x_off = strsplit(header[619],'HIERARCH ESO SEQ CUMOFFSETX = ', ESCAPE = '/', /extract)
-  y_off = strsplit(header[620],'HIERARCH ESO SEQ CUMOFFSETY = ', ESCAPE = '/', /extract) 
+  x_off = strsplit(header[size(header,/N_ELEMENTS)-74],'HIERARCH ESO SEQ CUMOFFSETX = ', ESCAPE = '/', /extract)
+  y_off = strsplit(header[size(header,/N_ELEMENTS)-73],'HIERARCH ESO SEQ CUMOFFSETY = ', ESCAPE = '/', /extract) 
   
   
   x_off_header = fix(x_off[0])
