@@ -48,7 +48,7 @@ wy = 1000
 ;jitter offset = 330 ; This value has been chosen empirically (systematics in FITS Header cumoffset?)
 jitter_offset = round((2700-2048)/2) ; This value has been chosen empirically (systematics in FITS Header cumoffset?)
 
-n_offsets = 68
+n_offsets = 70
 ;~ n_offsets = 68
 
 
@@ -87,17 +87,17 @@ for i = 1, n_offsets do begin
 	
   ;################################################################
   ; Read in cumulative offset from initial pointing in pixels
-  x_off = strsplit(header[615],'HIERARCH ESO SEQ CUMOFFSETX = ', ESCAPE = '/', /extract)
-  y_off = strsplit(header[616],'HIERARCH ESO SEQ CUMOFFSETY = ', ESCAPE = '/', /extract) 
+  x_off = strsplit(header[619],'HIERARCH ESO SEQ CUMOFFSETX = ', ESCAPE = '/', /extract)
+  y_off = strsplit(header[620],'HIERARCH ESO SEQ CUMOFFSETY = ', ESCAPE = '/', /extract) 
   
   
   x_off_header = fix(x_off[0])
   y_off_header = fix(y_off[0])
   
-
-  print, 'Offsets from Fits Header: ' + strn(x_off) + ', ' + strn(y_off)
-
-;STOP
+    
+  print, 'Offsets from Fits Header: ' + strn(x_off_header) + ', ' + strn(y_off_header)
+    
+STOP
 
   pos_x = jitter_offset - x_off_header
   pos_y = jitter_offset - y_off_header
