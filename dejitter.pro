@@ -97,7 +97,7 @@ for i = 1, n_offsets do begin
     
   print, 'Offsets from Fits Header: ' + strn(x_off_header) + ', ' + strn(y_off_header)
     
-STOP
+; STOP
 
   pos_x = jitter_offset - x_off_header
   pos_y = jitter_offset - y_off_header
