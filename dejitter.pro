@@ -3,13 +3,19 @@ pro dejitter, field, chip
 ;field = 10
 ;chip = 4
 
-for chip = chip, chip do begin
+
 
 band = 'H'
 indir = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
 outdir = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes/'
 pruebas= '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
+for chip = chip, 4 do begin
+print,'*****************'
+print,'*****************'
+print, 'Working on chip ',chip
+print,'*****************'
+print,'*****************'
 ;~ pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
 ;~ outdir=pruebas
@@ -88,6 +94,8 @@ for i = 1, n_offsets do begin
   
   ;################################################################
   ; Read in cumulative offset from initial pointing in pixels
+  ;When the autoguider is on, 2 lines are added to the header and line index for CUMOFFSETX changes. 
+  ;That is why we call it in this why instead of set the number of the line directly
   x_off = strsplit(header[size(header,/N_ELEMENTS)-74],'HIERARCH ESO SEQ CUMOFFSETX = ', ESCAPE = '/', /extract)
   y_off = strsplit(header[size(header,/N_ELEMENTS)-73],'HIERARCH ESO SEQ CUMOFFSETY = ', ESCAPE = '/', /extract) 
   
