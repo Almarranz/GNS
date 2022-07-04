@@ -6,13 +6,14 @@ GNS pipeline adapted for unwindowed frames.
 
 0. file_sorter.py. This separte the darks and th flats to be use with esorex recipes. Also generates the .sof files needed for esorex
 > Note: at the moment there is no **esorex** not **gasgano** installed at teatime. SO I doing this locally for now
-1. Esorex recipes
-> esorex hawki_dark_combine dark.sof.
 
-> esorex hawki_twilight_flat_combine flat.sof.
+> Note2: you need to make a folder with date of the flat in the Flat directory
+1. dark.pro. we do the dark with IDL. Genretaes two different darks,one on the canvas one with extentions
+1.1 Esorex recipes
 
->>Note: the dark.fits file is no longe produce by the dark.pro file, but for esorex dark recipe Instead
+> esorex hawki_twilight_flat_combine flat.sof. Run ot in the flat folder, in the date folder
 
+>>Note: the flat hawki_twilight_flat_combine needs the dark with each chip in different extension
 2. joint_flats.pro. generates the flat, bpm_H and the mask.
 3. sky.pro
 4. fullbpm.pro
