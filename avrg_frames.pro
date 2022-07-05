@@ -59,7 +59,7 @@ for chip=1, 4 do begin
 		avereged_frame = avg(all_frames,2)
 		new_cube[*,*,-1] = avereged_frame
 		
-		writefits, indir +'chip' + strn(chip) + '_cube' + strn(i) + '.fits.gz', new_cube, header
+		writefits, indir +'chip' + strn(chip) + '_cube' + strn(nam) + '.fits.gz', new_cube, header
 ; 	print,'##################'
 ; 	print,'Done with chip ',chip
 ; 	print,'##################'
