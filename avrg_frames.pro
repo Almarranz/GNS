@@ -1,32 +1,41 @@
 PRO avrg_frames
 
-field = 9
+field = 6
 
 
 ;~ for chip = chip, chip do begin
 
 band = 'H'
-indir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
-outdir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes/'
+; indir = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
+; outdir = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes/'
 
-pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
+pruebas= '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
-;~ outdir=pruebas
+indir = pruebas
+outdir = pruebas
 
 
 ROBUST=0
 ;~ j=2
-cubes_mod=[7,10,13,17,22,23,34,38,40,42,43,44,47]
+; cubes_mod=[11,24,31,34,36,41,45,58] 
+; cubes_mod=[11,24,31] 
 ;~ cubes_mod=[42,47]
 
 
 mods=n_elements(cubes_mod)
 print, 'Working on ', mods,' cubes'
 
-for chip=1, 4 do begin
-	for j=0, mods-1 do begin
+nam=''
+openr, inp, (pruebas + 'bad_cubes_'+strn(field)+'.txt'), /get_lun  ; open input file for reading
+while (not (EOF(inp))) do begin
+   readf, inp,nam
+   print, nam
 
-		cube=readfits(indir +'chip'+strn(chip)+'_cube' + strn(cubes_mod[j]) + '.fits',header)
+
+for chip=1, 4 do begin
+; 	for j=0, mods-1 do begin
+
+		cube=readfits(indir +'chip'+strn(chip)+'_cube' + strn(nam) + '.fits.gz',header)
 		;~ cube=readfits(indir +'chip1_cube' + strn(j) + '.fits',header)
 		sz = size(cube)
 		nax1 = sz[1]
@@ -106,12 +115,12 @@ for chip=1, 4 do begin
 			 endfor
 			endfor
 			new_cube[*,*,nax3-1]=ssa
-			writefits, indir + 'chip'+strn(chip)+'_cube' + strn(cubes_mod[j]) + '.fits', new_cube,header
+			writefits, indir + 'chip'+strn(chip)+'_cube' + strn(nam) + '_test1.fits', new_cube,header
 			;~ writefits, pruebas +'cube_average/'+ 'ssa_' + strn(cubes_mod[j]) + '.fits', ssa
 			;~ writefits, pruebas + 'cube_average/'+'wt_' + strn(cubes_mod[j]) + '.fits', wt
 			;~ writefits, pruebas + 'cube_average/'+'ssa_sigma' + strn(cubes_mod[j]) + '.fits', ssa_sigma
 			;~ writefits, pruebas + 'cube_average/'+'new_cube_all_' + strn(cubes_mod[j]) + '.fits', new_cube, header
-			print, 'Averaged cube: cube ',cubes_mod[j]
+			print, 'Averaged cube: cube ',nam
 			
 			;~ wt_all = wt_all + wt
 			;~ ssa_all = ssa_all + wt*ssa
@@ -129,12 +138,15 @@ for chip=1, 4 do begin
 			;~ writefits, pruebas + '_wt.fits', wt_all
 			;~ writefits, pruebas + 'new_cube_all_wt.fits', ssa_all
 			;~ writefits, pruebas + '_sigma.fits', sqrt(ssa_sigma_all)
-	endfor
+; 	endfor
 	print,'##################'
 	print,'Done with chip ',chip
 	print,'##################'
 	
  endfor  
-
+     print,'##################'
+ 	print,'Done with cube ',nam
+ 	print,'##################'
+endwhile
 
 END
