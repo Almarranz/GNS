@@ -63,7 +63,7 @@ for i = 0L, counts - 1 do begin
   yy = xy[1]
   if (bpm[xx,yy] gt 0) then begin
    region = search2d(bpm,xx,yy,0.99,1)
-   if (n_elements(region) gt 5) then mask[region] = 0
+   if (n_elements(region) gt 4) then mask[region] = 0; I have changed the size of the region to mask from 5 to 4 in order to mask the crosses
   endif
 endfor
 
