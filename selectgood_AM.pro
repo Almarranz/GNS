@@ -16,28 +16,25 @@ outdir = common_path
 ; indir = pruebas
 ; outdir = pruebas
 
-n_offset = 70
-openr, inp,common_path + 'cube_info.txt', /get_lun
-print, inp
 
-; Change format of image cubes
-; -----------------------------
+openr, inp,(common_path + 'cube_info_'+ field +'.txt'), /get_lun
 
-for j = 1, n_offset do begin
-   readf, inp, i1, i2, i3, i4, i5, i6, i7,i8, FORMAT='(8I)'
-   indices = [i1,i2,i3,i4,i5,i6,i7,i8]
-   
-    ind = indices[where(indices gt 0)] - 1
-;   ind = [ind,7]
-   
-  for chip = 1, 4 do begin
-      cube = readfits(indir + 'chip'+ strn(chip) + '_cube' + strn(j) + '.fits.gz', header)
+while not EOF(inp) do begin
+readf, inp, i0,i1, i2, i3, i4, i5, i6, i7,i8, FORMAT = '(9I)'
+indices = [i1,i2,i3,i4,i5,i6,i7,i8]
+cube = round(i0)
+ind = indices[where(indices gt 0)] - 1
+
+print,cube,ind
+stop
+help, ind
+for chip = 1, 4 do begin
+      cube = readfits(indir + 'chip'+ strn(chip) + '_cube' + strn(round(i0)) + '.fits.gz', header)
     help, cube[*,*,ind]
-      writefits, outdir + 'chip'+ strn(chip) + '_cube' + strn(j) + '.fits.gz', cube[*,*,ind], header, /COMPRESS
-      print, 'Finished offset ' + strn(j) + ', chip ' + strn(chip)
+      writefits, outdir + 'chip'+ strn(chip) + '_cube' + strn(round(i0)) + 'test.fits.gz', cube[*,*,ind], header, /COMPRESS
+      print, 'Finished offset ' +strn(round(i0)) + ', chip ' + strn(chip)
   endfor
-endfor
 
-free_lun, inp
+endwhile
 
 END
