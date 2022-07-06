@@ -166,9 +166,10 @@ while (not (EOF(inp))) do begin
 
    ;~ printf, lun, 'cube' + strn(cn) + '.fits'
    printf, lun, 'cube' + strn(cn) + '.fits.gz'
-
-   print, nam
    
+   print, '#########################################' 
+   print, 'Reduced pointing',cn,'of',n_elements(inp)
+   print, '#########################################'
 
 endwhile
 
