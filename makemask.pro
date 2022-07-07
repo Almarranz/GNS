@@ -11,6 +11,7 @@ field = '6'
 band = 'H'
 
 common_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
+pruebas = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
 ;~ common_path = '/data/GNS/2015/' + band + '/' + field +'/ims/'
 bpm_name = 'bpm.fits'
@@ -70,7 +71,8 @@ endfor
 ; mask manually an isolated pixel in the middle of a bunch 
 ; of bad pixels (I found it when running cleancubes.pro)
 ;~ mask[392,677] = 0
-writefits, common_path + 'mask.fits', mask
+; writefits, common_path + 'mask.fits', mask
+ writefits, pruebas + 'mask.fits', mask
 
 print, 'makemask.pro ended'
 

@@ -9,7 +9,7 @@ Created on Thu Jun 30 10:38:06 2022
 import numpy as np
 from scipy import ndimage
 from astropy.io import fits
-import glob
+
 
 field = '6'
 band = 'H'
