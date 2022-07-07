@@ -9,21 +9,23 @@ band = 'H'
 indir = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
 pruebas= '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
+
+
+
 ; indir = pruebas
 
 
-
-
-
 nam=''
-openr, inp, (pruebas + 'bad_cubes_'+strn(field)+'.txt'), /get_lun  ; open input file for reading
+openr, inp, (indir +'cube_info_'+ field +'.txt'), /get_lun  ; open input file for reading
+
 while (not (EOF(inp))) do begin
-   readf, inp,nam
-   print, nam
+   readf, inp, i0,i1, i2, i3, i4, i5, i6, i7,i8, FORMAT = '(9I)'
+   indices = [i1,i2,i3,i4,i5,i6,i7,i8]
+   print,round(i0)
 
 
 for chip=1, 4 do begin
-		cube=readfits(indir +'chip'+strn(chip)+'_cube' + strn(nam) + '.fits.gz',header)
+		cube=readfits(indir +'chip'+strn(chip)+'_cube' + strn(round(i0)) + '.fits.gz',header)
 		;~ cube=readfits(indir +'chip1_cube' + strn(j) + '.fits',header)
 		sz = size(cube)
 		nax1 = sz[1]
@@ -59,7 +61,7 @@ for chip=1, 4 do begin
 		avereged_frame = avg(all_frames,2)
 		new_cube[*,*,-1] = avereged_frame
 		
-		writefits, indir +'chip' + strn(chip) + '_cube' + strn(nam) + '.fits.gz', new_cube, header, /COMPRESS
+		writefits, indir +'chip' + strn(chip) + '_cube' + strn(round(i0)) + '.fits.gz', new_cube, header, /COMPRESS
 ; 	print,'##################'
 ; 	print,'Done with chip ',chip
 ; 	print,'##################'
