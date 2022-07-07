@@ -28,7 +28,7 @@ easier visual inspectiom. It also generates text files matches each slice in the
 with the corresponding pointing. You have to pass the information of the cubes with bad frames to **cube_info_file.py**
 
 ### 8.2 cube_info_file.py
-Generates de **cube_info.txt** file that selectgood will use
+Generates de **cube_info_<field>.txt** file that selectgood will use
 
 ### 9. selectgood_AM.pro. 
 Eliminates bad frames
