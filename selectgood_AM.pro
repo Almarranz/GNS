@@ -1,15 +1,14 @@
 PRO SELECTGOOD_AM;, chip
 
 ; We are going to elimante the bad frames before dejitter.pro, in order to avoind
-; uses bad frames with  correl optimace
+; useing bad frames with  correl_optimace
 
 field = '6'
 band = 'H'
 
 common_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/ims/'
 pruebas = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
-cubes = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/cubes/'
-morralla = '/Users/alvaromartinez/Desktop/morralla/'
+
 indir = common_path
 outdir = common_path
 
@@ -25,8 +24,7 @@ indices = [i1,i2,i3,i4,i5,i6,i7,i8]
 cube = round(i0)
 ind = indices[where(indices gt 0)] - 1
 
-print,cube,ind
-stop
+print,'Cube and good slices:',cube,ind
 help, ind
 for chip = 1, 4 do begin
       cube = readfits(indir + 'chip'+ strn(chip) + '_cube' + strn(round(i0)) + '.fits.gz', header)
