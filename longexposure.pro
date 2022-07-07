@@ -5,9 +5,9 @@ pro longexposure, field, n_chip
 
 band = 'H'
 
-indir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes/'
-outdir = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
-pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
+indir = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes/'
+outdir = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/ims/'
+pruebas= '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
 
 ;~ indir = '/data/GNS/2015/'+band+'/' + strn(field) + '/cubes/'
@@ -27,10 +27,10 @@ Sigma_CUT = 3.0
 
  chipnr = strn(n_chip)
  
- cube = readfits(indir + 'lnx_jitter_cube_' + chipnr + '.fits', header)
- mask = readfits(indir +'lnx_jitter_mask_' + chipnr + '.fits')
- ;~ cube = readfits(indir + 'lnx_jitter_cube_' + chipnr + '.fits.gz', header)
- ;~ mask = readfits(indir +'lnx_jitter_mask_' + chipnr + '.fits.gz')
+;  cube = readfits(indir + 'lnx_jitter_cube_' + chipnr + '.fits', header)
+;  mask = readfits(indir +'lnx_jitter_mask_' + chipnr + '.fits')
+  cube = readfits(indir + 'lnx_jitter_cube_' + chipnr + '.fits.gz', header)
+  mask = readfits(indir +'lnx_jitter_mask_' + chipnr + '.fits.gz')
  
 ;weight = readfits(indir + 'new_weight_jitter_chip' + strn(n_chip) + '.fits'
  sz = size(cube)
@@ -75,12 +75,12 @@ Sigma_CUT = 3.0
   
  endfor
  
- writefits, outdir + 'lnx_jitter_' + chipnr + '.fits', lxp, header
- writefits, outdir + 'lnx_jitter_' + chipnr + '_sig.fits', lxp_sigma
- writefits, outdir + 'lnx_jitter_' + chipnr + '_wt.fits', wt
- ;~ writefits, outdir + 'lnx_jitter_' + chipnr + '.fits', lxp, header, /COMPRESS
- ;~ writefits, outdir + 'lnx_jitter_' + chipnr + '_sig.fits', lxp_sigma, /COMPRESS
- ;~ writefits, outdir + 'lnx_jitter_' + chipnr + '_wt.fits', wt, /COMPRESS
+;  writefits, outdir + 'lnx_jitter_' + chipnr + '.fits', lxp, header
+;  writefits, outdir + 'lnx_jitter_' + chipnr + '_sig.fits', lxp_sigma
+;  writefits, outdir + 'lnx_jitter_' + chipnr + '_wt.fits', wt
+  writefits, outdir + 'lnx_jitter_' + chipnr + '.fits', lxp, header, /COMPRESS
+  writefits, outdir + 'lnx_jitter_' + chipnr + '_sig.fits', lxp_sigma, /COMPRESS
+  writefits, outdir + 'lnx_jitter_' + chipnr + '_wt.fits', wt, /COMPRESS
  
  print, 'Averaged chip '+ chipnr + '.'
 
