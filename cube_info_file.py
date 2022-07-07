@@ -25,6 +25,8 @@ common_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + ba
 pruebas = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 cubes = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/' + band + '/' + field +'/cubes/'
 
+# common_path = pruebas
+
 with open(common_path + 'cube_info_'+ field +'.txt','w') as f:
     f.write('')
 # Select the cube with bad frames and put them in the 'cube' array
@@ -43,11 +45,12 @@ if len(cube) != len(slices):
 for i in range(len(cube)):
     print(i)
     with open(common_path + 'cube_info_'+ field +'.txt','a') as f:
-        sl = str(slices[cube.index(i)]).replace('[', '').replace(']', '')
+        sl = str(slices[i]).replace('[', '').replace(']', '')
         # f.write('%s \n'%(slices[cube.index(i)]))  
-        f.write('%s, %s \n'%(str(i), sl ))  
+        f.write('%s, %s \n'%(cube[i], sl ))  
         
-       
+# %%
+print(cube[i])      
 
 
 
