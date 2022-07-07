@@ -29,7 +29,7 @@ help, ind
 for chip = 1, 4 do begin
       cube = readfits(indir + 'chip'+ strn(chip) + '_cube' + strn(round(i0)) + '.fits.gz', header)
     help, cube[*,*,ind]
-      writefits, outdir + 'chip'+ strn(chip) + '_cube' + strn(round(i0)) + 'test.fits.gz', cube[*,*,ind], header, /COMPRESS
+      writefits, outdir + 'chip'+ strn(chip) + '_cube' + strn(round(i0)) + '.fits.gz', cube[*,*,ind], header, /COMPRESS
       print, 'Finished offset ' +strn(round(i0)) + ', chip ' + strn(chip)
   endfor
 

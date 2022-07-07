@@ -16,12 +16,11 @@ pruebas= '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
 
 nam=''
-openr, inp, (indir +'cube_info_'+ field +'.txt'), /get_lun  ; open input file for reading
+openr, inp, (indir +'cube_info_'+ strn(field) +'.txt'), /get_lun  ; open input file for reading
 
 while (not (EOF(inp))) do begin
    readf, inp, i0,i1, i2, i3, i4, i5, i6, i7,i8, FORMAT = '(9I)'
-   indices = [i1,i2,i3,i4,i5,i6,i7,i8]
-   print,round(i0)
+   print,'Averagin cube:',round(i0)
 
 
 for chip=1, 4 do begin
@@ -68,7 +67,7 @@ for chip=1, 4 do begin
 	
  endfor  
      print,'********************'
- 	print,'Done with cube ',nam
+ 	print,'Done with cube ',strn(round(i0))
  	print,'********************'
 endwhile
 
