@@ -35,13 +35,13 @@ end
 
 PRO FINDSTARS, field_nr, chip_nr
 
-field_nr = 9
+field_nr = 6
 ;~ chip_nr = 1
 band = 'H'
 
-data_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/ims/'
-out_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) +  '/data/'
-tmp_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) +  '/tmp/'
+data_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/ims/'
+out_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) +  '/data/'
+tmp_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) +  '/tmp/'
 ;~ data_path = '/data/GNS/2015/'+band+'/' + strn(field_nr) + '/ims/'
 ;~ out_path = '/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
 ;~ tmp_path = '/data/GNS/2015/'+band+'/' + strn(field_nr) + '/tmp/'

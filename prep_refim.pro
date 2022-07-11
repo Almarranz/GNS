@@ -2,9 +2,9 @@ PRO PREP_REFIM, field
 
 field = strn(field)
 band = 'H'
-VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
+VVV='/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
 
-pruebas= '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
+pruebas= '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 ; Determine FoV
 ; We assume 60"  jitter window for all observations, even
 ; though the 2015 observations were done with a 30" jitter
@@ -31,20 +31,26 @@ y_vvv = round((2*y_size * pxscl_hawki + jitterbox/2. + 30.)/pxscl_vvv)
 ; of the observations.
 
 list = 'list.txt'
-raw_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/'+ band+'/Field/'+field+'/'
+raw_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/'+ band+'/Field/'+field+'/'
 ;~ raw_path = '/home/data/raw/2015/' + band +'/Field/' + field + '/'
 
 readcol, raw_path + list, names, FORMAT='A'
 im = readfits(raw_path + names[0], header)
 
 ; get offset from original (0,0) pointing ) in arcsec, NO  in PIXELs.
-x_off = strsplit(header[613],' ', /extract)
-y_off = strsplit(header[614],' ', /extract) 
+print,n_elements(header)
 
+x_off = strsplit(header[n_elements(header)-77],' ', /extract)
+y_off = strsplit(header[n_elements(header)-76],' ', /extract)
+
+
+print,x_off,y_off
 ;~ x_off = strsplit(header[425],' ', /extract)
 ;~ y_off = strsplit(header[426],' ', /extract) 
 x_off = float(x_off[5])
 y_off = float(y_off[5])
+
+print,x_off,y_off
 
 ;Convert to degrees
 x_off = x_off/3600.
@@ -103,9 +109,8 @@ endif
 ;~ SXADDPAR, refhdr, 'CRPIX1', crpix1
 ;~ refim = float(refim)
 
-;~ writefits, VVV+'Fields/H/Field' + strn(field) + '.fits', refim, refhdr
-writefits, pruebas+'Field' + strn(field) + '.fits', refim, refhdr
-;~ writefits, 'Field' + strn(field) + '.fits.gz', refim, refhdr, /COMPRESS
+; writefits, pruebas+'Field' + strn(field) + '.fits', refim, refhdr
+writefits, VVV + 'Field' + strn(field) + '.fits.gz', refim, refhdr, /COMPRESS
 
 print, 'Size of reference image: ' + strn(x_vvv)  + ' x '+ strn(y_vvv)
 ;stop
