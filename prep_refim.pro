@@ -2,7 +2,7 @@ PRO PREP_REFIM, field
 
 field = strn(field)
 band = 'H'
-VVV='/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/'+ band + '/'
+VVV='/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/Fields/'+ band + '/'
 
 pruebas= '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 ; Determine FoV
@@ -62,7 +62,7 @@ delta = crval2 - y_off
 
 
 ;~ vvvim = readfits('GC_VVV_J.fits',vvvhdr) ; load b333 from VVV
-vvvim = readfits(VVV+'GC_VVV_H.fits',vvvhdr) ; load b333 from VVV
+vvvim = readfits('/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/GC_VVV_H.fits',vvvhdr) ; load b333 from VVV
 ;~ vvvim = readfits('GC_VVV_' + band + '.fits',vvvhdr) ; load b333 from VVV
 ;~ vvvim = readfits('../GC_VVV_' + band + '.fits.gz',vvvhdr) ; load b333 from VVV
 EXTAST, vvvhdr, astr

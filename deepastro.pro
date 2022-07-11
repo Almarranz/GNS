@@ -2,12 +2,12 @@ PRO DEEPASTRO
 
 ;~ tmpdir = './Fields/tmp/'
 ;~ dir = './Fields/'
-VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
+VVV='/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
 tmpdir = VVV+'/Fields/H/tmp/'
 ;~ tmpdir = 'tmp/'
 ;~ dir = './'
 ZP = 23.171
-innam = 'Field9'
+innam = 'Field6'
 
 im = readfits(VVV+'/Fields/H/'+ innam + '.fits',header)
 ;~ im = readfits(dir + innam + '.fits.gz',header)

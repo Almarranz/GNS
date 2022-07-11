@@ -1,7 +1,7 @@
 PRO EXTRACTPSF
 
 band = 'H'
-VVV='/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/'+ band + '/'
+VVV='/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/Fields/'+ band + '/'
 tmpdir = VVV+'tmp/'
 ;~ dir = './'
 ZP = 23.171
@@ -265,7 +265,7 @@ print, 'Found  '+ strn(n_ref) + ' supported, unsaturated and isolated reference 
  dat = ptr_new({X_size: 40, Y_size: 40, Sigma_x: 2., Sigma_y: 2., Angle: 0.0})
  refstars = image_model(x_psf,y_psf,f_psf,n1,n2,'gaussian', dat)
  writefits, tmpdir + 'refstars.fits', refstars
- forprint, TEXTOUT= VVV+'Fields/H/' + innam + '_psfstars.txt', x_psf, y_psf, m_psf, /NOCOMMENT
+ forprint, TEXTOUT= VVV + innam + '_psfstars.txt', x_psf, y_psf, m_psf, /NOCOMMENT
 
  print
  print, 'Magnitudes of reference stars: '
