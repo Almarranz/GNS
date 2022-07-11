@@ -2,7 +2,7 @@ PRO PREP_REFIM, field
 
 field = strn(field)
 band = 'H'
-VVV='/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
+VVV='/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/'+ band + '/'
 
 pruebas= '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 ; Determine FoV

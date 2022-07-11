@@ -1,14 +1,14 @@
 PRO EXTRACTPSF
 
-
-VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
-tmpdir = VVV+'/Fields/H/tmp/'
+band = 'H'
+VVV='/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/'+ band + '/'
+tmpdir = VVV+'tmp/'
 ;~ dir = './'
 ZP = 23.171
-innam = 'Field9' ; chose the field you are working with
+innam = 'Field6' ; chose the field you are working with
 ;Edit the pathn depending on which tile of VVV you want to use H or J
-im = readfits(VVV+'Fields/H/' + innam + '.fits',header)
-;~ im = readfits(dir + innam + '.fits.gz',header)
+; im = readfits(VVV+ innam + '.fits',header)
+im = readfits(VVV + innam + '.fits.gz',header)
 ZP = SXPAR(header,'PHOTZP')
 print, 'Zero Point: ' + strn(ZP)
 sz = size(im)
@@ -288,7 +288,7 @@ print, 'Found  '+ strn(n_ref) + ' supported, unsaturated and isolated reference 
   psf = psf_masked  
   writefits, tmpdir + 'tmppsf_masked.fits', psf  
   psf = psf/total(psf)  ; normalization of PSF
-  writefits, VVV+'Fields/H/' + innam + '_psf.fits', psf
+  writefits, VVV+ innam + '_psf.fits', psf
 
 
 END
