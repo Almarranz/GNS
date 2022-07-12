@@ -17,7 +17,7 @@ ysize_ref = 1453
 ;~ chip = 1      
 chip_nr = strn(chip)
 band = 'H'
-field_nr = 9
+field_nr = 6
 
 ; ----------------CAN BE EDITED, but USUALLY NOT NECESSARY ----------
  
@@ -46,18 +46,21 @@ ysize_quad = 2700
 scale=0.34/0.106
 
 ; --------------------------------------------------------------------
-VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
-im_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/ims/'
-data_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/data/'
-tmp_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/tmp/'
-ref_file =  VVV +'/Fields/H/Field' + strn(field_nr) + '_stars.txt'
-pruebas='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
+; VVV='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/VVV/'
+; im_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/ims/'
+; data_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/data/'
+; tmp_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/tmp/'
+; ref_file =  VVV +'/Fields/H/Field' + strn(field_nr) + '_stars.txt'
+; pruebas='/Users/amartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
-;~ im_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/ims/'
-;~ data_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
-;~ tmp_path = '/home/data/GNS/2018/'+band+'/' + strn(field_nr) + '/tmp/'
-;~ ref_file = '/home/data/VVV/ForHAWKI/J/Fields/Field' + strn(field_nr) + '_stars.txt'
+VVV='/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/VVV/Fields/H/'
+im_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/' + strn(field_nr) + '/ims/'
+data_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/' + strn(field_nr) + '/data/'
+tmp_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/' + strn(field_nr) + '/tmp/'
+ref_file =  VVV +'Field' + strn(field_nr) + '_stars.txt'
+; ref_file =  VVV +'stars_' + strn(field_nr) + '.txt'
 
+pruebas='/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/pruebas/'
 
 
 ; Read list of reference stars
@@ -106,7 +109,7 @@ ysize_final = round(ysize_ref * scale)
  ; iterative degree 1 alignment
  ; ------------------------------
 
-  lim_it = 1
+  lim_it = 1
   count=0
   comm=[]
   it=0
@@ -140,7 +143,7 @@ ysize_final = round(ysize_ref * scale)
  ; ------------------------------
 
  print, 'Now Degree 2 alignment.'
- lim_it = 1
+ lim_it = 1
   count=0
   comm=[]
   it=0
@@ -185,54 +188,53 @@ ysize_final = round(ysize_ref * scale)
  ; later problems with division by small numbers
  ; ---------------------------------------------
 
- im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits')
- ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits.gz')
+;  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits')
+ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits.gz')
  transim=fltarr(xsize_final+200,ysize_final+200)
  
  ;~ transim= POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
  transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
 ; transim = transim * transmask
- writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_wt.fits', transim
+;  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_wt.fits', transim
+ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_wt.fits.gz', transim, /COMPRESS
 
- ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_wt.fits.gz', transim, /COMPRESS
-
- im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits')
- ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits.gz')
+;  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits')
+ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits.gz')
  transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
  ;~ transim = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
 ; transim = transim * transmask
- writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned.fits', transim
- ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned.fits.gz', transim, /COMPRESS
+;  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned.fits', transim
+ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned.fits.gz', transim, /COMPRESS
 
  ;~ transim_im = transim[100:xsize_final+99,100:ysize_final+99]
  transim_im = transim
 
- im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_sig.fits')
- ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_sig.fits.gz')
+;  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_sig.fits')
+ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_sig.fits.gz')
  transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0 )
  ;~ transim = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0 )
 ; transim = transim * transmask
- writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_sig.fits', transim
- ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_sig.fits.gz', transim, /COMPRESS
+;  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_sig.fits', transim
+ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_sig.fits.gz', transim, /COMPRESS
  
  ;~ transim_noise = transim[100:xsize_final+99,100:ysize_final+99]
  transim_noise = transim
  ; to check alignment with VVV, create
  ; a transformed image inside the VVV frame of reference
  polywarp,   x[subc2], y[subc2], x_ref[subc1], y_ref[subc1], degree, Kx, Ky
- im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits')
- ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits.gz')
+;  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits')
+  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits.gz')
  ;~ transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
  transim = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
- writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV.fits', transim
- ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV.fits.gz', transim, /COMPRESS
+;  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV.fits', transim
+ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV.fits.gz', transim, /COMPRESS
 
- im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits')
- ;~ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits.gz')
+;  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits')
+ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits.gz')
  ;~ transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
  transim = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
- writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV_wt.fits', transim
- ;~ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV_wt.fits.gz', transim, /COMPRESS
+;  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV_wt.fits', transim
+ writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV_wt.fits.gz', transim, /COMPRESS
  
 
 ; Now cut out the aligned HAWK-I images from the large frames to get
@@ -249,10 +251,10 @@ lnx_noise = transim_noise[xlo:xhi,ylo:yhi]
  
  
  
-writefits, data_path + 'lnx_aligned_' + chip_nr + '.fits', lnx
-writefits, data_path + 'lnx_aligned_' + chip_nr + '_sig.fits', lnx_noise
-;~ writefits, data_path + 'lnx_aligned_' + chip_nr + '.fits.gz', lnx, /COMPRESS
-;~ writefits, data_path + 'lnx_aligned_' + chip_nr + '_sig.fits.gz', lnx_noise, /COMPRESS
+; writefits, data_path + 'lnx_aligned_' + chip_nr + '.fits', lnx
+; writefits, data_path + 'lnx_aligned_' + chip_nr + '_sig.fits', lnx_noise
+ writefits, data_path + 'lnx_aligned_' + chip_nr + '.fits.gz', lnx, /COMPRESS
+ writefits, data_path + 'lnx_aligned_' + chip_nr + '_sig.fits.gz', lnx_noise, /COMPRESS
 
 
 ;To have an idea of the displacement that we have, we take the initial list and the corrected one to see the difference in positions.
