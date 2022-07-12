@@ -1,4 +1,4 @@
-PRO ALIGNQUADRANTS
+PRO ALIGNQUADRANTS,field_nr,chip
 
 ; PURPOSE: Use one (to a few, one is usually sufficient) reference stars per quadrant for a
 ; pre-alignment with VVV. Then search for more stars and refine the
@@ -13,10 +13,10 @@ PRO ALIGNQUADRANTS
 xsize_ref = 1595
 ysize_ref = 1595
 
-chip = 3
+; chip = 2
 chip_nr = strn(chip)
 band = 'H'
-field_nr = 9
+; field_nr = 6
 
 ; ----------------CAN BE EDITED, but USUALLY NOT NECESSARY ----------
 
@@ -43,16 +43,18 @@ scale = 0.34/0.106
 ; HAWKI --> HAWKI
 ;scale = 1.0
 
-VVV='/home/data/working/GNS_2/VVV/'
-im_path = '/home/data/working/data/GNS/2021/'+band+'/' + strn(field_nr) + '/ims/'
-data_path = '/home/data/working/data/GNS/2021/'+band+'/' + strn(field_nr) + '/data/'
-tmp_path = '/home/data/working/data/GNS/2021/'+band+'/' + strn(field_nr) + '/tmp/'
-;ref_file =  VVV +'/Fields/H/Field' + strn(field_nr) + '_stars.txt'
-ref_file =  VVV +'stars_' + strn(field_nr) + '.txt'
-pruebas='/home/data/working/GNS_2/pruebas'
+VVV='/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/VVV/Fields/H/'
+im_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/' + strn(field_nr) + '/ims/'
+data_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/' + strn(field_nr) + '/data/'
+tmp_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/' + strn(field_nr) + '/tmp/'
+ref_file =  VVV +'Field' + strn(field_nr) + '_stars.txt'
+; ref_file =  VVV +'stars_' + strn(field_nr) + '.txt'
+
+pruebas='/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/pruebas/'
 
 
 ; Read list of reference stars
+print,'VVV field 6 stars'
 readcol, ref_file, x_ref, y_ref, sx_ref, sy_ref, sm_ref, c, Format = 'A,A,A,A,A,A,A,A,A'
 
 x_ref=float(x_ref)
@@ -81,11 +83,13 @@ ysize_final = round(ysize_ref * scale)
 
 ;stop
 ; now read 'original' HAWK-I stars. We need the original list for Kx, Ky 
+print, 'Stars in original chip',chip_nr
  readcol, data_path + 'stars_' + chip_nr + '.txt', x, y, f, Format='A,A,A'
  x=float(x)
  y=float(y)
  f=float(f)
 ; now read transformed HAWK-I stars list
+print, 'Stars in transfomed chip',chip_nr
  readcol, data_path + 'aa_stars_' + chip_nr + '.txt', xi, yi, fi, Format='A,A,A'
  ;~ readcol, data_path + 'stars_' + chip_nr + '.txt', x, y, f, Format='A,A,A'
  xi=float(xi)
@@ -96,7 +100,6 @@ ysize_final = round(ysize_ref * scale)
  compare_lists, x_ref_scaled, y_ref_scaled, xi, yi, x1c, y1c, x2c, y2c, MAX_DISTANCE=dmax, SUBSCRIPTS_1=subc1, SUBSCRIPTS_2 = subc2, SUB1 = sub1, SUB2 = sub2
  nc = n_elements(subc1)
  print, 'Found ' + strn(nc) + ' common stars.'
-
  ; iterative degree 1 alignment
  ; ------------------------------
 
@@ -105,11 +108,14 @@ ysize_final = round(ysize_ref * scale)
   comm=[]
   it=0
   lim_it=1 ;cosider convergece when the number of common stars  'lim_it' times.
-	 
+   
   while count lt lim_it do begin
   it=it+1
  ;~ for it = 1, 1 do begin
   degree = 1
+  print,n_elements(x_ref_scaled[subc1]),n_elements(y_ref_scaled[subc1])
+  print,n_elements(x[subc2]),n_elements(y[subc2])
+  
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
   print, Kx
   print, Ky
