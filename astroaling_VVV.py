@@ -44,18 +44,24 @@ VVV_c1=VVV_all[0:round(xsize_vvv/2)-1,0:round(ysize_vvv/2)-1]
 # In[5]
 dic_gns={}
 dic_f={}
-max_pc = 100
-min_pc = 90
+# max_pc = 100
+# min_pc = 0
 for i in range(1,5):#loads GNS stars in two separate list: coordinates and fluxes
     stars_lst = np.loadtxt(GNS_stars+'stars_%s.txt'%(i))
-    flux_max = np.percentile(stars_lst[:,2],max_pc)
-    flux_min = np.percentile(stars_lst[:,2],min_pc)
-    ok_stars=np.where((stars_lst[:,2]<flux_max) & (stars_lst[:,2]>flux_min))
-    stars_good = stars_lst[ok_stars]
-    dic_gns['gns_c%s'%(i)]=stars_lst[ok_stars][:,0:2]
-    dic_f['f_c%s'%(i)]=stars_lst[ok_stars][:,2]
-# gns_s=np.loadtxt(GNS_stars+'stars_%s.txt'%(chip),usecols=(0,1))
-# gns_s2=np.loadtxt(GNS_stars+'stars_%s.txt'%(2),usecols=(0,1))
+    print('Stars in orginal list %s'%(len(stars_lst)))
+    # flux_max = np.percentile(stars_lst[:,2],max_pc)
+    # flux_min = np.percentile(stars_lst[:,2],min_pc)
+    # ok_stars=np.where((stars_lst[:,2]<flux_max) & (stars_lst[:,2]>flux_min))
+    # stars_good = stars_lst[ok_stars]
+    # dic_gns['gns_c%s'%(i)]=stars_lst[ok_stars][:,0:2]
+    # dic_f['f_c%s'%(i)]=stars_lst[ok_stars][:,2]
+    
+    
+    dic_gns['gns_c%s'%(i)]=stars_lst[:,0:2]
+    dic_f['f_c%s'%(i)]=stars_lst[:,2]
+    
+    
+
 
 vvv_all=np.loadtxt(VVV+'Field%s_stars.txt'%(field))
 mag_max = np.percentile(vvv_all[:,4],10)
@@ -94,6 +100,7 @@ for i in range(chip,5):
     check_x,check_y=2,2
     while abs(check_x) >1 or abs(check_y)>1  :# only when tranformation gets better than 1 chip desplacement the coordinates are stored
         print('starting aa')
+        print('Stars in transformed list %s'%(len(dic_gns['gns_c%s'%(i)])))
         tic = time.perf_counter()
         m,(_,_)= aa.find_transform(dic_gns['gns_c%s'%(i)],dic_vvv['vvv_c%s'%(i)],max_control_points=450)
         print('For chip%s'%(i)+'\n'+"Translation: (x, y) = (%.2f, %.2f)"%(m.translation[0],m.translation[1]))
@@ -116,10 +123,11 @@ for i in range(chip,5):
         check_y= t.translation[1]
     # sys.exit('line 117')
     print('___TRANSFORMED GNS chip %s (field %s)___'%(i,field))   
+    print('Stars in transformed list %s'%(len(dic_gns['gns_c%s'%(i)])))
     dic_gns['gns_c%s'%(i)] = aa.matrix_transform(dic_gns['gns_c%s'%(i)], m.params)
     dic_gns['gns_c%s'%(i)]=np.c_[dic_gns['gns_c%s'%(i)],dic_f['f_c%s'%(i)]]
     # np.savetxt(pruebas + 'aa_stars_%s.txt'%(i),dic_gns['gns_c%s'%(i)])
-    np.savetxt(GNS_stars+ 'aa_stars_%s.txt'%(i),dic_gns['gns_c%s'%(i)])
+    np.savetxt(GNS_stars+ 'aa_stars_%s.txt'%(i),dic_gns['gns_c%s'%(i)],fmt ='%.6f %.6f %.6f')
 
 print('DONE')
 # sys.exit()
