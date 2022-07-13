@@ -20,12 +20,12 @@ import time
 # In[12]:
 
 
-band='H'
+band='J'
 field=6
 chip =1 
 
 VVV='/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/Fields/%s/'%(band)
-tmpdir = VVV+'/Fields/H/tmp/'
+tmpdir = VVV+'/Fields/%s/tmp/'%(band)
 GNS_stars= '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/%s/data/'%(field)
 
 
@@ -95,14 +95,14 @@ for c in range(1,5):
 
 # sys.exit()
 # In[7]:
-
+max_offset =2.5
 for i in range(chip,5):
-    check_x,check_y=2,2
-    while abs(check_x) >1 or abs(check_y)>1  :# only when tranformation gets better than 1 chip desplacement the coordinates are stored
+    check_x,check_y=max_offset+1,max_offset+1
+    while abs(check_x) >max_offset or abs(check_y)>max_offset  :# only when tranformation gets better than 1 chip desplacement the coordinates are stored
         print('starting aa')
         print('Stars in transformed list %s'%(len(dic_gns['gns_c%s'%(i)])))
         tic = time.perf_counter()
-        m,(_,_)= aa.find_transform(dic_gns['gns_c%s'%(i)],dic_vvv['vvv_c%s'%(i)],max_control_points=450)
+        m,(_,_)= aa.find_transform(dic_gns['gns_c%s'%(i)],dic_vvv['vvv_c%s'%(i)],max_control_points=250)
         print('For chip%s'%(i)+'\n'+"Translation: (x, y) = (%.2f, %.2f)"%(m.translation[0],m.translation[1]))
         print("Rotation: %.3f degrees"%(m.rotation * 180.0 / np.pi))
         print("Scale factor: %.4f"%(m.scale))
