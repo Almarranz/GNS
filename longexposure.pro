@@ -27,8 +27,7 @@ Sigma_CUT = 3.0
 
  chipnr = strn(n_chip)
  
-;  cube = readfits(indir + 'lnx_jitter_cube_' + chipnr + '.fits', header)
-;  mask = readfits(indir +'lnx_jitter_mask_' + chipnr + '.fits')
+
   cube = readfits(indir + 'lnx_jitter_cube_' + chipnr + '.fits.gz', header)
   mask = readfits(indir +'lnx_jitter_mask_' + chipnr + '.fits.gz')
  
@@ -75,9 +74,7 @@ Sigma_CUT = 3.0
   
  endfor
  
-;  writefits, outdir + 'lnx_jitter_' + chipnr + '.fits', lxp, header
-;  writefits, outdir + 'lnx_jitter_' + chipnr + '_sig.fits', lxp_sigma
-;  writefits, outdir + 'lnx_jitter_' + chipnr + '_wt.fits', wt
+
   writefits, outdir + 'lnx_jitter_' + chipnr + '.fits', lxp, header, /COMPRESS
   writefits, outdir + 'lnx_jitter_' + chipnr + '_sig.fits', lxp_sigma, /COMPRESS
   writefits, outdir + 'lnx_jitter_' + chipnr + '_wt.fits', wt, /COMPRESS
