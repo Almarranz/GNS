@@ -1,10 +1,10 @@
 PRO EXTRACTPSF
 
-band = 'H'
+band = 'J'
 VVV='/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/Fields/'+ band + '/'
 tmpdir = VVV+'tmp/'
 ;~ dir = './'
-ZP = 23.171
+ZP = 23.171; this for H band (as it is in the originals GNS1 scripts)
 innam = 'Field6' ; chose the field you are working with
 ;Edit the pathn depending on which tile of VVV you want to use H or J
 ; im = readfits(VVV+ innam + '.fits',header)
