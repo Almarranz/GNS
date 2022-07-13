@@ -15,7 +15,7 @@ pruebas= '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 ;~ outdir=pruebas
 ;~ indir=pruebas
 
-sz = size(cube)
+; sz = size(cube)
 
 Sigma_CUT = 3.0
 
