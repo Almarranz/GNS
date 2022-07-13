@@ -1,7 +1,7 @@
 PRO PREP_REFIM, field
 
 field = strn(field)
-band = 'H'
+band = 'J'; this is for the VVV image.
 VVV='/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/Fields/'+ band + '/'
 
 pruebas= '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
@@ -31,7 +31,8 @@ y_vvv = round((2*y_size * pxscl_hawki + jitterbox/2. + 30.)/pxscl_vvv)
 ; of the observations.
 
 list = 'list.txt'
-raw_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/'+ band+'/Field/'+field+'/'
+;There is only H band in GNS_2
+raw_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/H/Field/'+field+'/'
 ;~ raw_path = '/home/data/raw/2015/' + band +'/Field/' + field + '/'
 
 readcol, raw_path + list, names, FORMAT='A'
@@ -62,7 +63,7 @@ delta = crval2 - y_off
 
 
 ;~ vvvim = readfits('GC_VVV_J.fits',vvvhdr) ; load b333 from VVV
-vvvim = readfits('/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/GC_VVV_H.fits',vvvhdr) ; load b333 from VVV
+vvvim = readfits('/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/GC_VVV_'+ band +'.fits',vvvhdr) ; load b333 from VVV
 ;~ vvvim = readfits('GC_VVV_' + band + '.fits',vvvhdr) ; load b333 from VVV
 ;~ vvvim = readfits('../GC_VVV_' + band + '.fits.gz',vvvhdr) ; load b333 from VVV
 EXTAST, vvvhdr, astr
