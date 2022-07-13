@@ -80,13 +80,13 @@ guide_y = ""
 
 for i_chip = chip_nr, chip_nr do begin
   chip_nr = strn(i_chip)
-  im = readfits(data_path + 'lnx_jitter_' + strn(i_chip)+ '.fits')
-  ;~ im = readfits(data_path + 'lnx_jitter_' + strn(i_chip)+ '.fits.gz')
+
+  im = readfits(data_path + 'lnx_jitter_' + strn(i_chip)+ '.fits.gz')
   sz = size(im)
   n1 = sz[1]
   n2 = sz[2]
-  noise = readfits(data_path + 'lnx_jitter_' + strn(i_chip)+ '_sig.fits')
-  ;~ noise = readfits(data_path + 'lnx_jitter_' + strn(i_chip)+ '_sig.fits.gz')
+  
+  noise = readfits(data_path + 'lnx_jitter_' + strn(i_chip)+ '_sig.fits.gz')
 
  ; choose PSF reference stars
  ; --------------------------
