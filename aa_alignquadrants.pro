@@ -1,4 +1,4 @@
-PRO AA_ALIGNQUADRANTS,chip
+PRO AA_ALIGNQUADRANTS,field_nr,chip
 
 ; PURPOSE: Loads the list for GNS stars already transfom with rotation and translation (python astroalign).
 ; Then search for more stars and refine the
@@ -14,26 +14,26 @@ xsize_ref = 1453
 ysize_ref = 1453
 ;~ ysize_ref = 655
 
-;~ chip = 1      
+; chip = 1      
 chip_nr = strn(chip)
 band = 'H'
-field_nr = 6
+; field_nr = 6
 
 ; ----------------CAN BE EDITED, but USUALLY NOT NECESSARY ----------
  
 
 ; To create small aligned longexposure images
 ; So that we can cut away the unnecessary zeros around the images.
-;~ xs = 2500
-;~ ys = 2500
-xs = 2400
-ys = 2400
+xs = 2500
+ys = 2500
+; xs = 2400
+; ys = 2400
 ;~ ys = 1200
 ; Approximate offsets of fields within aligned HAWK-I frame
 ; These offsets can be seen inside the 
 ; images lnx_jitter_?_aligned.fits.gz
 ; that are being produced by this script
-x_off = [0,2100,2100,0]
+x_off = [80,2100,2100,80]
 y_off = [100,100,2100,2100]
 ;~ x_off = [0,2200,2200,0]
 ;~ y_off = [0,0,2200,2200]
@@ -60,7 +60,7 @@ tmp_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/' + str
 ref_file =  VVV +'Field' + strn(field_nr) + '_stars.txt'
 ; ref_file =  VVV +'stars_' + strn(field_nr) + '.txt'
 
-pruebas='/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/pruebas/'
+pruebas='/users/alvaromartinez/desktop/phd/hawk/gns_2/pruebas/'
 
 
 ; Read list of reference stars
@@ -115,9 +115,9 @@ ysize_final = round(ysize_ref * scale)
   it=0
   lim_it=1 ;cosider convergece when the number of common stars  'lim_it' times.
 	 
-  while count lt lim_it do begin
-  it=it+1
- ;~ for it = 1, 1 do begin
+;  while count lt lim_it do begin
+;  it=it+1
+  for it = 1, 1 do begin
   degree = 1
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
   print, Kx
@@ -136,8 +136,8 @@ ysize_final = round(ysize_ref * scale)
 	   count=0
 	   endelse
 	endif
-  endwhile
-;~ endfor
+;  endwhile
+ endfor
 ;STOP
  ; iterative degree 2 alignment
  ; ------------------------------
@@ -149,9 +149,9 @@ ysize_final = round(ysize_ref * scale)
   it=0
   
 	 
-  while count lt lim_it do begin
-  it=it+1
- ;~ for it = 1, 1 do begin
+;  while count lt lim_it do begin
+;  it=it+1
+ for it = 1, 1 do begin
   degree = 2
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
   print, Kx
@@ -170,8 +170,8 @@ ysize_final = round(ysize_ref * scale)
 	   count=0
 	   endelse
 	endif
-  endwhile
-  ;~ endfor
+;  endwhile
+endfor
 
  ; determine transformation parameters for image and save them
  ; for later use
@@ -243,16 +243,17 @@ ysize_final = round(ysize_ref * scale)
 
   xlo = x_off[chip-1]
   ylo = y_off[chip-1]
-  xhi = x_off[chip-1] + xs - 1+300
-  yhi = y_off[chip-1] + ys - 1+300
-
+  xhi = x_off[chip-1] + xs +200
+  yhi = y_off[chip-1] + ys +200
+; print,x_off[chip-1],y_off[chip-1]
+; print,'xlo,ylo,xhi,yhi,size(transim_im)',xlo,ylo,xhi,yhi,size(transim_im)
+; stop
 lnx = transim_im[xlo:xhi,ylo:yhi]
 lnx_noise = transim_noise[xlo:xhi,ylo:yhi]
+  
+  
  
- 
- 
-; writefits, data_path + 'lnx_aligned_' + chip_nr + '.fits', lnx
-; writefits, data_path + 'lnx_aligned_' + chip_nr + '_sig.fits', lnx_noise
+        
  writefits, data_path + 'lnx_aligned_' + chip_nr + '.fits.gz', lnx, /COMPRESS
  writefits, data_path + 'lnx_aligned_' + chip_nr + '_sig.fits.gz', lnx_noise, /COMPRESS
 
