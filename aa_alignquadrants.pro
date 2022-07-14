@@ -34,7 +34,7 @@ ys = 2500
 ; images lnx_jitter_?_aligned.fits.gz
 ; that are being produced by this script
 x_off = [80,2100,2100,80]
-y_off = [100,100,2100,2100]
+y_off = [80,80,2100,2100]
 ;~ x_off = [0,2200,2200,0]
 ;~ y_off = [0,0,2200,2200]
 ;~ y_off = [50,50,900,900]
@@ -115,9 +115,9 @@ ysize_final = round(ysize_ref * scale)
   it=0
   lim_it=1 ;cosider convergece when the number of common stars  'lim_it' times.
 	 
-;  while count lt lim_it do begin
-;  it=it+1
-  for it = 1, 1 do begin
+  while count lt lim_it do begin
+  it=it+1
+;   for it = 1, 1 do begin
   degree = 1
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
   print, Kx
@@ -136,8 +136,8 @@ ysize_final = round(ysize_ref * scale)
 	   count=0
 	   endelse
 	endif
-;  endwhile
- endfor
+  endwhile
+;  endfor
 ;STOP
  ; iterative degree 2 alignment
  ; ------------------------------
@@ -149,9 +149,9 @@ ysize_final = round(ysize_ref * scale)
   it=0
   
 	 
-;  while count lt lim_it do begin
-;  it=it+1
- for it = 1, 1 do begin
+  while count lt lim_it do begin
+  it=it+1
+;  for it = 1, 1 do begin
   degree = 2
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
   print, Kx
@@ -170,8 +170,8 @@ ysize_final = round(ysize_ref * scale)
 	   count=0
 	   endelse
 	endif
-;  endwhile
-endfor
+  endwhile
+; endfor
 
  ; determine transformation parameters for image and save them
  ; for later use
@@ -240,17 +240,16 @@ endfor
 ; Now cut out the aligned HAWK-I images from the large frames to get
 ; rid of the zeros
 ; --------------------------------------------------------------------
-
+ 
   xlo = x_off[chip-1]
   ylo = y_off[chip-1]
   xhi = x_off[chip-1] + xs +200
   yhi = y_off[chip-1] + ys +200
-; print,x_off[chip-1],y_off[chip-1]
-; print,'xlo,ylo,xhi,yhi,size(transim_im)',xlo,ylo,xhi,yhi,size(transim_im)
-; stop
+
 lnx = transim_im[xlo:xhi,ylo:yhi]
 lnx_noise = transim_noise[xlo:xhi,ylo:yhi]
-  
+;   
+
   
  
         
