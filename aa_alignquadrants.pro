@@ -1,5 +1,7 @@
 PRO AA_ALIGNQUADRANTS,field_nr,chip
 
+
+for chip=1,4 do begin
 ; PURPOSE: Loads the list for GNS stars already transfom with rotation and translation (python astroalign).
 ; Then search for more stars and refine the
 ; alignment.
@@ -137,7 +139,7 @@ ysize_final = round(ysize_ref * scale)
 	   endelse
 	endif
   endwhile
-;  endfor
+;   endfor
 ;STOP
  ; iterative degree 2 alignment
  ; ------------------------------
@@ -151,7 +153,7 @@ ysize_final = round(ysize_ref * scale)
 	 
   while count lt lim_it do begin
   it=it+1
-;  for it = 1, 1 do begin
+;   for it = 1, 1 do begin
   degree = 2
   polywarp, x_ref_scaled[subc1], y_ref_scaled[subc1], x[subc2], y[subc2], degree, Kx, Ky
   print, Kx
@@ -188,52 +190,46 @@ ysize_final = round(ysize_ref * scale)
  ; later problems with division by small numbers
  ; ---------------------------------------------
 
-;  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits')
- im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits.gz')
  transim=fltarr(xsize_final+200,ysize_final+200)
- 
+ im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits.gz')
  ;~ transim= POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
  transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
 ; transim = transim * transmask
-;  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_wt.fits', transim
- writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_wt.fits.gz', transim, /COMPRESS
+  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_wt.fits.gz', transim, /COMPRESS
 
-;  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits')
+ transim=fltarr(xsize_final+200,ysize_final+200)
  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits.gz')
  transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
  ;~ transim = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0)
 ; transim = transim * transmask
-;  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned.fits', transim
  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned.fits.gz', transim, /COMPRESS
 
- ;~ transim_im = transim[100:xsize_final+99,100:ysize_final+99]
+ 
  transim_im = transim
-
-;  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_sig.fits')
+ 
+ transim=fltarr(xsize_final+200,ysize_final+200)
  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_sig.fits.gz')
  transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0 )
  ;~ transim = POLY_2D(im,Kx,Ky,2,xsize_final,ysize_final,CUBIC=-0.5,MISSING=0 )
 ; transim = transim * transmask
-;  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_sig.fits', transim
  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_sig.fits.gz', transim, /COMPRESS
  
+ transim=fltarr(xsize_final+200,ysize_final+200)
  ;~ transim_noise = transim[100:xsize_final+99,100:ysize_final+99]
  transim_noise = transim
  ; to check alignment with VVV, create
  ; a transformed image inside the VVV frame of reference
+ 
  polywarp,   x[subc2], y[subc2], x_ref[subc1], y_ref[subc1], degree, Kx, Ky
-;  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits')
   im = readfits(im_path + 'lnx_jitter_'+chip_nr + '.fits.gz')
- ;~ transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
- transim = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
-;  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV.fits', transim
+;  transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
+  transim = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV.fits.gz', transim, /COMPRESS
 
-;  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits')
+ 
  im = readfits(im_path + 'lnx_jitter_'+chip_nr + '_wt.fits.gz')
- ;~ transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
- transim = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
-;  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV_wt.fits', transim
+;   transim[100:xsize_final+99,100:ysize_final+99] = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
+  transim = POLY_2D(im,Kx,Ky,2,xsize_ref,ysize_ref,CUBIC=-0.5,MISSING=0)
  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_VVV_wt.fits.gz', transim, /COMPRESS
  
 
@@ -243,8 +239,8 @@ ysize_final = round(ysize_ref * scale)
  
   xlo = x_off[chip-1]
   ylo = y_off[chip-1]
-  xhi = x_off[chip-1] + xs +200
-  yhi = y_off[chip-1] + ys +200
+  xhi = x_off[chip-1] + xs +200-1
+  yhi = y_off[chip-1] + ys +200-1
 
 lnx = transim_im[xlo:xhi,ylo:yhi]
 lnx_noise = transim_noise[xlo:xhi,ylo:yhi]
@@ -331,7 +327,9 @@ ARROW, x0[num], y0[num], xf[num], yf[num], /DATA, COLOR=4, HSIZE=100
 
 device, /close
 
-
-
+print,'##########################'
+print, 'Aligned chip',chip
+print,'##########################'
+endfor
 
 END
