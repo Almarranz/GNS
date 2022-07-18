@@ -1,7 +1,7 @@
 PRO AA_ALIGNQUADRANTS,field_nr,chip
 
 
-for chip=1,4 do begin
+for chip=1,1 do begin
 ; PURPOSE: Loads the list for GNS stars already transfom with rotation and translation (python astroalign).
 ; Then search for more stars and refine the
 ; alignment.
@@ -214,7 +214,6 @@ ysize_final = round(ysize_ref * scale)
 ; transim = transim * transmask
  writefits, im_path + 'lnx_jitter_'+chip_nr+ '_aligned_sig.fits.gz', transim, /COMPRESS
  
- transim=fltarr(xsize_final+200,ysize_final+200)
  ;~ transim_noise = transim[100:xsize_final+99,100:ysize_final+99]
  transim_noise = transim
  ; to check alignment with VVV, create
