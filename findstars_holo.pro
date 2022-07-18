@@ -34,15 +34,17 @@ END
 
 PRO FINDSTARS_HOLO, field_nr, chip_nr
 
-  device, decomposed = 0
-  
 ;field_nr = 1
 ;chip_nr = 1
 
+band = 'H'
+data_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/H/' + strn(field_nr) + '/data/'
+tmp_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/H/' + strn(field_nr) + '/tmp/'
 
-      band = 'H'
-      data_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
-      tmp_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/tmp/'
+
+; band = 'H'
+; data_path = '/home/data/working/data/GNS/2021/'+band+'/' + strn(field_nr) + '/data/'
+; tmp_path = '/home/data/working/data/GNS/2021/'+band+'/' + strn(field_nr) + '/tmp/'
 
 ; Find stars in images of each Chip
 ; that can serve for image alignment.
@@ -50,9 +52,8 @@ PRO FINDSTARS_HOLO, field_nr, chip_nr
 
 ; General StarFinder settings
 ; ---------------------------
-psf_size = 60.
-maskrad = 20
-threshold = [5.]
+psf_size = 40.
+maskrad = 15
 back_box = 0.
 deblend = 0
 min_correlation = 0.7
@@ -150,4 +151,3 @@ endfor
  wdelete, wnum 
 
 END
-
