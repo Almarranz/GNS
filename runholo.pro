@@ -7,30 +7,41 @@ PRO RUNHOLO, field_nr, chip
                   ; if '2', then  results of SF on holo rebin 1 is used
 
 
+      debug = 0
       band = 'H'
       ZP = 26.3 ; rough mean ZP for all HAWK-I detectors
                 ; estimated from ESO QC data base
                 ; USE ZP FOR CORRECT FILTER!
-      DIT = 1.26   ; DIT [s] of observat1ions
-      mag_min = 16  ; faintest mag for reference stars
-      mag_max = 10  ; brightest mag for reference stars
+      DIT = 3.32   ; DIT [s] of observat1ions
+      mag_min = 15  ; faintest mag for reference stars
+      mag_max = 11  ; brightest mag for reference stars
 
-      psf_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
-      in_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/subcubes/'
-      out_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/cubeims/'
-      outpsf_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/psfs/'
-      data_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
-      tmp_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/tmp/'
+      psf_path = '/home/data/working/data/GNS/2021/'+band+'/' + strn(field_nr) + '/data/'
+      in_path = '/home/data/working/data/GNS/2021/'+band+'/9_test/subcubes/'
+      out_path = '/home/data/working/data/GNS/2021/'+band+'/9_test/cubeims/'
+      outpsf_path = '/home/data/working/data/GNS/2021/'+band+'9_test/psfs/'
+      tmp_path = '/home/data/working/data/GNS/2021/'+band+'/9_test/tmp/'
+;      in_path = '/home/data/working/data/GNS/2021/'+band+'/' + strn(field_nr) + '/subcubes/'
+;      out_path = '/home/data/working/data/GNS/2021/'+band+'/' + strn(field_nr) + '/cubeims/'
+;      outpsf_path = '/home/data/working/data/GNS/2021/'+band+'/' + strn(field_nr) + '/psfs/'
+      data_path = '/home/data/working/data/GNS/2021/'+band+'/' + strn(field_nr) + '/data/'
+;      tmp_path = '/home/data/working/data/GNS/2021/'+band+'/' + strn(field_nr) + '/tmp/'
       tmp_path_s = tmp_path +  'tmp'+strn(chip)+'/'
 
-      x_cube = 600 ; xaxis length of sub-cube
-      y_cube = 600 ; yaxis length of sub-cube
-      x_large = 2400  ; xaxis length of large cube
-      y_large = 1200  ; yaxis length of large cube
+ ;     x_cube = 600 ; xaxis length of sub-cube
+ ;     y_cube = 600 ; yaxis length of sub-cube
+      x_cube = 1350 ; xaxis length of sub-cube
+      y_cube = 1350 ; yaxis length of sub-cube
+      x_large = 2700  ; xaxis length of large cube
+      y_large = 2700  ; yaxis length of large cube
       
       SIGDEV = 3.0 ; standard deviations used in RESISTANT_MEAN
 
-; Use SSA PSF as a reference for PSF size and seeing
+      ; read relative offsets of cubes
+      ; necessary to take variable FoV into account
+      readcol, 'jitter_offsets'+strn(chip)+'.txt', x_off, y_off
+
+ ; Use SSA PSF as a reference for PSF size and seeing
  ; PSF should be roughly the same for all chips
  ; use PSF from long exposure, NOT holography (NOT holo2)
   ssa_psf = readfits(psf_path + 'psf_chip'+strn(chip)+'_holo.fits')
@@ -45,10 +56,9 @@ n_ref_max = 20  ; max number of reference stars to use in second iteration
 ; Parameters for holography
 ; --------------------------
 
-debug = 1
-rebfac = 2L
-nsub = 9         ; number of sub-images (HOLO_MOSAIC_SUBIM.PRO) or jackknife images (HOLO_MOSAIC.PRO)
-nsigma = [1.,2.] ; noise thesholds for PSF 
+rebfac = 1L
+nsub = 6         ; number of sub-images (HOLO_MOSAIC_SUBIM.PRO) or jackknife images (HOLO_MOSAIC.PRO)
+nsigma = [1.,1.] ; noise thesholds for PSF 
 satlevel = 4.0e4 ; saturation threshold of data
 unweighted = 0
 psfnoise = 0
@@ -57,9 +67,10 @@ holo_iter = n_elements(nsigma) - 1
 normrad = fwhm(ssa_psf)
 starlist = tmp_path_s + 'stars.txt'
 psf_size = rebfac * (x_cube < y_cube)
-airy = psf_gaussian(NPIXEL=psf_size,FWHM=2*rebfac,/NORMALIZE,/DOUBLE)
+airy = psf_gaussian(NPIXEL=psf_size,FWHM=2.0*rebfac,/NORMALIZE,/DOUBLE)
+;airy = psf_gaussian(NPIXEL=psf_size,FWHM=1.5*rebfac,/NORMALIZE,/DOUBLE)
 bord = 0  ; width of cosine shaped transition region from 0 to 3 sigma noise threshold
-out_iter = 10    ; output intermediate result after processing out_iter images
+out_iter = 3    ; output intermediate result after processing out_iter images
 psfout = 0       ; psf output?
 holoout = 0
 subpix = 1       ; sub-pixel alignment of PSFs, Y/N
@@ -82,9 +93,9 @@ circmask = circ_mask(dummy,boxhw,boxhw,maskrad)
 n_inner = total(circmask)
 
 ; large circular mask to avoid reference sources near saturated stars
-dummy = fltarr(4*boxhw+1,4*boxhw+1)
-dummy[*,*] = 1
-circbig = circ_mask(dummy,2*boxhw,2*boxhw,2*maskrad)
+;dummy = fltarr(4*boxhw+1,4*boxhw+1)
+;dummy[*,*] = 1
+;circbig = circ_mask(dummy,2*boxhw,2*boxhw,2*maskrad)
 
 
 x_sub_shift = x_cube/2
@@ -97,10 +108,10 @@ ny = y_large/y_sub_shift - 1
  ; read positions and fluxes of stars detected on SSA image of this chip
  readcol, data_path + 'stars' + '_' + chip_nr + '_holo' + iter + '.txt', x_chip, y_chip, f_chip, correl
 
- for i_x = 0, nx -1 do begin
+for i_x = 0, nx -1 do begin
   for i_y = 0, ny -1 do begin
-; for i_x = 1, 1 do begin
-;  for i_y = 1, 1 do begin
+; for i_x = 3, 3 do begin
+;  for i_y = 3, 3 do begin
 
    ; Compute longexposure image (for debugging) and support region
    filenam = '_' + strn(i_x) + '_' + strn(i_y)
@@ -156,17 +167,18 @@ ny = y_large/y_sub_shift - 1
    y_psf = y_sub[ref_ind]
    m_psf = m_sub[ref_ind]
 
-  ; PSF stars must be isolated
+   ; PSF stars must be isolated
    isolated_stars, x_sub, y_sub, m_sub, x_psf, y_psf, m_psf, delta_mag, delta_r, ind_iso
-   x_psf =x_psf[ind_iso]
-   y_psf =y_psf[ind_iso]
-   m_psf =m_psf[ind_iso]
+   x_psf = x_psf[ind_iso]
+   y_psf = y_psf[ind_iso]
+   m_psf = m_psf[ind_iso]
    isolated_stars, x_sub, y_sub, m_sub, x_psf, y_psf, m_psf, 0, maskrad, ind_iso
-   x_psf =x_psf[ind_iso]
-   y_psf =y_psf[ind_iso]
-   m_psf =m_psf[ind_iso]
+   x_psf = x_psf[ind_iso]
+   y_psf = y_psf[ind_iso]
+   m_psf = m_psf[ind_iso]
    n_ref = n_elements(m_psf)
    print, 'Found '+ strn(n_ref) + ' isolated reference stars.'
+
 
   ; exclude potentially saturated reference stars and those close to saturated sources
    sat_pixels = where(lxp gt satlevel, complement=not_saturated,n_saturated)
@@ -174,7 +186,8 @@ ny = y_large/y_sub_shift - 1
      sat_mask = lxp
      sat_mask[not_saturated] = 0
      sat_mask[sat_pixels] = 1
-     sat_mask = CONVOLVE(sat_mask,circbig)
+;     sat_mask = CONVOLVE(sat_mask,circbig)
+     sat_mask = CONVOLVE(sat_mask,circmask)
      goodpix = where(sat_mask lt 1,complement=maskpix)
      sat_mask[maskpix] = 0
      sat_mask[goodpix] = 1
@@ -213,6 +226,9 @@ ny = y_large/y_sub_shift - 1
     filenam = '_' + strn(i_x) + '_' + strn(i_y)
     indir =  in_path  + 'chip' + chip_nr + '/'
     inlist = in_path  + 'chip' + chip_nr + '/list' + filenam + '.txt'
+    ; inlist must be ordered by DECREASING FoV
+    ; 
+
     maskdir = in_path  + 'chip' + chip_nr + '/'
     masklist = maskdir + 'masklist' + filenam + '.txt'
 
@@ -232,93 +248,47 @@ ny = y_large/y_sub_shift - 1
     ; necessarily improve first estimation
     ; of PSF
     ; ESTIM_BG usually not necessary and costs execution time
-    HOLO_MOSAIC, indir, inlist, 'holo',  mrad, nrad, nsigma, rebfac, refsources, starlist, maskdir=maskdir, masklist=masklist, DEBUG = debug, iter=holo_iter, AIRY=airy, OUT_ITER=out_iter, PSFOUT = psfout, UNWEIGHTED = unweighted, SUBPIX=subpix, tmpdir=tmp_path_s, BOXHW=bhw, NSUB=nsub, MINSUPP=minsupp, MAXSUPP = maxsupp, REBITER=0, RAWOUT = 0, N_MASK_SECONDARY=n_mask_secondary, PSF_FRAC = 1.0, CORRECT_SKY = 0, SMOOTHMASK = smoothmask, N_REF_MAX = n_ref_max, PR = pr, SATLEVEL=satlevel, PSF_BORDER=psf_border, ESTIM_BG = 0, SAT_MASK = 0; sat_mask
 
-;    HOLO_MOSAIC_SUBIM, indir, inlist, 'holo',  mrad, nrad, nsigma, rebfac, refsources, starlist, maskdir=maskdir, masklist=masklist, DEBUG = debug, iter=holo_iter, AIRY=airy, OUT_ITER=out_iter, PSFOUT = psfout, UNWEIGHTED = unweighted, SUBPIX=subpix, tmpdir=tmp_path_s, BOXHW=bhw, NSUB=nsub, MINSUPP=minsupp, MAXSUPP = maxsupp, REBITER=0, RAWOUT = 0, N_MASK_SECONDARY=n_mask_secondary, PSF_FRAC = 1.0, CORRECT_SKY = 0, SMOOTHMASK = smoothmask, N_REF_MAX = n_ref_max, PR = pr, SATLEVEL=satlevel, PSF_BORDER=psf_border, ESTIM_BG = 0, SAT_MASK = 0; sat_mask
-
- 
-   ; Make mosaic and noise map for deep image 
-   ; 1) Deep image
-   readcol, tmp_path_s + 'holo_ims.txt', holonames, FORMAT='A'
-   readcol, tmp_path_s + 'weights.txt', expnames, FORMAT='A'
-   n_holo = n_elements(holonames)
-   cube = fltarr(x_cube*rebfac,y_cube*rebfac,n_holo)
-   cube_wt = fltarr(x_cube*rebfac,y_cube*rebfac,n_holo)
-   for j = 0, n_holo-1 do begin
-    im = readfits(tmp_path_s + holonames[j]  + '.fits.gz')
-    wt = readfits(tmp_path_s + expnames[j] + '.fits.gz')
-    bad = where(wt lt 1,complement=good)
-    wt[bad] = 0
-    wt[good] = 1
-    cube_wt[*,*,j] = wt
-    cube[*,*,j] = im * wt
-   endfor
-   mosaic = fltarr(x_cube*rebfac,y_cube*rebfac)
-   sigma = fltarr(x_cube*rebfac,y_cube*rebfac)
-   weights = fltarr(x_cube*rebfac,y_cube*rebfac)
-   for x = 0, x_cube*rebfac -1 do begin
-    for y = 0, y_cube*rebfac - 1 do begin
-      vals = cube[x,y,*]
-      wt = cube_wt[x,y,*]
-      good = where(wt gt 0,count)
-      if count gt 1 then begin
-        RESISTANT_Mean,vals[good],SIGDEV,m,s,Num_Rej
-        mosaic[x,y] = m
-        sigma[x,y] = s
-        weights[x,y] = total(wt)
-      endif else begin
-        weights[x,y] = 0
-        sigma[x,y] = 0
-        mosaic[x,y] = 0
-      endelse
-    endfor
-   endfor
-   writefits, outnam + '.fits', mosaic, /COMPRESS
-   writefits, outnam + '_sigma.fits', sigma, /COMPRESS
-   writefits, outnam + '_wt.fits', weights, /COMPRESS
+;    TESTWIEN_DEVEL, indir, inlist, outnam,  mrad, nrad, nsigma, rebfac, refsources, starlist, maskdir=maskdir, masklist=masklist, DEBUG = debug, iter=holo_iter, AIRY=airy, OUT_ITER=out_iter, PSFOUT = psfout, UNWEIGHTED = unweighted, SUBPIX=subpix, tmpdir=tmp_path_s, BOXHW=bhw, NSUB=nsub, MINSUPP=minsupp, MAXSUPP = maxsupp, REBITER=0, RAWOUT = 0, N_MASK_SECONDARY=n_mask_secondary, PSF_FRAC = 1.0, CORRECT_SKY = 0, SMOOTHMASK = smoothmask, N_REF_MAX = n_ref_max, PR = pr, SATLEVEL=satlevel, PSF_BORDER=psf_border, ESTIM_BG = 0, SAT_MASK = 0
+    holo_full, indir, inlist, outnam,  mrad, nrad, nsigma, rebfac, refsources, starlist, maskdir=maskdir, masklist=masklist, DEBUG = debug, iter=holo_iter, AIRY=airy, OUT_ITER=out_iter, PSFOUT = psfout, UNWEIGHTED = unweighted, SUBPIX=subpix, tmpdir=tmp_path_s, BOXHW=bhw, NSUB=nsub, MINSUPP=minsupp, MAXSUPP = maxsupp, REBITER=0, RAWOUT = 0, N_MASK_SECONDARY=n_mask_secondary, PSF_FRAC = 1.0, CORRECT_SKY = 0, SMOOTHMASK = smoothmask, N_REF_MAX = n_ref_max, PR = pr, SATLEVEL=satlevel, PSF_BORDER=psf_border, ESTIM_BG = 0, SAT_MASK = 0
 
 
-   ; Make mosaic and noise map for sub-maps
-   ; 2) Submaps
-   ; use same weight maps for submaps than for overall image
-   cube = fltarr(x_cube*rebfac,y_cube*rebfac,n_holo)
-   for j_sub = 1, nsub do begin
-    for j = 0, n_holo-1 do begin           
-     im = readfits(tmp_path_s + holonames[j] + '_s' + strn(j_sub)  + '.fits.gz')
-;     im = readfits(tmp_path_s + holonames[j] + '_s' + strn(j_sub)  + '.fits')
-     wt = cube_wt[*,*,j]
-     bad = where(wt lt 1,complement=good)
-     wt[bad] = 0
-     wt[good]= 1
-     cube[*,*,j] = im * wt
-    endfor
-    mosaic = fltarr(x_cube*rebfac,y_cube*rebfac)
-    sigma = fltarr(x_cube*rebfac,y_cube*rebfac)
-    for x = 0, x_cube*rebfac -1 do begin
-     for y = 0, y_cube*rebfac - 1 do begin
-       vals = cube[x,y,*]
-       wt = cube_wt[x,y,*]
-       good = where(wt gt 0,count)
-       if count gt 1 then begin
-         RESISTANT_Mean,vals[good],SIGDEV,m,s,Num_Rej
-         mosaic[x,y] = m
-         sigma[x,y] = s
-       endif else begin
-         sigma[x,y] = 0
-         mosaic[x,y] = 0
-       endelse
-     endfor
-    endfor
-    writefits, outnam + '_s' + strn(j_sub) +'.fits', mosaic, /COMPRESS
-    writefits, outnam + '_sigma_s' + strn(j_sub) +'.fits', sigma, /COMPRESS
+  ; Make noise map from jackknife images
+  im = readfits(outnam  + '.fits.gz')
+  wt = readfits(outnam + '_expmap.fits.gz')
+  sz = size(im)
+  n1 = sz[1] & n2 = sz[2]
+  imcube = fltarr(n1,n2,nsub)
+  meanim = fltarr(n1,n2)
+  noise = fltarr(n1,n2)
+  map = fltarr(n1,n2)
+  valid = where(wt gt 0, complement=invalid)
+  map[valid] = 1
+  map[invalid] = 0
+  for is = 0, nsub-1 do begin
+    im = readfits(outnam  + '_s' + strn(is+1) + '.fits.gz')
+    imcube[*,*,is] = im
   endfor
+  nnjack = (nsub-1)/float(nsub)
+  for ix =0, n1-1 do begin
+    for iy = 0, n2-1 do begin
+      vals = imcube[ix,iy,*]
+      mm =  mean(vals)
+      meanim[ix,iy] = mm
+      noise[ix,iy] = sqrt(total((vals - mm)^2)*nnjack)
+    endfor
+  endfor
+  writefits, outnam + '_ub.fits', meanim, /COMPRESS
+  writefits, outnam + '_sigma.fits', noise, /COMPRESS
+  writefits, outnam + '_map.fits', map, /COMPRESS
 
-  
+    
    ; Delete all temporary files
    print, 'Finished sub-field ' + strn(i_x) + ', ' + strn(i_y)
 
    spawn, 'rm ' + tmp_path_s + '*.fits.gz' 
-;   spawn, 'rm ' + tmp_path_s + '*.fits' 
+   spawn, 'rm ' + tmp_path_s + '*.fits' 
+
 
   endfor
  endfor
