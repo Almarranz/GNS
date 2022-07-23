@@ -1,7 +1,7 @@
 PRO AA_ALIGNQUADRANTS,field_nr,chip
 
 
-for chip=1,1 do begin
+for chip=1,4 do begin
 ; PURPOSE: Loads the list for GNS stars already transfom with rotation and translation (python astroalign).
 ; Then search for more stars and refine the
 ; alignment.

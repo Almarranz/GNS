@@ -22,7 +22,7 @@ import time
 
 band='J'
 field=6
-chip =1 
+# chip =1 
 
 VVV='/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/VVV/Fields/%s/'%(band)
 tmpdir = VVV+'/Fields/%s/tmp/'%(band)
@@ -96,7 +96,7 @@ for c in range(1,5):
 # sys.exit()
 # In[7]:
 max_offset =2.5
-for i in range(chip,5):
+for i in range(1,5):
     check_x,check_y=max_offset+1,max_offset+1
     while abs(check_x) >max_offset or abs(check_y)>max_offset  :# only when tranformation gets better than 1 chip desplacement the coordinates are stored
         print('starting aa')
@@ -122,8 +122,9 @@ for i in range(chip,5):
         check_x= t.translation[0]
         check_y= t.translation[1]
     # sys.exit('line 117')
-    print('___TRANSFORMED GNS chip %s (field %s)___'%(i,field))   
     print('Stars in transformed list %s'%(len(dic_gns['gns_c%s'%(i)])))
+    print('___TRANSFORMED GNS chip %s (field %s)___'%(i,field))   
+    
     dic_gns['gns_c%s'%(i)] = aa.matrix_transform(dic_gns['gns_c%s'%(i)], m.params)
     dic_gns['gns_c%s'%(i)]=np.c_[dic_gns['gns_c%s'%(i)],dic_f['f_c%s'%(i)]]
     # np.savetxt(pruebas + 'aa_stars_%s.txt'%(i),dic_gns['gns_c%s'%(i)])
