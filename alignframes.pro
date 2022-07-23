@@ -25,9 +25,8 @@ y_out = 2700
 ; used to cut out the chips from the large algined field
 ;~ x_off = [0,0,0,0]
 ;~ y_off = [0,0,0,0]
-x_off = [0,2160,2160,0]
-y_off = [0,0,2160,2160]
-
+x_off = [80,2100,2100,80]
+y_off = [80,80,2100,2100]
 ; size of VVV reference image
 xsize_ref = 1453
 ysize_ref = 1453
@@ -35,10 +34,10 @@ ysize_ref = 1453
 ; -------------------------------------------------------
 
 
-      band = 'H'
-      cube_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/cubes/'
-      data_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/data/'
-      out_path =  '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/aligned/'
+      
+      cube_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/H/' + strn(field_nr) + '/cubes/'
+      data_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/H/' + strn(field_nr) + '/data/'
+      out_path =  '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/H/' + strn(field_nr) + '/aligned/'
       ;~ cube_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/cubes/'
       ;~ data_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/data/'
       ;~ out_path =  '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/aligned/'
@@ -128,12 +127,12 @@ y_trans = round(ysize_ref * scale)
     print, j
    endfor
    
-   writefits, out_path + mask_names[ic], outmasks
-   writefits, out_path + cube_names[ic], outcube
+;    writefits, out_path + mask_names[ic], outmasks
+;    writefits, out_path + cube_names[ic], outcube
    print, mask_names[ic]
    print,'Done Cube', ic +1
-   ;~ writefits, out_path + mask_names[ic], outmasks, /COMPRESS
-   ;~ writefits, out_path + cube_names[ic], outcube, /COMPRESS
+   writefits, out_path + mask_names[ic], outmasks, /COMPRESS
+   writefits, out_path + cube_names[ic], outcube, /COMPRESS
  
 
  endfor
