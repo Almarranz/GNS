@@ -4,14 +4,16 @@ PRO SUBCUBES, field_nr, chip
 ;chip_nr = 1
 
  band = 'H'
- data_path =  '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/aligned/' 
- out_path = '/Users/amartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/subcubes/'
+ data_path =  '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/aligned/' 
+ out_path = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field_nr) + '/subcubes/'
  ;~ data_path =  '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/aligned/' 
  ;~ out_path = '/home/data/GNS/2015/'+band+'/' + strn(field_nr) + '/subcubes/'
  
  mask_path = data_path
- x_cube = 900 ; xaxis length of sub-cube
- y_cube = 900 ; yaxis length of sub-cube
+ x_cube = 1350 ; xaxis length of sub-cube
+ y_cube = 1350 ; yaxis length of sub-cube
+; x_cube = 900 ; xaxis length of sub-cube
+; y_cube = 900 ; yaxis length of sub-cube
  x_large = 2700  ; xaxis length of large cube
  y_large = 2700  ; yaxis length of large cube
  valid_frac = 0.3 ; minimum fraction of valid pixels required
@@ -26,18 +28,17 @@ PRO SUBCUBES, field_nr, chip
 chip_nr = strn(chip)
 
 ; First, remove all *fits and *txt  files in target directory
-spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.fits'
-spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.fits'
+
+spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.fits.gz'
+spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.fits.gz'
 spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.txt'
-;~ spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.fits.gz'
-;~ spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.fits.gz'
-;~ spawn, 'rm -f ' +  out_path +  'chip' + chip_nr + '/*.txt'
 
 readcol, data_path + 'list_chip' + chip_nr + '.txt', cube_names, FORMAT='A'
 readcol, data_path + 'masklist_chip' + chip_nr + '.txt', mask_names, FORMAT='A'
 n_cubes = n_elements(cube_names)
 
 for ic = 0, n_cubes - 1 do begin
+;for ic = 14, n_cubes - 1 do begin
 
  icnum = strn(ic+1)
  masks = readfits(data_path + mask_names[ic])
@@ -45,6 +46,9 @@ for ic = 0, n_cubes - 1 do begin
 
  sz = size(cube)
  n3 = sz[3]
+
+ ; skip cube if there are less than 3 valid frames
+ if (sz[0] gt 2 and n3 gt 2) then begin
 
   for i_x = 0, nx -1 do begin
     for i_y = 0, ny -1 do begin
@@ -63,21 +67,14 @@ for ic = 0, n_cubes - 1 do begin
       outnam = '_' + strn(i_x) + '_' + strn(i_y)
       out_cube = cube[xlo:xhi,ylo:yhi,*]
       
-      writefits, out_path +  'chip' + chip_nr + '/cube' + outnam + '_' + icnum + '.fits', out_cube
-      writefits, out_path +  'chip' + chip_nr + '/masks'+ outnam + '_' + icnum + '.fits', out_masks    
+      
+      writefits, out_path +  'chip' + chip_nr + '/cube' + outnam + '_' + icnum + '.fits.gz', out_cube, /COMPRESS
+      writefits, out_path +  'chip' + chip_nr + '/masks'+ outnam + '_' + icnum + '.fits.gz', out_masks, /COMPRESS      
       openw, outc, out_path + 'chip' + chip_nr + '/list' + outnam + '.txt', /get_lun, /APPEND
       openw, outm, out_path  + 'chip' + chip_nr + '/masklist' + outnam + '.txt', /get_lun, /APPEND
 
-      printf, outc,  'cube' + outnam + '_' + icnum + '.fits'
-      printf, outm,  'masks' + outnam + '_' + icnum + '.fits'
-      
-      ;~ writefits, out_path +  'chip' + chip_nr + '/cube' + outnam + '_' + icnum + '.fits.gz', out_cube, /COMPRESS
-      ;~ writefits, out_path +  'chip' + chip_nr + '/masks'+ outnam + '_' + icnum + '.fits.gz', out_masks, /COMPRESS      
-      ;~ openw, outc, out_path + 'chip' + chip_nr + '/list' + outnam + '.txt', /get_lun, /APPEND
-      ;~ openw, outm, out_path  + 'chip' + chip_nr + '/masklist' + outnam + '.txt', /get_lun, /APPEND
-
-      ;~ printf, outc,  'cube' + outnam + '_' + icnum + '.fits.gz'
-      ;~ printf, outm,  'masks' + outnam + '_' + icnum + '.fits.gz'
+      printf, outc,  'cube' + outnam + '_' + icnum + '.fits.gz'
+      printf, outm,  'masks' + outnam + '_' + icnum + '.fits.gz'
       free_lun, outc, outm
 
      endif
@@ -86,7 +83,9 @@ for ic = 0, n_cubes - 1 do begin
 
     endfor
    endfor
+   endif ; if statement of number of valid frames
 
+  
   endfor
 
 END
