@@ -10,7 +10,7 @@ indir = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' +
 outdir = '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/data/GNS/2021/'+band+'/' + strn(field) + '/cubes/'
 pruebas= '/Users/alvaromartinez/Desktop/PhD/HAWK/GNS_2/pruebas/'
 
-for chip = chip, 4 do begin
+for chip = chip, 1 do begin
 print,'*****************'
 print,'*****************'
 print, 'Working on chip ',chip
