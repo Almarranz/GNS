@@ -100,7 +100,7 @@ y_trans = round(ysize_ref * scale)
    trans_mask=fltarr(x_trans+200,y_trans+200)
   ;Because the masks are always the same, I put this here instead of the "for" cycle.
   ; 
-   trans_mask[100:x_trans+99,0:y_trans-1] = POLY_2D(masks,Kx,Ky,2,x_trans,y_trans,CUBIC=-0.5,MISSING=0)
+   trans_mask[100:x_trans+99,100:y_trans+99] = POLY_2D(masks,Kx,Ky,2,x_trans,y_trans,CUBIC=-0.5,MISSING=0)
    mask=trans_mask
    ;~ mask = POLY_2D(masks,Kx,Ky,2,x_trans-200,y_trans-200,CUBIC=-0.5,MISSING=0)
    
@@ -112,7 +112,7 @@ y_trans = round(ysize_ref * scale)
     trans_im=fltarr(x_trans+200,y_trans+200)
     im = cube[*,*,j]
     ;~ writefits, pruebas + 'im_test_chip'+chip_nr+'_'+strn(ic)+'.fits',im;·································
-    trans_im[100:x_trans+99,0:y_trans-1] = POLY_2D(im,Kx,Ky,2,x_trans,y_trans,CUBIC=-0.5,MISSING=0)
+    trans_im[100:x_trans+99,100:y_trans+99] = POLY_2D(im,Kx,Ky,2,x_trans,y_trans,CUBIC=-0.5,MISSING=0)
     im=trans_im
     ;~ im = POLY_2D(im,Kx,Ky,2,x_trans-200,y_trans-200,CUBIC=-0.5,MISSING=0)
     
@@ -134,7 +134,7 @@ y_trans = round(ysize_ref * scale)
    writefits, out_path + mask_names[ic], outmasks, /COMPRESS
    writefits, out_path + cube_names[ic], outcube, /COMPRESS
  
-
+stop
  endfor
  ; save names of cubes and masks
  forprint, /NOCOMMENT, TEXTOUT=out_path + 'list_chip' + chip_nr + '.txt', cube_names
