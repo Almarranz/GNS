@@ -9,12 +9,15 @@ GNS pipeline adapted for unwindowed frames.
 > Note: at the moment there is no **esorex** not **gasgano** installed at teatime. SO I doing this locally for now
 
 > Note2: you need to make a folder with date of the flat in the Flat directory
+
 1. dark.pro. we do the dark with IDL. Genretaes two different darks,one on the canvas one with extentions
+
 1.1 Esorex recipes
 
 > esorex hawki_twilight_flat_combine flat.sof. Run ot in the flat folder, in the date folder
 
->>Note: the flat hawki_twilight_flat_combine needs the dark with each chip in different extension
+>>Note: the flat hawki_twilight_flat_combine needs the dark with each chip in different extension.
+
 2. joint_flats.pro. generates the flat, bpm_H and the mask.
 3. sky.pro
 4. fullbpm.pro
@@ -54,13 +57,16 @@ Instead of clinking on common stars to figure out the x ,y displacement and manu
 >> At the prevous version the brigthest and faintestb stats were de-selected. I comment those lines couse it was a bug. Easy to fix though. But I dont think de-seleting those stats will make much difference.
 * ### 13.2  aa_alignquadrants.pro
 >To be run once for chip(if you are sure that works, activite the *for* loop at the beginig in order to worl onthe four chips in one go)
->>Note: Im using aa_alignquadrants.pro here instead of the regular version, cause it doesnt work with thw GRAAL data. It moves the images out of the canvas when aplying the alignment
+>>Note: Im using aa_alignquadrants.pro here instead of alingquadrants.pro, cause it doesnt work with thw GRAAL data. It moves the images out of the canvas when aplying the alignment
 ___
 14. mosaic.pro
 15. aligframes.pro.(some chnges). I changed the size of the cropping areas to extrac aligned frames of the big  cambas.
-(Rainer have changed this one considerably)
+and correceted something 
 
-16. subcubes.pro. The cube are 2700x2700 and the subcube are 900x900 (insted of 600x600). 
+16. subcubes.pro. The cubes in field 6 are 1350X1350
+17. findstars_holo.pro
+18. runholo.pro
+ 
 
 
 
