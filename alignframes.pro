@@ -59,7 +59,8 @@ y_trans = round(ysize_ref * scale)
  ; Loop over four quadrants
  ; ------------------------
 
- for chip = chip_nr, chip_nr do begin
+;  for chip = chip_nr, chip_nr do begin
+ for chip = chip_nr, 4 do begin
 
   chip_nr = strn(chip)
 
@@ -134,7 +135,7 @@ y_trans = round(ysize_ref * scale)
    writefits, out_path + mask_names[ic], outmasks, /COMPRESS
    writefits, out_path + cube_names[ic], outcube, /COMPRESS
  
-stop
+
  endfor
  ; save names of cubes and masks
  forprint, /NOCOMMENT, TEXTOUT=out_path + 'list_chip' + chip_nr + '.txt', cube_names
