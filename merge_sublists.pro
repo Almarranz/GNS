@@ -1,4 +1,4 @@
-pro merge_sublists, field_nr, chip_nr, Band
+pro merge_sublists, field_nr, chip_nr
 
 
 ; PURPOSE: Piece the lists of the holographically reduced sub-images together
@@ -19,6 +19,7 @@ pro merge_sublists, field_nr, chip_nr, Band
 ;         Stars near to the borders of sub-images will be deselected 
 ;         to avoid bias due to edge effects.
 
+Band = 'H'
 field = strn(field_nr)
 chip = 'chip' + strn(chip_nr)
 t_exp = 3.32
@@ -34,8 +35,9 @@ if Band eq 'H' then mag_cal = 16
 if Band eq 'Ks' then mag_cal = 14
 
 ; input and output directories
-plotdir = 'plots/'
-indir = '/home/data/GNS/2021/'+ Band + '/' + field
+basedir = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/'
+plotdir = basedir + 'H/6/photo/chip4/plots/'
+indir = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/'+ Band + '/' + field
 outdir = indir
 photdir = indir + '/photo/chip' + strn(chip_nr) + '/lists/'
 imdir = indir + '/cubeims/chip' + strn(chip_nr) + '/'
@@ -44,9 +46,10 @@ imdir = indir + '/cubeims/chip' + strn(chip_nr) + '/'
 ; size of final image
 xaxis = 2700L
 yaxis = 2700L  
-sub_size_x0 = 600
-sub_size_y0 = 600
+sub_size_x0 = 1350
+sub_size_y0 = 1350
 edge = 20
+
 
 rebfac = 2   ; rebin factor
 edge =  edge * rebfac
@@ -66,7 +69,8 @@ nx = xaxis/x_sub_shift - 1
 ny = yaxis/y_sub_shift - 1
        
 n_multi = 4 ; maximum number of measurements for a given source (four overlapping sub-fields)
-tolerance = 1.0 ; Correponds to dmax in search for 
+; tolerance = 2.0 
+tolerance = 10.0 ; Correponds to dmax in search for 
               ; common stars between a subimmages
               ;  for fine-alignment of subimages
               ; with rebfac = 2, tolerance = 2
@@ -90,7 +94,7 @@ for i_x = 0, nx-1 do begin
      
      readcol, photdir + name + '.txt', x, y, f, sx, sy, sf, c, /SILENT
      nmax = nmax + n_elements(f)
-
+     print, 'nmax, i_x, i_y',nmax, i_x, i_y
   endfor
 endfor
 print, 'Max number of sources: ' + strn(nmax)
@@ -145,11 +149,11 @@ for i_x = 0, nx-1 do begin
      ; offset of sub-image
      ; within the original image
      ; as defined in subcubes.pro
-     xoff_0 =  i_x * x_sub_shift
-     yoff_0 =  i_y * y_sub_shift 
+     xoff_0 =  i_x * x_sub_shift/2
+     yoff_0 =  i_y * y_sub_shift /2
      x = x + xoff_0
      y = y + yoff_0
-
+    print,'xoff_0,y_off0',xoff_0,yoff_0
     ; compare list for this sub-field with current list of 
     ; all detected stars
     ; -----------------------------------------------------
@@ -179,10 +183,11 @@ for i_x = 0, nx-1 do begin
     ;
     ; We also correct for flux offsets.
     ; -------------------------------------------------------
-
+    
+    
     if (i_x gt 0) or (i_y gt 0) then begin
 ;    if (i_x gt 0)  then begin
-
+    
       if (nc lt 1) then begin
         print, 'No common stars, cannot compute offsets.'
         STOP
