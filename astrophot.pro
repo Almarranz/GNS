@@ -1,10 +1,11 @@
-pro astrophot, field_nr, chip_nr, filter
+pro astrophot, field_nr, chip_nr
 
 
 ; PURPOSE: Run photo astrometry on each holographic region
 ;            
 ; INPUT:  filter must be string
 
+filter = 'H'
 field = strn(field_nr)
 chip = 'chip' + strn(chip_nr)
 
@@ -12,8 +13,8 @@ chip = 'chip' + strn(chip_nr)
 ; size of final image
 xaxis = 2700L
 yaxis = 2700L  
-sub_size_x0 = 600
-sub_size_y0 = 600
+sub_size_x0 = 1350
+sub_size_y0 = 1350
 ;sub_size_x0 = 900
 ;sub_size_y0 = 900
 rebfac = 2
@@ -36,16 +37,16 @@ border =  round(maskrad); borders of input images will be masked
 ; Numbers of first and last sub-images (usually not to be changed, see
 ; runholo.pro)
 i_x0 = 0
-i_x1 = 7
+i_x1 = 2
 
 i_y0 = 0
-i_y1 = 7
+i_y1 = 2
 
 ; number of sub-images from jackknifing
 nsub = 6
 
 ; input and output directories
-basedir = '/home/data/working/data/GNS/2021/'
+basedir = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/'
 
 indir = basedir + filter + '/' + field + '/cubeims/chip' + strn(chip_nr) + '/'
 photdir = basedir + filter + '/' + field + '/photo/chip' + strn(chip_nr) + '/lists/'
