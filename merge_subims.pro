@@ -10,7 +10,8 @@ field = strn(field_nr)
 chip = 'chip' + strn(chip_nr)
 
 ; input and output directories
-indir = '/home/data/GNS/2021/'+ Band + '/' + field
+basedir = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/'
+indir = basedir + Band + '/' + field
 outdir = indir
 photdir = indir + '/photo/chip' + strn(chip_nr) + '/lists/'
 imdir = indir + '/cubeims/chip' + strn(chip_nr) + '/'
