@@ -51,7 +51,7 @@ sub_size_y0 = 1350
 edge = 20
 
 
-rebfac = 2   ; rebin factor
+rebfac = 1   ; rebin factor
 ; edge =  edge * rebfac
 ; xaxis = xaxis * rebfac
 ; yaxis = yaxis * rebfac
@@ -159,8 +159,8 @@ for i_x = 0, nx-1 do begin
      ; offset of sub-image
      ; within the original image
      ; as defined in subcubes.pro
-     xoff_0 =  i_x * x_sub_shift/2
-     yoff_0 =  i_y * y_sub_shift /2
+     xoff_0 =  i_x * x_sub_shift/rebfac
+     yoff_0 =  i_y * y_sub_shift /rebfac
      x = x + xoff_0
      y = y + yoff_0
     print,'xoff_0,y_off0',xoff_0,yoff_0
