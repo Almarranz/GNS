@@ -36,7 +36,7 @@ if Band eq 'Ks' then mag_cal = 14
 
 ; input and output directories
 basedir = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/'
-plotdir = basedir + 'H/6/photo/chip4/plots/'
+plotdir = basedir + 'H/6/photo/chip' + strn(chip_nr) + '/plots/'
 indir = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/'+ Band + '/' + field
 outdir = indir
 photdir = indir + '/photo/chip' + strn(chip_nr) + '/lists/'
@@ -52,15 +52,21 @@ edge = 20
 
 
 rebfac = 2   ; rebin factor
+; edge =  edge * rebfac
+; xaxis = xaxis * rebfac
+; yaxis = yaxis * rebfac
+; sub_size_x0 = sub_size_x0 * rebfac
+; sub_size_y0 = sub_size_y0 * rebfac
+xlo = edge-1
+xhi = sub_size_x0 - edge
+ylo = edge
+yhi = sub_size_y0 - edge
+
 edge =  edge * rebfac
 xaxis = xaxis * rebfac
 yaxis = yaxis * rebfac
 sub_size_x0 = sub_size_x0 * rebfac
 sub_size_y0 = sub_size_y0 * rebfac
-xlo = edge-1
-xhi = sub_size_x0 - edge
-ylo = edge
-yhi = sub_size_y0 - edge
 ; Here, the assumption is that each half of a sub-image
 ; overlaps with one half of its neighbour (see subcubes.pro)
 x_sub_shift = sub_size_x0/2
@@ -133,8 +139,11 @@ for i_x = 0, nx-1 do begin
      if (Band ne 'H') then name = 'offH_' + name    
 
      readcol, photdir + name + '.txt', x, y, f, sx, sy, sf, c, /SILENT
-
-     ; Deselect stars near edge of image     
+     print,'max(x), xhi', max(x), xhi
+     print,'min(x), xlo', min(x), xlo
+     
+     ; Deselect stars near edge of image  
+     print, 'with borders',n_elements(x)   
      in_frame = where((x gt xlo) and (x lt xhi) and (y gt ylo)  and (y lt yhi))
      x = x[in_frame]
      y = y[in_frame]
@@ -143,7 +152,8 @@ for i_x = 0, nx-1 do begin
      sy = sy[in_frame]
      sf = sf[in_frame]
      c = c[in_frame]
-
+     print, 'without borders',n_elements(x)   
+     
     ; Apply pre-offsets for this sub-field
     ; ----------------------------------------
      ; offset of sub-image
@@ -154,6 +164,7 @@ for i_x = 0, nx-1 do begin
      x = x + xoff_0
      y = y + yoff_0
     print,'xoff_0,y_off0',xoff_0,yoff_0
+
     ; compare list for this sub-field with current list of 
     ; all detected stars
     ; -----------------------------------------------------
