@@ -70,7 +70,7 @@ ny = yaxis/y_sub_shift - 1
        
 n_multi = 4 ; maximum number of measurements for a given source (four overlapping sub-fields)
 ; tolerance = 2.0 
-tolerance = 10.0 ; Correponds to dmax in search for 
+tolerance = 2.0 ; Correponds to dmax in search for 
               ; common stars between a subimmages
               ;  for fine-alignment of subimages
               ; with rebfac = 2, tolerance = 2
