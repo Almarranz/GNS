@@ -37,6 +37,9 @@ ys = 2500
 ; that are being produced by this script
 x_off = [80,2100,2100,80]
 y_off = [80,80,2100,2100]
+SAVE, x_off, y_off, FILENAME = 'xy_off.SAV'
+stop
+
 ;~ x_off = [0,2200,2200,0]
 ;~ y_off = [0,0,2200,2200]
 ;~ y_off = [50,50,900,900]
