@@ -1,11 +1,11 @@
-pro merge_subims, field_nr, chip_nr, Band
+pro merge_subims, field_nr, chip_nr
 
 
 ; PURPOSE: Piece the holographically reduced sub-images together
 ;          use input from align_lists.pro/merge_sublists.pro
 ;
 
-
+Band = 'H'
 field = strn(field_nr)
 chip = 'chip' + strn(chip_nr)
 
@@ -15,6 +15,7 @@ indir = basedir + Band + '/' + field
 outdir = indir
 photdir = indir + '/photo/chip' + strn(chip_nr) + '/lists/'
 imdir = indir + '/cubeims/chip' + strn(chip_nr) + '/'
+plotdir = basedir + 'H/6/photo/chip4/plots/'
 
 border = 20. ; border of images that is to be masked
 
@@ -22,10 +23,11 @@ border = 20. ; border of images that is to be masked
 ; size of final image
 xaxis = 2700L
 yaxis = 2700L  
-sub_size_x0 = 600
-sub_size_y0 = 600
+sub_size_x0 = 1350
+sub_size_y0 = 1350
 
-rebfac = 2   ; rebin factor
+; rebfac = 2   ; rebin factor
+rebfac = 1
 border = border * rebfac
 xaxis = xaxis * rebfac
 yaxis = yaxis * rebfac
@@ -72,15 +74,18 @@ for i_x = 0, nx-1 do begin
      subim = readfits(imdir + name + '.fits.gz') * mask_borders
      subnoise = readfits(imdir + name + '_sigma.fits.gz') * mask_borders
      subexp = readfits(imdir + name + '_expmap.fits.gz')  * mask_borders
-
-
+     print, 'subim size', size(subim)
+     
     ; Apply offsets for this sub-field
     ; ----------------------------------------
      xoff_0 =  i_x * x_sub_shift
      yoff_0 =  i_y * y_sub_shift 
      x_off = xoff_0 + x_offsets[i_x,i_y]
      y_off = yoff_0 + y_offsets[i_x,i_y]
-
+     
+     print, size(tmp_subfield)
+     print, 'sub_size_x0', sub_size_x0
+    
      tmp_subfield[0:sub_size_x0-1,0:sub_size_y0-1] = subim            
      tmp_subfield_noise[0:sub_size_x0-1,0:sub_size_y0-1] = subnoise
      tmp_subfield_exp[0:sub_size_x0-1,0:sub_size_y0-1] = subexp
