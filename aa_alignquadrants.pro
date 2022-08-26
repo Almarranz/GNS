@@ -35,10 +35,11 @@ ys = 2500
 ; These offsets can be seen inside the 
 ; images lnx_jitter_?_aligned.fits.gz
 ; that are being produced by this script
+data_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/' + strn(field_nr) + '/data/'
+
 x_off = [80,2100,2100,80]
 y_off = [80,80,2100,2100]
-SAVE, x_off, y_off, FILENAME = 'xy_off.SAV'
-stop
+SAVE, x_off, y_off, FILENAME = data_path + 'xy_off.SAV'
 
 ;~ x_off = [0,2200,2200,0]
 ;~ y_off = [0,0,2200,2200]
@@ -60,7 +61,6 @@ scale=0.34/0.106
 
 VVV='/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/VVV/Fields/H/'
 im_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/' + strn(field_nr) + '/ims/'
-data_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/' + strn(field_nr) + '/data/'
 tmp_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/' + strn(field_nr) + '/tmp/'
 ref_file =  VVV +'Field' + strn(field_nr) + '_stars.txt'
 ; ref_file =  VVV +'stars_' + strn(field_nr) + '.txt'
