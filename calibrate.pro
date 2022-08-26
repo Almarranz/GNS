@@ -63,7 +63,8 @@ ref_file = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/VVV/Fields/H/Field' + s
 scale = 0.106/(0.34*rebfac) ; to take into consideration the rebinning factor in the scale
 
 ; RESTORE, '../scripts/xy_off.SAV'
-RESTORE, './xy_off.SAV'
+data_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/' + strn(field) + '/data/'
+RESTORE, data_path + 'xy_off.SAV'
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
