@@ -10,7 +10,7 @@ dmax_vvv = 3.    ; max HAWK-I pixel distance between VVV and HAWK-I
 ;dmax_near_stars = 10 ; eliminate nearby stars within this amount of HAWK-I pixels (10 pix = 0.53")
 ; Any secondary star within within delta_r of a photometric reference
 ; star needs to be at least delta_mag magnitudes fainter
-delta_r = 5. ; ; with 0.053"  pixel scale 20 = 1" 
+delta_r = 7. ; ; with 0.053"  pixel scale 20 = 1" 
 delta_mag = 5
 SIGMA_CUT = 3.0 ; sigma cut to be applied in resistant_mean
 
@@ -18,7 +18,7 @@ magerr_si = 0.03 ; max acceptable sirius magnitude uncertainty for photometric c
 magerr_hawki = 0.03 ; max acceptable sirius magnitude uncertainty for photometric calibration stars
 
 mag_max = 13.5 ; Bright magnitude cut off for calibration stars
-scale_holo = 0.053 ; pixel scale of hollography image (" /pixel)
+scale_holo = 0.106/rebfac ; pixel scale of hollography image (" /pixel)
 
 ; Radius for creating median ZP
 rmed = 1800. ; with 0.053"  pixel scale 1200 ~1 arcmin
