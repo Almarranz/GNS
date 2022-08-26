@@ -1,6 +1,7 @@
-pro calibrate, field, chip, band
+pro calibrate, field, chip
 
 
+band = 'H'
 t_exp = 3.32
 dmax_sirius = 3.  ; max HAWK-I pixel distance between SIRIUS and HAWK-I for calibration star selection
                  ; 1 pixel = 0.053" 
@@ -9,7 +10,7 @@ dmax_vvv = 3.    ; max HAWK-I pixel distance between VVV and HAWK-I
 ;dmax_near_stars = 10 ; eliminate nearby stars within this amount of HAWK-I pixels (10 pix = 0.53")
 ; Any secondary star within within delta_r of a photometric reference
 ; star needs to be at least delta_mag magnitudes fainter
-delta_r = 10. ; ; with 0.053"  pixel scale 20 = 1" 
+delta_r = 5. ; ; with 0.053"  pixel scale 20 = 1" 
 delta_mag = 5
 SIGMA_CUT = 3.0 ; sigma cut to be applied in resistant_mean
 
@@ -29,36 +30,40 @@ minexp_cal = 0.2 ; valid calibration stars should be covered by at leasy 40% of 
 ; and file names
 ; -----------------------------
 
-indir = '/home/data/GNS/2021/' + band + '/' + strn(field) + '/cubeims/chip' + strn(chip) + '/'
-indir_list = '/home/data/GNS/2021/' + band + '/' + strn(field) + '/photo/chip' + strn(chip) + '/lists/'
+basedir = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/'
+indir = basedir + band + '/' + strn(field) + '/cubeims/chip' + strn(chip) + '/'
+indir_list = basedir + band + '/' + strn(field) + '/photo/chip' + strn(chip) + '/lists/'
 
 ; output
-res_dir = '/home/data/GNS/2021/' + band + '/' + strn(field) + '/photo/chip' + strn(chip) + '/lists/'
-res_dir_im = '/home/data/GNS/2021/' + band + '/' + strn(field) + '/cubeims/chip' + strn(chip) + '/'
+res_dir = basedir + band + '/' + strn(field) + '/photo/chip' + strn(chip) + '/lists/'
+res_dir_im = basedir + band + '/' + strn(field) + '/cubeims/chip' + strn(chip) + '/'
 
 star_list = 'astrophot.txt' ; from merge_sublists.pro
 ;star_list = 'astrophot_cal.txt' ; from merge_sublists.pro
 
 ; The J-band data will be used to establish astrometry (via VVV)
-indir_list_J = '/home/data/GNS/2021/H' + '/' + strn(field) + '/photo/chip' + strn(chip) + '/lists/' 
+indir_list_J = basedir + 'H' + '/' + strn(field) + '/photo/chip' + strn(chip) + '/lists/' 
 star_list_J = 'astrophot.txt'
-res_dir_imJ = '/home/data/GNS/2021/H' + strn(field) + '/photo/chip' + strn(chip) + '/'
+res_dir_imJ = basedir + 'H' + '/' + strn(field) + '/photo/chip' + strn(chip) + '/'
 
 
-tmpdir =  '/home/data/GNS/2021/' + band + '/' + strn(field) + '/tmp/' 
+tmpdir =  basedir + band + '/' + strn(field) + '/tmp/' 
 
-
+pruebas = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/pruebas/'
 ; Calibration files and images are taken from VVV J-band
-ref = readfits('/home/data/working/GNS_2/VVV/Field' + strn(field)  + '_J.fits.gz',vvvheader)
-ref_file = '/home/data/working/GNS_2/VVV/stars_' + strn(field) + '.txt'
+ref = readfits('/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/VVV/Fields/H/Field' + strn(field)  + '.fits.gz',vvvheader)
+ref_file = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/VVV/Fields/H/Field' + strn(field) + '_stars.txt'
 
 ; Holography image is aligned just as lnx_aligned (see alignquadrants)
 ; To transfrom HAWK-I positions from holography image
 ; to VVV we merely need to scale and shift (x_off, y_off from alignquadrants)
 ; VVV --> HAWKI
-rebfac = 2
-scale = (0.053/0.34)
-RESTORE, '../scripts/xy_off.SAV'
+rebfac = 1
+; scale = (0.053/0.34)
+scale = 0.106/(0.34*rebfac) ; to take into consideration the rebinning factor in the scale
+
+; RESTORE, '../scripts/xy_off.SAV'
+RESTORE, './xy_off.SAV'
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -78,17 +83,26 @@ xsize_vvv = sz_vvv[1]
 ysize_vvv = sz_vvv[2]
 xsize_hawki = sz[1]
 ysize_hawki = sz[2]
-sub_size = 1200 ; size of sub-fields for check of ZP variations across the field
+; this parametrer does nothing
+sub_size = 1350 ; size of sub-fields for check of ZP variations across the field
 
 ; Read star lists
 readcol, ref_file, x_vvv, y_vvv, f_vvv, Dx_vvv, Dy_vvv, Df_vvv, c  ; astrometric reference
 ;readcol, indir_list_J + star_list_J, xJ, yJ, fJ, sxJ, syJ, sfJ, corrJ, ndetJ  ; HAWK-I J-band list for field to be calibrated
 readcol, indir_list + star_list, x, y, f, sx, sy, sf, corr, ndet               ; HAWK-I list for field to be calibrated
 
- 
+
+
+; Adding those -100 the results improve significally. I thing they come for and adjustment I made in aa_alignquadrants.pro (in order to place the images inside the canvas)
+x_off = x_off -100
+y_off = y_off -100
+print,'x_off,y_off',x_off,y_off
 ; find common stars VVV J and HAWK-I
 x_scaled = (x + rebfac*x_off[chip-1]) * scale
 y_scaled = (y + rebfac*y_off[chip-1]) * scale
+
+; readcol, pruebas + 'aa_astrophot.txt',x_scaled, y_scaled
+
 compare_lists, x_vvv, y_vvv, x_scaled, y_scaled, x1c, y1c, x2c, y2c, MAX_DISTANCE=dmax_vvv,$
    SUBSCRIPTS_1=subc1, SUBSCRIPTS_2 = subc2, SUB1 = sub1, SUB2 = sub2   
 
@@ -134,12 +148,12 @@ print, 'Found ' + strn(nc) + ' common stars.'
 ; iterative degree 1 alignment
 ; ------------------------------
 
-  lim_it = 1
+  
   count=0
   comm=[]
   it=0
   lim_it=1 ;consider convergece when the number of common stars  'lim_it' times.
-	 
+;   lim_it=0; uncomented this for skinping the loop
   while count lt lim_it do begin
   it=it+1
  ;~ for it = 1, 1 do begin
@@ -163,21 +177,22 @@ print, 'Found ' + strn(nc) + ' common stars.'
 	endif
   endwhile
 
-STOP
+; STOP
 
 n_stars = n_elements(subc1)
 openw, out, 'VVV.reg', /get_lun
 printf, out, 'global color=magenta dashlist=8 3 width=1 font="helvetica 10 normal" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1'
 printf, out, 'image'
 for s = 0, n_stars-1 do begin
-   printf, out, 'circle('+ strn(x1c[s])+','+strn(y1c[s])+',5)'
+   printf, out, 'circle('+ strn(x1c[s])+','+strn(y1c[s])+',2)'
 endfor
 free_lun, out
 openw, out, 'HAWKI.reg', /get_lun
 printf, out, 'global color=green dashlist=8 3 width=1 font="helvetica 10 normal" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1'
 printf, out, 'image'
 for s = 0, n_stars-1 do begin
-   printf, out, 'circle('+ strn(x[subc2[s]])+','+strn(y[subc2[s]])+',5)'
+    printf, out, 'circle('+ strn(x[subc2[s]])+','+strn(y[subc2[s]])+',2)'
+
 endfor
 free_lun, out
 
@@ -186,8 +201,8 @@ free_lun, out
 ; astrometric  positions between reference stars in HAWK-I and VVV
 ; -----------------------------------------------------------------
 
-dx_tmp =  (x1c-x2c)*0.053
-dy_tmp = (y1c-y2c)*0.053
+dx_tmp =  (x1c-x2c)*(0.106/rebfac)
+dy_tmp = (y1c-y2c)*(0.106/rebfac)
 set_plot,'PS',/interpolate
 device, XOFFSET=0, YOFFSET=0, $
       FILENAME =  res_dir + 'position_uncertainty_' + strn(chip) + '.eps', XSIZE=20., YSIZE=12., $
@@ -301,7 +316,7 @@ readcol, indir_list + star_list,  a, d, x, y, f, sx, sy, sf
 ; Read in SIRIUS photometric reference catalogue 
 ; -------------------------------------------------------
 
-readcol, '/home/data/working/GNS_2/SIRIUS/list_all_Sirius_central_region.txt',$
+readcol, '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/SIRIUS/list_all_Sirius_central_region.txt',$
   a_si, dec_si, J_si, dJ_si, H_si, dH_si, K_si, dK_si, Format = 'F,F,F,F,F,F,F,F'   
 
 ; check the uncerinties of SIRIUS to get an idea
