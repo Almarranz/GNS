@@ -10,7 +10,8 @@ dmax_vvv = 3.    ; max HAWK-I pixel distance between VVV and HAWK-I
 ;dmax_near_stars = 10 ; eliminate nearby stars within this amount of HAWK-I pixels (10 pix = 0.53")
 ; Any secondary star within within delta_r of a photometric reference
 ; star needs to be at least delta_mag magnitudes fainter
-delta_r = 7. ; ; with 0.053"  pixel scale 20 = 1" 
+rebfac = 1
+delta_r = 5*rebfac ; with 0.053"  pixel scale 20 = 1" 
 delta_mag = 5
 SIGMA_CUT = 3.0 ; sigma cut to be applied in resistant_mean
 
@@ -58,7 +59,6 @@ ref_file = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/VVV/Fields/H/Field' + s
 ; To transfrom HAWK-I positions from holography image
 ; to VVV we merely need to scale and shift (x_off, y_off from alignquadrants)
 ; VVV --> HAWKI
-rebfac = 1
 ; scale = (0.053/0.34)
 scale = 0.106/(0.34*rebfac) ; to take into consideration the rebinning factor in the scale
 
