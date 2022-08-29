@@ -7,9 +7,17 @@ Created on Tue Jun 14 10:14:07 2022
 """
 
 # =============================================================================
-# A gasgano kind of tool to classifided files in flat dark or science
+# A gasgano kind-of-tool for classifing files in flat, dark or science
 # =============================================================================
-# Change to pull
+
+# =============================================================================
+# WARNING!!!!
+# For some reason the dark that we have to use for these data are no loger
+# atached to the science data. In order to get the right darks you have to donwload
+# them directly from the archive (http://archive.eso.org/eso/eso_archive_main.html)
+# specify the corret date and the instrument (HAWKI), check the 'calibration'
+# box and fill the field TPL ID with 'HAWKI_img_cal_WinDarks'
+# =============================================================================
 import numpy as np
 import os
 import glob
@@ -25,7 +33,7 @@ dark = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Dark/%s/'%(field_n)
 common_path = '/Users/alvaromartinez/Desktop/Phd/HAWK/GNS_2/Data/GNS/2021/H/6/ims/'
 field = 'GC H F%s'%(field_n)
 # %%
-with open(dark + 'dark.sof','w') as f:
+with open(dark + 'list.sof','w') as f:
     f.write('')
 with open(flat + 'flat.sof','w') as ff:
     ff.write('')
