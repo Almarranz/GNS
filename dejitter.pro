@@ -60,7 +60,7 @@ n_offsets = 70
 
 openw, out1, outdir + 'list_chip'+strn(chip)+'.txt', /get_lun
 openw, out2, outdir + 'masklist_chip'+strn(chip)+'.txt', /get_lun
-openw, out3, 'jitter_offsets'+strn(chip)+'.txt', /get_lun
+openw, out3, outdir + 'jitter_offsets'+strn(chip)+'.txt', /get_lun
 
 new_ref = fltarr(sizex_new,sizey_new)
 ;~ new_ref_cube = fltarr(sizex_new,sizey_new,elements_cube)
