@@ -15,9 +15,9 @@ PRO CLEANCUBES;, common_path, in_path, out_path, tmp_path, mask_name, N_SIGMA = 
    ;~ tmp_path = '/data/GNS/2015/' + band + '/' + field + '/tmp/'
    
    mask_name = 'mask.fits'
-   n_sigma = 6. ; value must be high, otherwise valid pixels of bright stars will be corrected (PSF varies between frames)!
+   n_sigma = 7. ; value must be high, otherwise valid pixels of bright stars will be corrected (PSF varies between frames)!
    debug = 0
-   filt_box = 6 ; width of box for sigma filtering
+   filt_box = 5 ; width of box for sigma filtering
 
 
 ;~ if not(KEYWORD_SET(n_sigma)) then n_sigma = 5.

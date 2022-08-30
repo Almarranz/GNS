@@ -20,7 +20,7 @@ field = '6'
    mask_name = 'mask_' + band + '.fits'
    flat_name = 'flat_' + band + '.fits'
    sigma_dev_sky = 5. ; sigma threshold for determining bad pixels in sky
-   sigma_dev_dark = 5. ; sigma threshold for determining bad pixels in dark
+   sigma_dev_dark = 20. ; sigma threshold for determining bad pixels in dark
 
 
 
